@@ -94,7 +94,7 @@ public class MyApp extends Application{
             SdCardUtil.createFileDir(SdCardUtil.FILEDIR+"/"+SdCardUtil.FILEPHOTO);
             SdCardUtil.createFileDir(SdCardUtil.FILEDIR+"/"+SdCardUtil.FILEAPK);
             SdCardUtil.createFileDir(SdCardUtil.FILEDIR+"/"+SdCardUtil.FILECACHE);
-            SdCardUtil.createFileDir(SdCardUtil.FILEDIR+"/"+SdCardUtil.FILEUSER+"/icon");
+            SdCardUtil.createFileDir(SdCardUtil.FILEDIR+"/"+SdCardUtil.RESPONSE);
         }else{
 
         }

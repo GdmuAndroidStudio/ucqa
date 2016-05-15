@@ -15,7 +15,6 @@ import android.widget.GridView;
 import android.widget.PopupWindow;
 
 import com.dawnlightning.ucqa.R;
-import com.dawnlightning.ucqa.dialog.LoadingDialog;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.Platform.ShareParams;
@@ -46,17 +45,17 @@ public class ShareTool
 
     }
     public void initdialog(String msg){
-        if (pd == null) {
-            pd = new LoadingDialog(context, msg, new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-
-                }
-            });
-            pd.show();
-        } else {
-            pd.show();
-        }
+//        if (pd == null) {
+//            pd = new LoadingDialog(context, msg, new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//
+//                }
+//            });
+//            pd.show();
+//        } else {
+//            pd.show();
+//        }
     }
     public  void dismissdialog(){
         pd.dismiss();

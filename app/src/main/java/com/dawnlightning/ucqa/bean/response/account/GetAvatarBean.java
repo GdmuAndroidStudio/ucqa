@@ -66,4 +66,14 @@ public class GetAvatarBean {
             return avatar_url;
         }
     }
+
+    @Override
+    public String toString() {
+        return "GetAvatarBean{" +
+                "code=" + code +
+                ", data=" + data +
+                ", msg='" + msg + '\'' +
+                ", action='" + action + '\'' +
+                '}';
+    }
 }

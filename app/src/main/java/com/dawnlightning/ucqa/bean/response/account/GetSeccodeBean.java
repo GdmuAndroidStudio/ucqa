@@ -75,5 +75,23 @@ public class GetSeccodeBean {
         public String getSeccode() {
             return seccode;
         }
+
+        @Override
+        public String toString() {
+            return "DataEntity{" +
+                    "seccode_auth='" + seccode_auth + '\'' +
+                    ", seccode='" + seccode + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "GetSeccodeBean{" +
+                "code=" + code +
+                ", data=" + data +
+                ", msg='" + msg + '\'' +
+                ", action='" + action + '\'' +
+                '}';
     }
 }

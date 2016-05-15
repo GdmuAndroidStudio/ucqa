@@ -76,4 +76,14 @@ public class LoginOutBean {
             return ucsynlogout;
         }
     }
+
+    @Override
+    public String toString() {
+        return "LoginOutBean{" +
+                "code=" + code +
+                ", data=" + data +
+                ", msg='" + msg + '\'' +
+                ", action='" + action + '\'' +
+                '}';
+    }
 }

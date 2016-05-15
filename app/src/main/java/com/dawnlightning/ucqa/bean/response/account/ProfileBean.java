@@ -40,4 +40,13 @@ public class ProfileBean {
     public String getAction() {
         return action;
     }
+
+    @Override
+    public String toString() {
+        return "ProfileBean{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", action='" + action + '\'' +
+                '}';
+    }
 }

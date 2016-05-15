@@ -21,7 +21,7 @@ public class SdCardUtil {
 	public static final String FILECACHE="cache";
 	
 	//用户信息目录
-	public static final String FILEUSER="user";
+	public static final String RESPONSE="response";
 	
 	/**
 	 * 检测sd卡是否可以用
