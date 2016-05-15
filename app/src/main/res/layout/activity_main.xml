@@ -1,0 +1,110 @@
+<com.dawnlightning.ucqa.widget.DragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dl_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="30dp"
+        android:paddingTop="100dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/lefe_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="80dp"
+            android:orientation="vertical">"
+
+            <com.dawnlightning.ucqa.widget.RoundImageView
+                android:id="@+id/iv_icon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@mipmap/default_round_head" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="BlueMor"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:textColor="#ffffff"
+                android:textSize="18.0sp" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lv_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/lefe_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="20dp"
+            android:cacheColorHint="#00000000"
+            android:divider="@null"
+            android:textColor="#ffffff" />
+
+
+    </RelativeLayout>
+
+    <com.dawnlightning.ucqa.widget.MyRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rl_title"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#549D37" >
+
+            <ImageView
+                android:id="@+id/iv_menu"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/left_menu_list" />
+
+            <TextView
+                android:id="@+id/unread_msg_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@mipmap/unread_count_bg"
+                android:gravity="center"
+                android:text="7"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/iv_menu"
+                android:layout_toEndOf="@+id/iv_menu"
+                android:visibility="invisible"
+                />
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="系统相册"
+                android:textColor="#ffffff"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+        <com.dawnlightning.ucqa.widget.MyViewPager
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rl_title"
+            android:id="@+id/mvp_mainactivity"
+            >
+
+        </com.dawnlightning.ucqa.widget.MyViewPager>
+
+    </com.dawnlightning.ucqa.widget.MyRelativeLayout>
+
+</com.dawnlightning.ucqa.widget.DragLayout>
