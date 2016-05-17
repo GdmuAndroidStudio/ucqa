@@ -3,12 +3,25 @@ package com.dawnlightning.ucqa.model;
 import android.util.Log;
 
 import com.dawnlightning.ucqa.api.AccountApiManager;
+import com.dawnlightning.ucqa.api.action.FailureAction;
+import com.dawnlightning.ucqa.api.action.SuccessAction;
+import com.dawnlightning.ucqa.api.requestbody.ProgressRequestBody;
+import com.dawnlightning.ucqa.base.MyApp;
+import com.dawnlightning.ucqa.bean.response.account.GetAvatarBean;
 import com.dawnlightning.ucqa.bean.response.account.GetSeccodeBean;
 import com.dawnlightning.ucqa.bean.response.account.LoginBean;
-import com.dawnlightning.ucqa.bean.response.account.LoginOutBean;
 import com.dawnlightning.ucqa.bean.response.account.RegisterBean;
+import com.dawnlightning.ucqa.utils.SdCardUtil;
+import com.nostra13.universalimageloader.utils.L;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
-import rx.functions.Action1;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * 作者：Administrator on 2016/5/15 22:22
@@ -18,53 +31,84 @@ import rx.functions.Action1;
 public class TestModel {
     AccountApiManager apiManager=new AccountApiManager(0,0);
     public void login(){
-        apiManager.Login("13650421544","123456").subscribe(new Action1<LoginBean>() {
+        apiManager.Login("13650421544","123456").subscribe(new SuccessAction<LoginBean>() {
             @Override
-            public void call(LoginBean loginBean) {
-                Log.e("login",loginBean.toString());
+            public void Success(LoginBean target) {
+                Log.e("Success",target.toString());
             }
-        }, new Action1<Throwable>() {
             @Override
-            public void call(Throwable throwable) {
-                Log.e("login",throwable.toString());
+            public void Failure(int code, String msg) {
+                Log.e("Failure",msg);
+            }
+        }, new FailureAction() {
+            @Override
+            public void Error(String msg) {
+                Log.e("Error",msg);
             }
         });
     }
-    public void register(final String username, final String password){
-        apiManager.GetSeccode().subscribe(new Action1<GetSeccodeBean>() {
+    public void Register(){
+        apiManager.GetSeccode().subscribe(new SuccessAction<GetSeccodeBean>() {
             @Override
-            public void call(GetSeccodeBean getSeccodeBean) {
-                Log.e("getseccode",getSeccodeBean.toString());
-                apiManager.Register(username,password,getSeccodeBean).subscribe(new Action1<RegisterBean>() {
+            public void Success(GetSeccodeBean target) {
+                apiManager.Register("13550421248","123456",target).subscribe(new SuccessAction<RegisterBean>() {
                     @Override
-                    public void call(RegisterBean registerBean) {
-                        Log.e("register",registerBean.toString());
+                    public void Success(RegisterBean target) {
+                        Log.e("register",target.getSpace().toString());
                     }
-                }, new Action1<Throwable>() {
                     @Override
-                    public void call(Throwable throwable) {
-                        Log.e("register",throwable.toString());
+                    public void Failure(int code, String msg) {
+                        Log.e("registerfailure",msg);
+                    }
+                }, new FailureAction() {
+                    @Override
+                    public void Error(String msg) {
+                        Log.e("error",msg);
                     }
                 });
             }
-        }, new Action1<Throwable>() {
+
             @Override
-            public void call(Throwable throwable) {
-                Log.e("getseccode",throwable.toString());
+            public void Failure(int code, String msg) {
+
+            }
+        }, new FailureAction() {
+            @Override
+            public void Error(String msg) {
+
             }
         });
     }
-    public void loginoff(String uhash){
-        apiManager.Loginoff(uhash).subscribe(new Action1<LoginOutBean>() {
+    public void Upload(){
+        File file= new File("/storage/sdcard0/lightup/photos/345.jpg");
+        RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),file);
+
+        ProgressRequestBody progressRequestBody=new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressListener() {
             @Override
-            public void call(LoginOutBean loginOutBean) {
-                Log.e("logoff",loginOutBean.toString());
+            public void update(long bytesRead, long contentLength, boolean done) {
+                int count = (int) ((bytesRead * 1.0 / contentLength) * 100);
+                Log.e("progress",count+"%");
             }
-        }, new Action1<Throwable>() {
+        });
+        Map<String, RequestBody> map = new HashMap<>();
+        map.put("Filedata\";filename=\"+"+file.getName()+"",progressRequestBody);
+        apiManager.UploadAvater("70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg",map)
+        .subscribe(new SuccessAction<GetAvatarBean>() {
             @Override
-            public void call(Throwable throwable) {
-                Log.e("uhash",throwable.toString());
+            public void Success(GetAvatarBean target) {
+                Log.e("bean", target.toString());
+            }
+
+            @Override
+            public void Failure(int code, String msg) {
+                Log.e("bean", msg);
+            }
+        }, new FailureAction() {
+            @Override
+            public void Error(String msg) {
+                Log.e("error", msg);
             }
         });
     }
+
 }

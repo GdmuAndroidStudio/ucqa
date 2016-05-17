@@ -2,12 +2,8 @@ package com.dawnlightning.ucqa.api;
 
 import com.dawnlightning.ucqa.api.httphelper.RetrofitHelper;
 import com.dawnlightning.ucqa.api.requestbody.ProgressRequestBody;
-import com.dawnlightning.ucqa.bean.response.account.GetAvatarBean;
+import com.dawnlightning.ucqa.bean.ApiBase;
 import com.dawnlightning.ucqa.bean.response.account.GetSeccodeBean;
-import com.dawnlightning.ucqa.bean.response.account.LoginBean;
-import com.dawnlightning.ucqa.bean.response.account.LoginOutBean;
-import com.dawnlightning.ucqa.bean.response.account.ProfileBean;
-import com.dawnlightning.ucqa.bean.response.account.RegisterBean;
 
 import java.util.Map;
 
@@ -19,12 +15,11 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import rx.Observable;
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -33,39 +28,44 @@ import rx.schedulers.Schedulers;
  * 用于操作用户信息的api
  */
 public class AccountApiManager {
-    Retrofit retrofit;
-    AccountApiService accountApiManager;
-    public AccountApiManager(final  int max_age,final int max_stale){
-        this.retrofit= new RetrofitHelper(max_age,max_stale).getInstance();
-        this.accountApiManager=this.retrofit.create(AccountApiService.class);
+
+    private Retrofit retrofit;
+    public AccountApiService accountApiManager;
+    public AccountApiManager(){
+        this.retrofit=new RetrofitHelper().getInstance();
+        this.accountApiManager=retrofit.create(AccountApiService.class);
     }
-    public  Observable<LoginBean> Login(String username,String password){
+    public AccountApiManager(final int max_age,final int max_stale){
+        this.retrofit=new RetrofitHelper(max_age,max_stale).getInstance();
+        this.accountApiManager=retrofit.create(AccountApiService.class);
+    }
+    public  Observable<ApiBase> Login(String username,String password){
        return accountApiManager.doLogin(username,password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
     }
-    public  Observable<GetSeccodeBean> GetSeccode(){
+    public  Observable<ApiBase> GetSeccode(){
         return accountApiManager.getSeccode()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-    public  Observable<RegisterBean> Register(final String username,final String password,final GetSeccodeBean seccodeBean ){
-        return accountApiManager.doRegister(username,password,password,seccodeBean.getData().getSeccode_auth(),seccodeBean.getData().getSeccode())
+    public  Observable<ApiBase> Register(final String username,final String password,final GetSeccodeBean seccodeBean ){
+        return accountApiManager.doRegister(username,password,password,seccodeBean.getSeccode_auth(),seccodeBean.getSeccode())
                  .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-    public Observable<LoginOutBean> Loginoff(String uhash){
+    public Observable<ApiBase> Loginoff(String uhash){
         return accountApiManager.doLoginoff(uhash)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-    public  Observable<GetAvatarBean> UploadAvater(String m_auth,ProgressRequestBody imgs){
+    public  Observable<ApiBase> UploadAvater(String m_auth,Map<String, RequestBody> imgs){
         return accountApiManager.doUploadAvatar(m_auth,imgs)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-    public  Observable<ProfileBean> EditProfile(String m_auth,Map<String,String> map){
+    public  Observable<ApiBase> EditProfile(String m_auth,Map<String,String> map){
         return accountApiManager.doEditProfile(m_auth,map)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -78,26 +78,26 @@ public class AccountApiManager {
          * @return 登陆结果
          */
         @GET("/capi/do.php?ac=login&loginsubmit=true")
-        Observable<LoginBean> doLogin(@Query("username") String username, @Query("password") String password);
+        Observable<ApiBase> doLogin(@Query("username") String username, @Query("password") String password);
 
         /**
          * 获取防伪验证码
          */
         @Headers("Cache-Control:no-cache")
         @GET("/capi/do.php?ac=register&op=seccode")
-        Observable<GetSeccodeBean> getSeccode();
+        Observable<ApiBase> getSeccode();
 
         /**
          * 注册
          * @param username 用户名
          * @param password  第一次密码
          * @param password2 第二次密码
-         * @param m_auth  soccode返回的结果
+         * @param m_auth  seccode返回的结果
          * @return
          */
         @Headers("Cache-Control:no-cache")
         @GET("/capi/do.php?ac=register&registersubmit=true")
-        Observable<RegisterBean> doRegister(@Query("username") String username,@Query("password") String password,@Query("password2") String password2,@Query("m_auth") String m_auth,@Query("seccode")String seccode);
+        Observable<ApiBase> doRegister(@Query("username") String username,@Query("password") String password,@Query("password2") String password2,@Query("m_auth") String m_auth,@Query("seccode")String seccode);
 
         /**
          * 注销
@@ -105,18 +105,19 @@ public class AccountApiManager {
          * @return
          */
         @GET("/capi/cp.php?ac=common&op=logout")
-        Observable<LoginOutBean> doLoginoff(@Query("uhash") String uhash);
+        Observable<ApiBase> doLoginoff(@Query("uhash") String uhash);
 
 
         /**
          * 上传用户头像
          * @param m_auth 登陆返回的m_auth
-         * @param imgs 图片
+         * @paramimgs 图片
          * @return
+         *
          */
         @Multipart
-        @POST("/capi/cp.php?ac=avatar&m_auth={m_auth}&avatarsubmit=ture")
-        Observable<GetAvatarBean> doUploadAvatar(@Path("m_auth") String m_auth,@Part("Filedata") ProgressRequestBody imgs);
+        @POST("/capi/cp.php?ac=avatar&avatarsubmit=true")
+        Observable<ApiBase> doUploadAvatar(@Query("m_auth") String m_auth,@PartMap Map<String, RequestBody> params);
 
         /**
          * 修改用户资料
@@ -125,6 +126,6 @@ public class AccountApiManager {
          * @return
          */
         @POST("/capi/cp.php?ac=profile&m_auth={m_auth}&op=base")
-        Observable<ProfileBean> doEditProfile(@Path("m_auth") String m_auth,@FieldMap Map<String, String> options);
+        Observable<ApiBase> doEditProfile(@Path("m_auth") String m_auth, @FieldMap Map<String, String> options);
     }
 }

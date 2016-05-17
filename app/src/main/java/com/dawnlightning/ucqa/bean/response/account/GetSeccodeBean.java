@@ -7,91 +7,38 @@ package com.dawnlightning.ucqa.bean.response.account;
  */
 public class GetSeccodeBean {
 
+    public GetSeccodeBean(){
+
+    }
     /**
-     * code : 0
-     * data : {"seccode_auth":"134aqUzRfCZE4so67mO%2FsLOS0Cy8ZmQYuQ5vM06Ll4cm","seccode":"CQ9B"}
-     * msg : rest_success
-     * action : rest_success
+     * seccode_auth : 134aqUzRfCZE4so67mO%2FsLOS0Cy8ZmQYuQ5vM06Ll4cm
+     * seccode : CQ9B
      */
 
-    private int code;
-    private DataEntity data;
-    private String msg;
-    private String action;
+    private String seccode_auth;
+    private String seccode;
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setSeccode_auth(String seccode_auth) {
+        this.seccode_auth = seccode_auth;
     }
 
-    public void setData(DataEntity data) {
-        this.data = data;
+    public void setSeccode(String seccode) {
+        this.seccode = seccode;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public String getSeccode_auth() {
+        return seccode_auth;
     }
 
-    public void setAction(String action) {
-        this.action = action;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public DataEntity getData() {
-        return data;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public String getAction() {
-        return action;
-    }
-
-    public static class DataEntity {
-        /**
-         * seccode_auth : 134aqUzRfCZE4so67mO%2FsLOS0Cy8ZmQYuQ5vM06Ll4cm
-         * seccode : CQ9B
-         */
-
-        private String seccode_auth;
-        private String seccode;
-
-        public void setSeccode_auth(String seccode_auth) {
-            this.seccode_auth = seccode_auth;
-        }
-
-        public void setSeccode(String seccode) {
-            this.seccode = seccode;
-        }
-
-        public String getSeccode_auth() {
-            return seccode_auth;
-        }
-
-        public String getSeccode() {
-            return seccode;
-        }
-
-        @Override
-        public String toString() {
-            return "DataEntity{" +
-                    "seccode_auth='" + seccode_auth + '\'' +
-                    ", seccode='" + seccode + '\'' +
-                    '}';
-        }
+    public String getSeccode() {
+        return seccode;
     }
 
     @Override
     public String toString() {
         return "GetSeccodeBean{" +
-                "code=" + code +
-                ", data=" + data +
-                ", msg='" + msg + '\'' +
-                ", action='" + action + '\'' +
+                "seccode_auth='" + seccode_auth + '\'' +
+                ", seccode='" + seccode + '\'' +
                 '}';
     }
 }
