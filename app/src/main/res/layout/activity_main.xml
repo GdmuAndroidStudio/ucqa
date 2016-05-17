@@ -7,15 +7,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="30dp"
-        android:paddingTop="100dp"
         >
 
         <LinearLayout
             android:id="@+id/lefe_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="80dp"
+            android:layout_height="match_parent"
             android:orientation="vertical">"
 
             <com.dawnlightning.ucqa.widget.RoundImageView
@@ -29,23 +26,21 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="BlueMor"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="5dp"
                 android:textColor="#ffffff"
                 android:textSize="18.0sp" />
+            <ListView
+                android:id="@+id/lv_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginTop="20dp"
+                android:cacheColorHint="#00000000"
+                android:divider="@null"
+                android:textColor="#ffffff" />
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/lv_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/lefe_content"
-            android:layout_marginBottom="30dp"
-            android:layout_marginTop="20dp"
-            android:cacheColorHint="#00000000"
-            android:divider="@null"
-            android:textColor="#ffffff" />
+
 
 
     </RelativeLayout>
@@ -60,7 +55,7 @@
             android:id="@+id/rl_title"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="#549D37" >
+            android:background="@color/green" >
 
             <ImageView
                 android:id="@+id/iv_menu"
