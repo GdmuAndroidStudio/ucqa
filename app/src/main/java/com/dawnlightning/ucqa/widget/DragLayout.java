@@ -178,7 +178,7 @@ public class DragLayout extends FrameLayout {
 		super.onSizeChanged(w, h, oldw, oldh);
 		width = vg_left.getMeasuredWidth();
 		height = vg_left.getMeasuredHeight();
-		range = (int) (width * 0.6f);
+		range = (int) (width * 0.65f);
 	}
 
 	@Override
