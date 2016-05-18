@@ -125,7 +125,7 @@ public class AccountApiManager {
          * @param options 资料
          * @return
          */
-        @POST("/capi/cp.php?ac=profile&m_auth={m_auth}&op=base")
-        Observable<ApiBase> doEditProfile(@Path("m_auth") String m_auth, @FieldMap Map<String, String> options);
+        @POST("/capi/cp.php?ac=profile&op=base")
+        Observable<ApiBase> doEditProfile(@Query("m_auth") String m_auth, @FieldMap Map<String, String> options);
     }
 }
