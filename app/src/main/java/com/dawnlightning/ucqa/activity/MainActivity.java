@@ -77,8 +77,12 @@ public class MainActivity extends BaseActivity implements IMainView{
         initView();
         initDragLayout();
         initLeftContent();
+        TestModel model=new TestModel();
+        model.edit();
     }
+    public void test(){
 
+    }
     @Override
     public void showupdate() {
         ((Menu)menuadapter.getItem(4)).setStatus(1);

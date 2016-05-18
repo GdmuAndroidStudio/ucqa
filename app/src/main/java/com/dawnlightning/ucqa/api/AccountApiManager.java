@@ -10,6 +10,7 @@ import java.util.Map;
 import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
@@ -65,7 +66,7 @@ public class AccountApiManager {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-    public  Observable<ApiBase> EditProfile(String m_auth,Map<String,String> map){
+    public  Observable<ApiBase> EditProfile(String m_auth,Map<String,Object> map){
         return accountApiManager.doEditProfile(m_auth,map)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -76,7 +77,10 @@ public class AccountApiManager {
          * @param username 用户名
          * @param password 密码
          * @return 登陆结果
+         *
+         * baseurl+"////"
          */
+
         @GET("/capi/do.php?ac=login&loginsubmit=true")
         Observable<ApiBase> doLogin(@Query("username") String username, @Query("password") String password);
 
@@ -125,7 +129,8 @@ public class AccountApiManager {
          * @param options 资料
          * @return
          */
+        @FormUrlEncoded
         @POST("/capi/cp.php?ac=profile&op=base")
-        Observable<ApiBase> doEditProfile(@Query("m_auth") String m_auth, @FieldMap Map<String, String> options);
+        Observable<ApiBase> doEditProfile(@Query("m_auth") String m_auth, @FieldMap Map<String, Object> options);
     }
 }
