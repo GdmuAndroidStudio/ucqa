@@ -3,6 +3,7 @@ package com.dawnlightning.ucqa.activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -14,6 +15,7 @@ import com.dawnlightning.ucqa.adapter.LeftMenuAdapter;
 import com.dawnlightning.ucqa.adapter.MyFragmentPagerAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.base.BaseFragment;
+import com.dawnlightning.ucqa.fragment.MessageFragment;
 import com.dawnlightning.ucqa.model.TestModel;
 import com.dawnlightning.ucqa.utils.BaseTools;
 import com.dawnlightning.ucqa.viewinterface.IMainView;
@@ -67,6 +69,7 @@ public class MainActivity extends BaseActivity implements IMainView{
     private LeftMenuAdapter menuadapter;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
     private BaseFragment baseFragment;
+    private MessageFragment messageFragment;
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
 
     @Override
@@ -104,11 +107,33 @@ public class MainActivity extends BaseActivity implements IMainView{
         });
 
         baseFragment = new BaseFragment();
+        messageFragment = new MessageFragment();
         fragmentArrayList.add(baseFragment);
+        fragmentArrayList.add(messageFragment);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),fragmentArrayList);
         mvpMainactivity.setAdapter(myFragmentPagerAdapter);
+        lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+                selectview(position);
+
+            }
+        });
     }
 
+    public void selectview(int id) {
+        switch (id) {
+            case 0:
+                showtitleclassift("全部");
+                mvpMainactivity.setCurrentItem(0);
+                break;
+            case 1:
+                showtitleclassift("消息列表");
+                mvpMainactivity.setCurrentItem(1);
+                break;
+        }
+        }
     /**
      * 初始化侧拉栏
      */
