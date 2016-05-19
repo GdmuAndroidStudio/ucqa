@@ -3,7 +3,11 @@
     android:layout_width="120dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+<<<<<<< HEAD
     android:background="@drawable/detaile_left_list"
+=======
+    android:background="@mipmap/detaile_left_list"
+>>>>>>> 967bc6893be202e8f1c72c17b87590b0be2f1219
     android:paddingLeft="5dp"
     android:paddingTop="10dp"
     >

@@ -18,6 +18,7 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -30,7 +31,12 @@ import okhttp3.RequestBody;
  */
 public class TestModel {
     AccountApiManager apiManager=new AccountApiManager(0,0);
+
+    /**
+     * 登陆
+     */
     public void login(){
+
         apiManager.Login("13650421544","123456").subscribe(new SuccessAction<LoginBean>() {
             @Override
             public void Success(LoginBean target) {
@@ -46,7 +52,11 @@ public class TestModel {
                 Log.e("Error",msg);
             }
         });
+
     }
+    /**
+     * 注册
+     */
     public void Register(){
         apiManager.GetSeccode().subscribe(new SuccessAction<GetSeccodeBean>() {
             @Override
@@ -79,10 +89,42 @@ public class TestModel {
             }
         });
     }
+    /**
+     * 修改用户资料
+     */
+    public void edit(){
+        Map<String,Object> map=new HashMap<String,Object>();
+        map.put("profilesubmit","true");
+        map.put("formhash","d295e322");
+        map.put("name","doctor");
+        map.put("sex",1);
+        map.put("birthyear",1990);
+        map.put("birthmonth",8);
+        map.put("birthday",1);
+        apiManager.EditProfile("70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg",map)
+                .subscribe(new SuccessAction<String>() {
+                    @Override
+                    public void Success(String target) {
+                        Log.e("成功","修改资料成功");
+                    }
+
+                    @Override
+                    public void Failure(int code, String msg) {
+                        Log.e("失败","修改资料失败");
+                    }
+                }, new FailureAction() {
+                    @Override
+                    public void Error(String msg) {
+                        Log.e("提交失败","修改资料失败");
+                    }
+                });
+    }
+    /**
+     * 上传用户头像
+     */
     public void Upload(){
         File file= new File("/storage/sdcard0/lightup/photos/345.jpg");
         RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),file);
-
         ProgressRequestBody progressRequestBody=new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressListener() {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {

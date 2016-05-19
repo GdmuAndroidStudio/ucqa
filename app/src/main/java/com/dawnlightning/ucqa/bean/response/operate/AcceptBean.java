@@ -7,93 +7,48 @@ package com.dawnlightning.ucqa.bean.response.operate;
  */
 public class AcceptBean {
 
+
     /**
-     * code : 0
-     * data : {"status":1,"uid":"1","username":"root","bwztid":"4"}
-     * msg : 进行的操作完成了
-     * action : do_success
+     * status : 1
+     * uid : 1
+     * username : root
+     * bwztid : 4
      */
 
-    private int code;
-    private DataEntity data;
-    private String msg;
-    private String action;
+    private int status;
+    private String uid;
+    private String username;
+    private String bwztid;
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public void setData(DataEntity data) {
-        this.data = data;
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setAction(String action) {
-        this.action = action;
+    public void setBwztid(String bwztid) {
+        this.bwztid = bwztid;
     }
 
-    public int getCode() {
-        return code;
+    public int getStatus() {
+        return status;
     }
 
-    public DataEntity getData() {
-        return data;
+    public String getUid() {
+        return uid;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getUsername() {
+        return username;
     }
 
-    public String getAction() {
-        return action;
-    }
-
-    public static class DataEntity {
-        /**
-         * status : 1
-         * uid : 1
-         * username : root
-         * bwztid : 4
-         */
-
-        private int status;
-        private String uid;
-        private String username;
-        private String bwztid;
-
-        public void setStatus(int status) {
-            this.status = status;
-        }
-
-        public void setUid(String uid) {
-            this.uid = uid;
-        }
-
-        public void setUsername(String username) {
-            this.username = username;
-        }
-
-        public void setBwztid(String bwztid) {
-            this.bwztid = bwztid;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-
-        public String getUid() {
-            return uid;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getBwztid() {
-            return bwztid;
-        }
+    public String getBwztid() {
+        return bwztid;
     }
 }
