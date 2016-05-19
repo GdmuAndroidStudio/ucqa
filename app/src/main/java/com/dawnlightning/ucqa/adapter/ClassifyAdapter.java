@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-
-import com.dawnlightning.ucqa.bean.view.ConsultClassifyBean;
 import com.dawnlightning.ucqa.R;
-import com.dawnlightning.ucqa.bean.view.ConsultClassifyBean;
+import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 
 import java.io.Serializable;
 import java.util.List;

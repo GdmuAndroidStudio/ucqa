@@ -1,4 +1,4 @@
-package com.dawnlightning.ucqa.bean.view;
+package com.dawnlightning.ucqa.bean.others;
 
 import java.io.Serializable;
 
