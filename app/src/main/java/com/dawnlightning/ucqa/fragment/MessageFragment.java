@@ -13,7 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView; 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -45,6 +45,9 @@ public class MessageFragment extends Fragment {
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshLayout;
     private MyHandler handler;
+    private MessageAdapter messageAdapter;
+    private int lastVisibleItem;
+    private LinearLayoutManager mLayoutManager;
 
     @Nullable
     @Override
@@ -58,7 +61,8 @@ public class MessageFragment extends Fragment {
 
     private void initview() {
         handler=new MyHandler();
-        recyclerView.setAdapter(new MessageAdapter(getContext()));
+        messageAdapter=new MessageAdapter(getContext());
+        recyclerView.setAdapter(messageAdapter);
         swipeRefreshLayout.setColorSchemeResources(R.color.jianshured);
         Message message=Message.obtain();
         message.arg1=1;
@@ -81,15 +85,33 @@ public class MessageFragment extends Fragment {
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView,
+                                             int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE
+                        && lastVisibleItem + 1 == messageAdapter.getItemCount()) {
+                    swipeRefreshLayout.setRefreshing(true);
+                    // 此处在现实项目中，请换成网络请求数据代码，sendRequest .....
+                    handler.sendEmptyMessageDelayed(0, 3000);
+                }
             }
 
+            @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                if (lastVisibleItemPosition + 1 == messageAdapter.getItemCount()) {
+
+                }
             }
+
         });
+        recyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
     }
 
     class MyHandler extends Handler {

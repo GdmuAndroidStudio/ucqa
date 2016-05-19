@@ -176,7 +176,6 @@ public class MainActivity extends BaseActivity implements IMainView{
         LinearLayout.LayoutParams NameParams = (LinearLayout.LayoutParams) tvUsername.getLayoutParams();
         NameParams.setMargins((int) (mScreenWidth * 0.25), 5, 0, 0);
         tvUsername.setLayoutParams(NameParams);
-
         menuList.add(new Menu("主        页", 0));
         menuList.add(new Menu("我的消息", 0));
         menuList.add(new Menu("我的咨询",0));

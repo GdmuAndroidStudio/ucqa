@@ -6,14 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-<<<<<<< HEAD
 
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.R;
-=======
-import com.dawnlightning.ucqa.R;
-import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
->>>>>>> 967bc6893be202e8f1c72c17b87590b0be2f1219
 
 import java.io.Serializable;
 import java.util.List;

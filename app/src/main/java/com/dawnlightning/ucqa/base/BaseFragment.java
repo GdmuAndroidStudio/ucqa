@@ -13,10 +13,7 @@ import android.widget.GridView;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.MainActivity;
 import com.dawnlightning.ucqa.adapter.ClassifyAdapter;
-<<<<<<< HEAD
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
-=======
->>>>>>> 967bc6893be202e8f1c72c17b87590b0be2f1219
 import com.dawnlightning.ucqa.viewinterface.IBase;
 import com.dawnlightning.ucqa.widget.OtherGridView;
 import com.dawnlightning.ucqa.bean.others.*;
