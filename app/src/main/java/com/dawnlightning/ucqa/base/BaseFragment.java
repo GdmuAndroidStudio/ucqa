@@ -13,7 +13,7 @@ import android.widget.GridView;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.MainActivity;
 import com.dawnlightning.ucqa.adapter.ClassifyAdapter;
-import com.dawnlightning.ucqa.bean.view.ConsultClassifyBean;
+import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.viewinterface.IBase;
 import com.dawnlightning.ucqa.widget.OtherGridView;
 
@@ -27,7 +27,6 @@ import butterknife.ButterKnife;
  * Created by Kyo on 2016/5/17.
  */
 public class BaseFragment extends Fragment implements IBase {
-
 
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshWidget;
