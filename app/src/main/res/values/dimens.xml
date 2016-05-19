@@ -3,4 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="gridview_height">130dp</dimen>
+    <dimen name="touch_raise">20dp</dimen>
+    <dimen name="message_item_imagesize">36dp</dimen>
 </resources>

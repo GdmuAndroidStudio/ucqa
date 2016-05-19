@@ -126,10 +126,12 @@ public class MainActivity extends BaseActivity implements IMainView{
         switch (id) {
             case 0:
                 showtitleclassift("全部");
+                dlMain.close();
                 mvpMainactivity.setCurrentItem(0);
                 break;
             case 1:
                 showtitleclassift("消息列表");
+                dlMain.close();
                 mvpMainactivity.setCurrentItem(1);
                 break;
         }
