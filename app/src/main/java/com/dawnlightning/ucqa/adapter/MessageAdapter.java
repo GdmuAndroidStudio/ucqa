@@ -51,6 +51,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
          else if (viewType ==TYPE_FOOTER) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_foot,null);
+            view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
             footViewHolder=new FootViewHolder(view);
             return footViewHolder;
         }
