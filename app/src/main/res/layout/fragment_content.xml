@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="@dimen/margin5"
                 android:textColor="@color/nomalGray"
                 android:textSize="12sp"
                 android:text="暂无咨询"
@@ -60,10 +60,10 @@
             <Button
                 android:id="@+id/bt_error"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="@dimen/height30"
                 android:background="#549D37"
                 android:textColor="@color/white"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/margin30"
                 android:text="发布咨询"
                 />
         </LinearLayout>

@@ -15,6 +15,7 @@ import com.dawnlightning.ucqa.adapter.LeftMenuAdapter;
 import com.dawnlightning.ucqa.adapter.MyFragmentPagerAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.base.BaseFragment;
+import com.dawnlightning.ucqa.fragment.ConsultFragment;
 import com.dawnlightning.ucqa.fragment.MessageFragment;
 import com.dawnlightning.ucqa.model.TestModel;
 import com.dawnlightning.ucqa.utils.BaseTools;
@@ -71,6 +72,7 @@ public class MainActivity extends BaseActivity implements IMainView{
     private BaseFragment baseFragment;
     private MessageFragment messageFragment;
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
+    private ConsultFragment consultFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,11 +111,12 @@ public class MainActivity extends BaseActivity implements IMainView{
                 dlMain.open();
             }
         });
-
         baseFragment = new BaseFragment();
         messageFragment = new MessageFragment();
+        consultFragment = new ConsultFragment();
         fragmentArrayList.add(baseFragment);
         fragmentArrayList.add(messageFragment);
+        fragmentArrayList.add(consultFragment);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),fragmentArrayList);
         mvpMainactivity.setAdapter(myFragmentPagerAdapter);
         lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -137,6 +140,11 @@ public class MainActivity extends BaseActivity implements IMainView{
                 showtitleclassift("消息列表");
                 dlMain.close();
                 mvpMainactivity.setCurrentItem(1);
+                break;
+            case 2:
+                showtitleclassift("我的咨询");
+                dlMain.close();
+                mvpMainactivity.setCurrentItem(2);
                 break;
         }
         }

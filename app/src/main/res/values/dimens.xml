@@ -8,4 +8,18 @@
     <dimen name="margin_10">10dp</dimen>
     <dimen name="textSize_small">14sp</dimen>
     <dimen name="textSize_normal">16sp</dimen>
+    <dimen name="consult_item_margin">10dp</dimen>
+    <dimen name="consult_item_content_padding">10dp</dimen>
+    <dimen name="consult_item_imagesize">48dp</dimen>
+    <dimen name="consult_item_image_marginright">8dp</dimen>
+    <dimen name="margin10">10dp</dimen>
+    <dimen name="margin5">5dp</dimen>
+    <dimen name="margin20">20dp</dimen>
+    <dimen name="height30">30dp</dimen>
+    <dimen name="margin30">20dp</dimen>
+    <dimen name="textsize14">14.0sp</dimen>
+    <dimen name="textsize10">10.0sp</dimen>
+    <dimen name="margin15">15dp</dimen>
+    <dimen name="textsize12">12sp</dimen>
+    <dimen name="textsize5">5sp</dimen>
 </resources>

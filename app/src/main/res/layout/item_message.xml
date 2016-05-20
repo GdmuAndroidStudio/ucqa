@@ -9,20 +9,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="@dimen/margin5"
+        android:layout_marginRight="@dimen/margin5"
         android:orientation="vertical"
         android:foreground="?attr/selectableItemBackground"
         app:cardBackgroundColor="@color/white"
-        app:contentPadding="10dp">
+        app:contentPadding="@dimen/margin10">
     <LinearLayout
         android:id="@+id/ll_detail_userdata"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:layout_marginTop="@dimen/margin10"
+        android:paddingLeft="@dimen/margin10"
+        android:paddingRight="@dimen/margin10"
         >
         <com.dawnlightning.ucqa.widget.RoundImageView
             android:id="@+id/rv_message_icon"
@@ -30,7 +30,7 @@
             android:layout_height="@dimen/message_item_imagesize"
             android:src="@mipmap/mylogo"
             android:scaleType="center"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="@dimen/margin10"
             />
         <TextView
             android:id="@+id/tv_message_status"
@@ -41,14 +41,14 @@
             android:visibility="gone"
             android:textColor="@color/white"
             android:gravity="center_horizontal|center_vertical"
-            android:textSize="5sp"
+            android:textSize="@dimen/textsize5"
             android:layout_toRightOf="@+id/left_menu_img"
             android:layout_toEndOf="@+id/left_menu_img" />
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingLeft="15dp"
+            android:paddingLeft="@dimen/margin15"
             >
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -58,20 +58,20 @@
                     android:id="@+id/tv_messsage_note"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16.0sp"
+                    android:textSize="@dimen/textSize_small"
                     android:textColor="#020202"
                     android:text="如何有效地在海外市场推广产品？"
                     />
                 <TextView
                     android:id="@+id/tv_message_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/margin5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@+id/tv_messsage_note"
                     android:text="2分钟前"
                     android:textColor="@color/nomalGray"
-                    android:textSize="12.0sp"
+                    android:textSize="@dimen/textsize12"
                     />
             </RelativeLayout>
         </LinearLayout>

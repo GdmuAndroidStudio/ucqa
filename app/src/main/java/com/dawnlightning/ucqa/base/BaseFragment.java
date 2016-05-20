@@ -71,6 +71,7 @@ public class BaseFragment extends Fragment implements IBase {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        if (swipeRefreshWidget!=null)
                         swipeRefreshWidget.setRefreshing(false);
                     }
                 }, 5000);
