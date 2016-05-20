@@ -4,7 +4,7 @@
     android:id="@+id/swipe_refresh_widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -12,25 +12,11 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:cacheColorHint="@null"
-                android:scrollbars="vertical" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5px"
-                android:background="@color/subscribe_seperate_line"
-                />
-        </LinearLayout>
-
-    <ProgressBar
-            android:id="@+id/consult_list_progressbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="?android:attr/progressBarStyleSmall"
-            android:visibility="invisible"
-            android:layout_centerInParent="true"
-            />
+                android:scrollbars="vertical" >
+            </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

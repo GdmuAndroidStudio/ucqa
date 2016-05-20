@@ -15,24 +15,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.ConsultAdapter;
-import com.dawnlightning.ucqa.adapter.MessageAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
 /**
  * Created by Administrator on 2016/5/20.
  */
-public class ConsultFragment extends Fragment{
+public class ConsultFragment extends Fragment {
+
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
-    @Bind(R.id.consult_list_progressbar)
-    ProgressBar consultListProgressbar;
     @Bind(R.id.iv_error)
     ImageView ivError;
     @Bind(R.id.tv_error)
@@ -54,33 +52,35 @@ public class ConsultFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_content, container, false);
         ButterKnife.bind(this, view);
-        initview();
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        initview();
+    }
 
     private void initview() {
-        handler=new MyHandler();
-        consultAdapter=new ConsultAdapter(getContext());
-        recyclerView.setAdapter(consultAdapter);
-        swipeRefreshLayout.setColorSchemeResources(R.color.jianshured);
-        Message message=Message.obtain();
-        message.arg1=1;
+        handler = new MyHandler();
+        consultAdapter = new ConsultAdapter(getContext());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        swipeRefreshLayout.setColorSchemeResources(R.color.green);
+        Message message = Message.obtain();
+        message.arg1 = 1;
         handler.sendMessage(message);
-        Message message1=Message.obtain();
-        message1.arg1=0;
-        handler.sendMessageDelayed(message1,2000);
+        Message message1 = Message.obtain();
+        message1.arg1 = 0;
+        handler.sendMessageDelayed(message1, 4000);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Message message2=Message.obtain();
-                message2.arg1=0;
-                handler.sendMessageDelayed(message2,2000);
+                Message message2 = Message.obtain();
+                message2.arg1 = 0;
+                handler.sendMessageDelayed(message2, 2000);
             }
         });
-
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
             @Override
@@ -106,9 +106,9 @@ public class ConsultFragment extends Fragment{
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            Message message3=Message.obtain();
-                            message3.arg1=2;
-                            handler.sendMessageDelayed(message3,2000);
+                            Message message3 = Message.obtain();
+                            message3.arg1 = 2;
+                            handler.sendMessageDelayed(message3, 2000);
                         }
                     }, 1000);
 
@@ -126,14 +126,16 @@ public class ConsultFragment extends Fragment{
         public void handleMessage(Message msg) {
             // TODO Auto-generated method stub
             Log.d("MyHandler", "handleMessage......");
-            switch (msg.arg1){
+            switch (msg.arg1) {
                 case 0:
-                    if (swipeRefreshLayout!=null)
-                    swipeRefreshLayout.setRefreshing(false);
+                    if (swipeRefreshLayout != null) {
+                        recyclerView.setAdapter(consultAdapter);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     break;
                 case 1:
-                    if (swipeRefreshLayout!=null)
-                    swipeRefreshLayout.setRefreshing(true);
+                    if (swipeRefreshLayout != null)
+                        swipeRefreshLayout.setRefreshing(true);
                     break;
                 case 2:
                     consultAdapter.setCount(20);

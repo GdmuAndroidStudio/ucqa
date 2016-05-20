@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
@@ -23,6 +24,7 @@ import com.dawnlightning.ucqa.adapter.MessageAdapter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 
 
 /**
@@ -32,8 +34,6 @@ public class MessageFragment extends Fragment {
 
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
-    @Bind(R.id.consult_list_progressbar)
-    ProgressBar consultListProgressbar;
     @Bind(R.id.iv_error)
     ImageView ivError;
     @Bind(R.id.tv_error)
@@ -55,22 +55,25 @@ public class MessageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_content, container, false);
         ButterKnife.bind(this, view);
-        initview();
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        initview();
+    }
 
     private void initview() {
         handler=new MyHandler();
         messageAdapter=new MessageAdapter(getContext());
-        recyclerView.setAdapter(messageAdapter);
-        swipeRefreshLayout.setColorSchemeResources(R.color.jianshured);
-        Message message=Message.obtain();
-        message.arg1=1;
+        swipeRefreshLayout.setColorSchemeResources(R.color.green);
+        Message message = Message.obtain();
+        message.arg1 = 1;
         handler.sendMessage(message);
         Message message1=Message.obtain();
         message1.arg1=0;
-        handler.sendMessageDelayed(message1,2000);
+        handler.sendMessageDelayed(message1,4000);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -129,12 +132,14 @@ public class MessageFragment extends Fragment {
             Log.d("MyHandler", "handleMessage......");
             switch (msg.arg1){
                 case 0:
-                    if (swipeRefreshLayout!=null)
-                    swipeRefreshLayout.setRefreshing(false);
+                    if (swipeRefreshLayout!=null){
+                        recyclerView.setAdapter(messageAdapter);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                     break;
                 case 1:
                     if (swipeRefreshLayout!=null)
-                    swipeRefreshLayout.setRefreshing(true);
+                         swipeRefreshLayout.setRefreshing(true);
                     break;
                 case 2:
                     messageAdapter.setCount(20);
