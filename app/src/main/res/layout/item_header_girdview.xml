@@ -9,6 +9,8 @@
         android:layout_height="wrap_content"
         android:horizontalSpacing="10dp"
         android:verticalSpacing="10dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="4dp"
         android:numColumns="3"
         android:scrollbars="none"
         android:listSelector="@drawable/main_listview_selector"
