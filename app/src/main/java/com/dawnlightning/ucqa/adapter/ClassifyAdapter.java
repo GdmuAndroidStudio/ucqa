@@ -9,10 +9,7 @@ import android.widget.ImageView;
 
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.R;
-<<<<<<< HEAD
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
-=======
->>>>>>> 796cfc7378f72e8023c00bfbc3625cdcabb55ddb
 
 import java.io.Serializable;
 import java.util.List;

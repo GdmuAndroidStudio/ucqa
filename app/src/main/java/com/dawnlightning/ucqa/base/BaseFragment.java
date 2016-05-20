@@ -10,21 +10,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
 
 import com.dawnlightning.ucqa.R;
-<<<<<<< HEAD
 import com.dawnlightning.ucqa.adapter.RecyclerViewAdapter;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.viewinterface.IBase;
 
-=======
 import com.dawnlightning.ucqa.activity.MainActivity;
 import com.dawnlightning.ucqa.adapter.ClassifyAdapter;
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.viewinterface.IBase;
 import com.dawnlightning.ucqa.widget.OtherGridView;
 import com.dawnlightning.ucqa.bean.others.*;
->>>>>>> 796cfc7378f72e8023c00bfbc3625cdcabb55ddb
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -37,16 +35,13 @@ public class BaseFragment extends Fragment implements IBase {
 
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshWidget;
-<<<<<<< HEAD
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
     boolean isLoading = false;
-=======
     @Bind(R.id.gv_classify)
     GridView gvClassify;
     private static boolean FirstIn = true;
->>>>>>> 796cfc7378f72e8023c00bfbc3625cdcabb55ddb
     private Handler handler = new Handler();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     private ArrayList<ConsultMessageBean> consultMessageBeanList = new ArrayList<>();
@@ -82,13 +77,10 @@ public class BaseFragment extends Fragment implements IBase {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-<<<<<<< HEAD
                         consultMessageBeanList.clear();
                         getData();
-=======
                         if (swipeRefreshWidget!=null)
                         swipeRefreshWidget.setRefreshing(false);
->>>>>>> 796cfc7378f72e8023c00bfbc3625cdcabb55ddb
                     }
                 }, 2000);
             }
@@ -102,10 +94,7 @@ public class BaseFragment extends Fragment implements IBase {
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 Log.d("test", "StateChanged = " + newState);
-
-
-
-            }
+   }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
