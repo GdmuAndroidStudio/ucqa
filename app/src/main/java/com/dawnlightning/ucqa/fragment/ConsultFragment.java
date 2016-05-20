@@ -128,9 +128,11 @@ public class ConsultFragment extends Fragment{
             Log.d("MyHandler", "handleMessage......");
             switch (msg.arg1){
                 case 0:
+                    if (swipeRefreshLayout!=null)
                     swipeRefreshLayout.setRefreshing(false);
                     break;
                 case 1:
+                    if (swipeRefreshLayout!=null)
                     swipeRefreshLayout.setRefreshing(true);
                     break;
                 case 2:
