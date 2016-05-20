@@ -100,10 +100,21 @@ public class MessageFragment extends Fragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                verticalPosition=(recyclerView==null||recyclerView.getChildCount()==0)? 0 :recyclerView.getChildAt(0).getTop();
-                swipeRefreshLayout.setEnabled(verticalPosition>=0);         /*处理滑动冲突*/
-            }
+                verticalPosition = (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(verticalPosition >= 0);
+                lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();       /*处理滑动冲突*/
+                if (lastVisibleItemPosition + 1 == messageAdapter.getItemCount()) {
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Message message3=Message.obtain();
+                            message3.arg1=2;
+                            handler.sendMessageDelayed(message3,2000);
+                        }
+                    }, 1000);
 
+                }
+            }
         });
     }
 
@@ -122,6 +133,11 @@ public class MessageFragment extends Fragment {
                     break;
                 case 1:
                     swipeRefreshLayout.setRefreshing(true);
+                    break;
+                case 2:
+                    messageAdapter.setCount(20);
+                    messageAdapter.notifyItemRemoved(messageAdapter.getItemCount());
+                    messageAdapter.notifyDataSetChanged();
                     break;
             }
         }
