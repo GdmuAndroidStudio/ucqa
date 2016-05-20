@@ -6,8 +6,6 @@ package com.dawnlightning.ucqa.bean.response.account;
  * 登陆返回结果
  */
 public class LoginBean {
-
-
     /**
      * m_auth : 4e64L1WXZV%2B0TDmRgCsOe050x1WCD5EGhnZpxlUx7RcoTEA5w10e9dVL1wSLvnSCuv4nFRqBGKOCmf%2F37AKP
      * uhash : e8fee782f2e7ddce363edd0979dbd4f8
@@ -99,7 +97,6 @@ public class LoginBean {
          * sex : 女
          * age : 15
          */
-
         private String uid;
         private String groupid;
         private String credit;

@@ -3,6 +3,7 @@ package com.dawnlightning.ucqa.activity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -14,6 +15,8 @@ import com.dawnlightning.ucqa.adapter.LeftMenuAdapter;
 import com.dawnlightning.ucqa.adapter.MyFragmentPagerAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.base.BaseFragment;
+import com.dawnlightning.ucqa.fragment.ConsultFragment;
+import com.dawnlightning.ucqa.fragment.MessageFragment;
 import com.dawnlightning.ucqa.model.TestModel;
 import com.dawnlightning.ucqa.utils.BaseTools;
 import com.dawnlightning.ucqa.viewinterface.IMainView;
@@ -67,7 +70,9 @@ public class MainActivity extends BaseActivity implements IMainView{
     private LeftMenuAdapter menuadapter;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
     private BaseFragment baseFragment;
+    private MessageFragment messageFragment;
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
+    private ConsultFragment consultFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +82,12 @@ public class MainActivity extends BaseActivity implements IMainView{
         initView();
         initDragLayout();
         initLeftContent();
+        TestModel model=new TestModel();
+        model.edit();
     }
+    public void test(){
 
+    }
     @Override
     public void showupdate() {
         ((Menu)menuadapter.getItem(4)).setStatus(1);
@@ -102,13 +111,43 @@ public class MainActivity extends BaseActivity implements IMainView{
                 dlMain.open();
             }
         });
-
         baseFragment = new BaseFragment();
+        messageFragment = new MessageFragment();
+        consultFragment = new ConsultFragment();
         fragmentArrayList.add(baseFragment);
+        fragmentArrayList.add(messageFragment);
+        fragmentArrayList.add(consultFragment);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),fragmentArrayList);
         mvpMainactivity.setAdapter(myFragmentPagerAdapter);
+        lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1,
+                                    int position, long arg3) {
+                selectview(position);
+
+            }
+        });
     }
 
+    public void selectview(int id) {
+        switch (id) {
+            case 0:
+                showtitleclassift("全部");
+                dlMain.close();
+                mvpMainactivity.setCurrentItem(0);
+                break;
+            case 1:
+                showtitleclassift("消息列表");
+                dlMain.close();
+                mvpMainactivity.setCurrentItem(1);
+                break;
+            case 2:
+                showtitleclassift("我的咨询");
+                dlMain.close();
+                mvpMainactivity.setCurrentItem(2);
+                break;
+        }
+        }
     /**
      * 初始化侧拉栏
      */
@@ -145,7 +184,6 @@ public class MainActivity extends BaseActivity implements IMainView{
         LinearLayout.LayoutParams NameParams = (LinearLayout.LayoutParams) tvUsername.getLayoutParams();
         NameParams.setMargins((int) (mScreenWidth * 0.25), 5, 0, 0);
         tvUsername.setLayoutParams(NameParams);
-
         menuList.add(new Menu("主        页", 0));
         menuList.add(new Menu("我的消息", 0));
         menuList.add(new Menu("我的咨询",0));
