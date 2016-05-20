@@ -4,21 +4,19 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
 import com.dawnlightning.ucqa.R;
-import com.dawnlightning.ucqa.activity.MainActivity;
-import com.dawnlightning.ucqa.adapter.ClassifyAdapter;
-import com.dawnlightning.ucqa.bean.view.ConsultClassifyBean;
+import com.dawnlightning.ucqa.adapter.RecyclerViewAdapter;
+import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.viewinterface.IBase;
-import com.dawnlightning.ucqa.widget.OtherGridView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,30 +29,32 @@ public class BaseFragment extends Fragment implements IBase {
 
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshWidget;
-    @Bind(R.id.gv_classify)
-    GridView gvClassify;
+    @Bind(R.id.recycler_view)
+    RecyclerView recyclerView;
 
-    private static boolean FirstIn = true;
+    boolean isLoading = false;
     private Handler handler = new Handler();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
-    private List<ConsultClassifyBean> list = new ArrayList<>(6);
-    private ClassifyAdapter classifyAdapter;
-    private MainActivity mainActivity;
+    private ArrayList<ConsultMessageBean> consultMessageBeanList = new ArrayList<>();
+    private RecyclerViewAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_base, container, false);
+        final View view = inflater.inflate(setContentLayout(), container, false);
         ButterKnife.bind(this, view);
-        initdata();
-        initevent();
-        initview();
+        initView();
+        initData();
+        initEvent();
         return view;
     }
 
     @Override
-    public void initview() {
+    public int setContentLayout() {
+        return R.layout.fragment_base;
+    }
 
-        gvClassify.setAdapter(classifyAdapter);
+    @Override
+    public void initView() {
         swipeRefreshWidget.setColorSchemeResources(R.color.green);
         swipeRefreshWidget.post(new Runnable() {
             @Override
@@ -62,41 +62,103 @@ public class BaseFragment extends Fragment implements IBase {
                 swipeRefreshWidget.setRefreshing(true);
             }
         });
-        onRefreshListener.onRefresh();
-    }
-
-    @Override
-    public void initevent() {
-        swipeRefreshWidget.setOnRefreshListener( onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        swipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        swipeRefreshWidget.setRefreshing(false);
+                        consultMessageBeanList.clear();
+                        getData();
                     }
-                }, 5000);
+                }, 2000);
             }
         });
-        gvClassify.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        adapter = new RecyclerViewAdapter(getActivity(), consultMessageBeanList);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ConsultClassifyBean bean = (ConsultClassifyBean) classifyAdapter.getItem(position);
-                mainActivity.showtitleclassift(bean.getBwztclassarrname());
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                Log.d("test", "StateChanged = " + newState);
+
+
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.d("test", "onScrolled");
+                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+                if (lastVisibleItemPosition + 1 == adapter.getItemCount()) {
+                    Log.d("test", "loading executed");
+
+                    boolean isRefreshing = swipeRefreshWidget.isRefreshing();
+                    if (isRefreshing) {
+                        adapter.notifyItemRemoved(adapter.getItemCount());
+                        return;
+                    }
+                    System.out.println("loading = " + isLoading);
+                    if (!isLoading) {
+                        isLoading = true;
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                getData();
+                                Log.d("test", "load more completed");
+                                isLoading = false;
+                            }
+                        }, 1000);
+                    }
+                }
             }
         });
+
     }
 
     @Override
-    public void initdata() {
-        for (int i = 0; i < 6; i++) {
-            ConsultClassifyBean consultClassifyBean = new ConsultClassifyBean();
-            consultClassifyBean.setBwztclassarrid(""+(i+1));
-            consultClassifyBean.setBwztclassarrname(""+(i+1));
-            list.add(consultClassifyBean);
+    public void initEvent() {
+        //添加点击事件
+        adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Log.d("test", "item position = " + position);
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void initData() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getData();
+            }
+        }, 1500);
+    }
+
+    private void getData() {
+        for (int i = 0; i < 8; i++) {
+            ConsultMessageBean bean = new ConsultMessageBean();
+            bean.setSubject("title" + i);
+            bean.setMessage("content" + i);
+            bean.setViewnum("" + i);
+            bean.setReplynum("" + i);
+            bean.setDateline("" + i);
+            consultMessageBeanList.add(bean);
         }
-        classifyAdapter = new ClassifyAdapter(getContext(), list);
-        mainActivity = (MainActivity)getActivity();
+        adapter.notifyDataSetChanged();
+        swipeRefreshWidget.setRefreshing(false);
+        adapter.notifyItemRemoved(adapter.getItemCount());
     }
 
     @Override
