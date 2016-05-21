@@ -176,6 +176,16 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true" />
+
+        <activity
+            android:name=".activity.ConsultActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true" />
+
+        <activity
+            android:name=".activity.DisplayActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true" />
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
     </application>

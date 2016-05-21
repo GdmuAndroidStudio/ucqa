@@ -37,10 +37,7 @@ public class BaseFragment extends Fragment implements IBase {
     SwipeRefreshLayout swipeRefreshWidget;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
-
     boolean isLoading = false;
-    @Bind(R.id.gv_classify)
-    GridView gvClassify;
     private static boolean FirstIn = true;
     private Handler handler = new Handler();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener;

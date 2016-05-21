@@ -1,5 +1,6 @@
 package com.dawnlightning.ucqa.activity;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.View;
@@ -145,6 +146,13 @@ public class MainActivity extends BaseActivity implements IMainView{
                 showtitleclassift("我的咨询");
                 dlMain.close();
                 mvpMainactivity.setCurrentItem(2);
+                break;
+            case 3:
+                showtitleclassift("咨询");
+                dlMain.close();
+                Intent consult = new Intent();
+                consult.setClass(this,ConsultActivity.class);
+                startActivity(consult);
                 break;
         }
         }
