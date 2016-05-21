@@ -1,6 +1,7 @@
 package com.dawnlightning.ucqa.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.MainActivity;
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
+import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +30,8 @@ public class RecyclerViewAdapter extends Adapter<ViewHolder> {
     private List data;
 
 
-    public RecyclerViewAdapter(Context context, List data) {
+    public RecyclerViewAdapter(Context context,List data) {
         this.context = context;
-        System.out.println("adapter context = " + context);
         this.data = data;
     }
 
@@ -55,7 +56,9 @@ public class RecyclerViewAdapter extends Adapter<ViewHolder> {
     public int getItemViewType(int position) {
         if (position + 1 == getItemCount()) {
             return TYPE_FOOTER;
-        } else{
+        } else if(position == 0){
+            return TYPE_HEADER;
+        }else{
             return TYPE_ITEM;
         }
     }
@@ -63,13 +66,17 @@ public class RecyclerViewAdapter extends Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_recyclerview, parent,
+            View view = LayoutInflater.from(context).inflate(R.layout.item_consult, parent,
                     false);
             return new ItemViewHolder(view);
         } else if (viewType == TYPE_FOOTER) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_rv_footer, parent,
+            View view = LayoutInflater.from(context).inflate(R.layout.item_foot, parent,
                     false);
             return new FootViewHolder(view);
+        } else if (viewType == TYPE_HEADER) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_header_girdview, parent,
+                    false);
+            return new HeadViewHolder(context, view);
         }
         return null;
     }
@@ -107,27 +114,29 @@ public class RecyclerViewAdapter extends Adapter<ViewHolder> {
         private TextView tvTitle;
         private TextView tvContent;
         private TextView tvView;
-        private TextView tvComment;
+        private TextView tvReplay;
         private TextView tvTime;
 
         public ItemViewHolder(View view) {
             super(view);
-            ivPic = (ImageView) view.findViewById(R.id.rv_pic);
-            tvTitle = (TextView) view.findViewById(R.id.rv_title);
-            tvContent = (TextView) view.findViewById(R.id.rv_content);
-            tvView = (TextView) view.findViewById(R.id.rv_view_counts);
-            tvComment = (TextView) view.findViewById(R.id.rv_comment_counts);
-            tvTime = (TextView) view.findViewById(R.id.rv_time);
+            ivPic = (ImageView) view.findViewById(R.id.iv_consultpic);
+            tvTitle = (TextView) view.findViewById(R.id.subject);
+            tvContent = (TextView) view.findViewById(R.id.message);
+            tvView = (TextView) view.findViewById(R.id.numview);
+            tvReplay = (TextView) view.findViewById(R.id.numreply);
+            tvTime = (TextView) view.findViewById(R.id.time);
         }
     }
 
-    static class FootViewHolder extends ViewHolder {
-
-        private ProgressBar mProgressBar;
+    static     class FootViewHolder extends RecyclerView.ViewHolder {
+        ProgressBar progressBar;
+        TextView textView;
 
         public FootViewHolder(View view) {
             super(view);
-            mProgressBar = (ProgressBar) view.findViewById(R.id.rv_footer_progress);
+            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+            textView = (TextView) view.findViewById(R.id.tv_recyclerview_foot);
+
         }
     }
 

@@ -1,52 +1,50 @@
 package com.dawnlightning.ucqa.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.GridView;
 
 import com.dawnlightning.ucqa.R;
-<<<<<<< HEAD
+import com.dawnlightning.ucqa.activity.MainActivity;
+import com.dawnlightning.ucqa.adapter.ClassifyAdapter;
 import com.dawnlightning.ucqa.adapter.RecyclerViewAdapter;
+import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.viewinterface.IBase;
 
-=======
-import com.dawnlightning.ucqa.activity.MainActivity;
-import com.dawnlightning.ucqa.adapter.ClassifyAdapter;
-import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
-import com.dawnlightning.ucqa.viewinterface.IBase;
-import com.dawnlightning.ucqa.widget.OtherGridView;
-import com.dawnlightning.ucqa.bean.others.*;
->>>>>>> 796cfc7378f72e8023c00bfbc3625cdcabb55ddb
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Converter;
 
 /**
  * Created by Kyo on 2016/5/17.
  */
 public class BaseFragment extends Fragment implements IBase {
 
+
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshWidget;
-<<<<<<< HEAD
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
     boolean isLoading = false;
-=======
-    @Bind(R.id.gv_classify)
-    GridView gvClassify;
-    private static boolean FirstIn = true;
->>>>>>> 796cfc7378f72e8023c00bfbc3625cdcabb55ddb
     private Handler handler = new Handler();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     private ArrayList<ConsultMessageBean> consultMessageBeanList = new ArrayList<>();
@@ -82,27 +80,22 @@ public class BaseFragment extends Fragment implements IBase {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-<<<<<<< HEAD
                         consultMessageBeanList.clear();
                         getData();
-=======
-                        if (swipeRefreshWidget!=null)
-                        swipeRefreshWidget.setRefreshing(false);
->>>>>>> 796cfc7378f72e8023c00bfbc3625cdcabb55ddb
                     }
                 }, 2000);
             }
         });
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         adapter = new RecyclerViewAdapter(getActivity(), consultMessageBeanList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 Log.d("test", "StateChanged = " + newState);
-
 
 
             }
@@ -111,6 +104,15 @@ public class BaseFragment extends Fragment implements IBase {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 Log.d("test", "onScrolled");
+//                int topRowVerticalPosition =
+//                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+//                swipeRefreshWidget.setEnabled(topRowVerticalPosition >= 0);
+                if(layoutManager.findFirstCompletelyVisibleItemPosition() == 0){
+                    swipeRefreshWidget.setEnabled(true);
+                }else{
+                    swipeRefreshWidget.setEnabled(false);
+                }
+                System.out.println("topRowVerticalPosition = " +  recyclerView.getChildAt(0).getTop());
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 if (lastVisibleItemPosition + 1 == adapter.getItemCount()) {
                     Log.d("test", "loading executed");
