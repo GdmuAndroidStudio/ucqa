@@ -25,6 +25,12 @@ import com.dawnlightning.ucqa.adapter.ConsultAdapter;
 import com.dawnlightning.ucqa.adapter.MessageAdapter;
 import com.dawnlightning.ucqa.base.Actions;
 import com.dawnlightning.ucqa.base.BaseFragment;
+import com.dawnlightning.ucqa.bean.others.ConsultBean;
+import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
+import com.dawnlightning.ucqa.viewinterface.IMessageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,39 +40,41 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 /**
  * Created by Administrator on 2016/4/18.
  */
-public class MessageFragment extends BaseFragment {
+public class MessageFragment extends BaseFragment implements IMessageView{
 
-    private int count=12;
-
+    private List<ConsultMessageBean> consultMessageBeanList;
     @Override
     public void initAdapter() {
+        consultMessageBeanList = new ArrayList<ConsultMessageBean>();
+        for(int i=0;i<10;i++)
+            consultMessageBeanList.add(new ConsultMessageBean());
         adapter = new MessageAdapter(getContext());
-        adapter.setCount(count);
-        adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener(){
-            @Override
-            public void onItemLongClick(View view, int position) {
-                Log.i("test", "item position = " + position);
-            }
-
-            @Override
-            public void onItemClick(View view, int position) {
-                Log.i("test", "item position = " + position);
-            }
-        });
+        adapter.setList(consultMessageBeanList);
     }
 
     @Override
     public void Refresh(Actions action) {
-        count=12;
-        adapter.setCount(count);
+        consultMessageBeanList.clear();
+        for(int i=0;i<10;i++)
+            consultMessageBeanList.add(new ConsultMessageBean());
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void LoadMore(Actions action) {
-        count+=2;
-        adapter.setCount(count);
+        for(int i=0;i<2;i++)
+            consultMessageBeanList.add(new ConsultMessageBean());
         adapter.notifyDataSetChanged();
-        adapter.notifyItemRemoved(adapter.getItemCount());;
+        adapter.notifyItemRemoved(adapter.getItemCount());
+    }
+
+    @Override
+    public void showerror(int code, String msg) {
+
+    }
+
+    @Override
+    public void showConsultMessageList(List<ConsultMessageBean> list, Actions action) {
+
     }
 }
