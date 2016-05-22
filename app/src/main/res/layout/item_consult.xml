@@ -26,6 +26,8 @@
         android:layout_marginRight="@dimen/consult_item_image_marginright"
         android:baselineAlignBottom="true"
         android:visibility="visible"
+        android:src="@mipmap/default_round_head"
+        android:scaleType="fitXY"
         />"
     <LinearLayout
         android:layout_width="0dp"
@@ -57,6 +59,7 @@
       		     android:textSize="@dimen/textsize14"
                  android:textColor="@color/black"
                  android:maxLines="1"
+                 android:ellipsize="end"
                  android:text="如何有效地在海外市场推广产品？"/>
 		     <TextView
                 android:id="@+id/message"
@@ -67,6 +70,7 @@
                 android:text="3D打印机一直以来只能进行单向操作，任务一旦开始便无法反悔。不过最近一批研究生研发了一种新型打印机，让你在打印的同时，可以修改重塑之前的设计。让我们一起来看看这个神奇的设备究竟是怎样的吧。"
                 android:textColor="@color/nomalGray"
                 android:textSize="12sp"
+                 android:ellipsize="end"
                 android:layout_below="@+id/subject"
                  />
 
@@ -115,6 +119,7 @@
                     android:textColor="@color/nomalGray"
                     android:layout_toRightOf="@+id/viewpeople"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="4dp"
                     />
             </RelativeLayout>
             <RelativeLayout
@@ -142,6 +147,7 @@
                     android:textColor="@color/nomalGray"
                     android:layout_toRightOf="@+id/commentpeople"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="4dp"
                     >
 
                 </TextView>

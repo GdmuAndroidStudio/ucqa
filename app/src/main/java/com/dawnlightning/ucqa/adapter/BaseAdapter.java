@@ -14,11 +14,23 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public  static final  int TYPE_FOOTER = 1;
     private int count=10;
     public List<T> data;
-    private View.OnClickListener onClickListener;
 
     public void setCount(int count){
         this.count=count;
     }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int position);
+    }
+
+    private OnItemClickListener onItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     @Override
     public int getItemCount() {
 
@@ -42,14 +54,25 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder,final int position){
-        if (onClickListener != null) {
-            holder.itemView.setOnClickListener(this.onClickListener);
-            }
-    }
+        if (onItemClickListener != null) {
 
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = holder.getLayoutPosition();
+                    onItemClickListener.onItemClick(holder.itemView, position);
+                }
+            });
 
-    public  void setListener(View.OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int position = holder.getLayoutPosition();
+                    onItemClickListener.onItemLongClick(holder.itemView, position);
+                    return false;
+                }
+            });
+        }
     }
 
     public void setList(List<T> list){

@@ -10,19 +10,30 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.widget.GridView;
 
 import com.dawnlightning.ucqa.R;
+=======
+import android.widget.Toast;
+
+import com.dawnlightning.ucqa.R;
+import com.dawnlightning.ucqa.adapter.BaseAdapter;
+>>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
 import com.dawnlightning.ucqa.adapter.RecyclerViewAdapter;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.viewinterface.IBase;
+import com.dawnlightning.ucqa.viewinterface.IRefreshAndLoadmore;
 
+<<<<<<< HEAD
 import com.dawnlightning.ucqa.activity.MainActivity;
 import com.dawnlightning.ucqa.adapter.ClassifyAdapter;
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.viewinterface.IBase;
 import com.dawnlightning.ucqa.widget.OtherGridView;
 import com.dawnlightning.ucqa.bean.others.*;
+=======
+>>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -31,32 +42,44 @@ import butterknife.ButterKnife;
 /**
  * Created by Kyo on 2016/5/17.
  */
-public class BaseFragment extends Fragment implements IBase {
+public abstract class BaseFragment extends Fragment implements IBase,IRefreshAndLoadmore {
 
+<<<<<<< HEAD
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshWidget;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
     boolean isLoading = false;
     private static boolean FirstIn = true;
+=======
+
+    boolean isLoading = false;
+    @Bind(R.id.recyclerView)
+    RecyclerView recyclerView;
+    @Bind(R.id.swipe_refresh_widget)
+    SwipeRefreshLayout swipeRefreshWidget;
+>>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
     private Handler handler = new Handler();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     private ArrayList<ConsultMessageBean> consultMessageBeanList = new ArrayList<>();
-    private RecyclerViewAdapter adapter;
+    public BaseAdapter adapter;
+
+    public abstract void initAdapter();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(setContentLayout(), container, false);
         ButterKnife.bind(this, view);
-        initView();
+        initAdapter();
         initData();
+        initView();
         initEvent();
         return view;
     }
 
     @Override
     public int setContentLayout() {
-        return R.layout.fragment_base;
+        return R.layout.fragment_content;
     }
 
     @Override
@@ -75,28 +98,47 @@ public class BaseFragment extends Fragment implements IBase {
                     @Override
                     public void run() {
                         consultMessageBeanList.clear();
+<<<<<<< HEAD
                         getData();
                         if (swipeRefreshWidget!=null)
+=======
+                        Refresh(Actions.Refresh);
+>>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
                         swipeRefreshWidget.setRefreshing(false);
                     }
                 }, 2000);
             }
         });
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        adapter = new RecyclerViewAdapter(getActivity(), consultMessageBeanList);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 Log.d("test", "StateChanged = " + newState);
+<<<<<<< HEAD
    }
+=======
+
+
+            }
+>>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 Log.d("test", "onScrolled");
+//                int topRowVerticalPosition =
+//                        (recyclerView == null || recyclerView.getChildCount() == 0) ? 0 : recyclerView.getChildAt(0).getTop();
+//                swipeRefreshWidget.setEnabled(topRowVerticalPosition >= 0);
+                if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                    swipeRefreshWidget.setEnabled(true);
+                } else {
+                    swipeRefreshWidget.setEnabled(false);
+                }
+                System.out.println("topRowVerticalPosition = " + recyclerView.getChildAt(0).getTop());
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 if (lastVisibleItemPosition + 1 == adapter.getItemCount()) {
                     Log.d("test", "loading executed");
@@ -112,7 +154,7 @@ public class BaseFragment extends Fragment implements IBase {
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                getData();
+                                LoadMore(Actions.LoadMore);
                                 Log.d("test", "load more completed");
                                 isLoading = false;
                             }
@@ -126,11 +168,11 @@ public class BaseFragment extends Fragment implements IBase {
 
     @Override
     public void initEvent() {
-        //添加点击事件
         adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Log.d("test", "item position = " + position);
+                Toast.makeText(getActivity(),"test",Toast.LENGTH_SHORT);
             }
 
             @Override
@@ -138,7 +180,6 @@ public class BaseFragment extends Fragment implements IBase {
 
             }
         });
-
     }
 
     @Override
@@ -146,24 +187,10 @@ public class BaseFragment extends Fragment implements IBase {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getData();
+                Refresh(Actions.Refresh);
+                swipeRefreshWidget.setRefreshing(false);
             }
-        }, 1500);
-    }
-
-    private void getData() {
-        for (int i = 0; i < 8; i++) {
-            ConsultMessageBean bean = new ConsultMessageBean();
-            bean.setSubject("title" + i);
-            bean.setMessage("content" + i);
-            bean.setViewnum("" + i);
-            bean.setReplynum("" + i);
-            bean.setDateline("" + i);
-            consultMessageBeanList.add(bean);
-        }
-        adapter.notifyDataSetChanged();
-        swipeRefreshWidget.setRefreshing(false);
-        adapter.notifyItemRemoved(adapter.getItemCount());
+        }, 2000);
     }
 
     @Override

@@ -67,7 +67,7 @@ public class ConsultAdapter extends BaseAdapter {
             photoView = (ImageView) view.findViewById(R.id.iv_consultpic);
             content = (TextView) view.findViewById(R.id.message);
             textView = (TextView) view.findViewById(R.id.tv_messsage_note);
-            consultStatus= (ImageView) view.findViewById(R.id.consult_status);
+            consultStatus = (ImageView) view.findViewById(R.id.consult_status);
             numview = (TextView) view.findViewById(R.id.numview);
             numreply = (TextView) view.findViewById(R.id.numreply);
             time = (TextView) view.findViewById(R.id.time);

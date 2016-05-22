@@ -3,6 +3,7 @@ package com.dawnlightning.ucqa.activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.dawnlightning.ucqa.adapter.MyFragmentPagerAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.base.BaseFragment;
 import com.dawnlightning.ucqa.fragment.ConsultFragment;
+import com.dawnlightning.ucqa.fragment.MainFragment;
 import com.dawnlightning.ucqa.fragment.MessageFragment;
 import com.dawnlightning.ucqa.model.TestModel;
 import com.dawnlightning.ucqa.utils.BaseTools;
@@ -70,7 +72,7 @@ public class MainActivity extends BaseActivity implements IMainView{
     private List<Menu> menuList=new ArrayList<Menu>();
     private LeftMenuAdapter menuadapter;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
-    private BaseFragment baseFragment;
+    private MainFragment mainFragment;
     private MessageFragment messageFragment;
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
     private ConsultFragment consultFragment;
@@ -112,10 +114,10 @@ public class MainActivity extends BaseActivity implements IMainView{
                 dlMain.open();
             }
         });
-        baseFragment = new BaseFragment();
+        mainFragment = new MainFragment();
         messageFragment = new MessageFragment();
         consultFragment = new ConsultFragment();
-        fragmentArrayList.add(baseFragment);
+        fragmentArrayList.add(mainFragment);
         fragmentArrayList.add(messageFragment);
         fragmentArrayList.add(consultFragment);
         myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),fragmentArrayList);
