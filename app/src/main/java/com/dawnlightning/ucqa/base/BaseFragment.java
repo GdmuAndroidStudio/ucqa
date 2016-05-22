@@ -10,30 +10,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD
-import android.widget.GridView;
-
-import com.dawnlightning.ucqa.R;
-=======
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.BaseAdapter;
->>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
 import com.dawnlightning.ucqa.adapter.RecyclerViewAdapter;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
+import com.dawnlightning.ucqa.utils.BaseTools;
 import com.dawnlightning.ucqa.viewinterface.IBase;
 import com.dawnlightning.ucqa.viewinterface.IRefreshAndLoadmore;
 
-<<<<<<< HEAD
-import com.dawnlightning.ucqa.activity.MainActivity;
-import com.dawnlightning.ucqa.adapter.ClassifyAdapter;
-import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
-import com.dawnlightning.ucqa.viewinterface.IBase;
-import com.dawnlightning.ucqa.widget.OtherGridView;
-import com.dawnlightning.ucqa.bean.others.*;
-=======
->>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -44,24 +31,14 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseFragment extends Fragment implements IBase,IRefreshAndLoadmore {
 
-<<<<<<< HEAD
-    @Bind(R.id.swipe_refresh_widget)
-    SwipeRefreshLayout swipeRefreshWidget;
-    @Bind(R.id.recycler_view)
-    RecyclerView recyclerView;
-    boolean isLoading = false;
-    private static boolean FirstIn = true;
-=======
 
     boolean isLoading = false;
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshWidget;
->>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
     private Handler handler = new Handler();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
-    private ArrayList<ConsultMessageBean> consultMessageBeanList = new ArrayList<>();
     public BaseAdapter adapter;
 
     public abstract void initAdapter();
@@ -97,13 +74,7 @@ public abstract class BaseFragment extends Fragment implements IBase,IRefreshAnd
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        consultMessageBeanList.clear();
-<<<<<<< HEAD
-                        getData();
-                        if (swipeRefreshWidget!=null)
-=======
                         Refresh(Actions.Refresh);
->>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
                         swipeRefreshWidget.setRefreshing(false);
                     }
                 }, 2000);
@@ -112,19 +83,12 @@ public abstract class BaseFragment extends Fragment implements IBase,IRefreshAnd
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 Log.d("test", "StateChanged = " + newState);
-<<<<<<< HEAD
-   }
-=======
-
-
             }
->>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -142,7 +106,6 @@ public abstract class BaseFragment extends Fragment implements IBase,IRefreshAnd
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 if (lastVisibleItemPosition + 1 == adapter.getItemCount()) {
                     Log.d("test", "loading executed");
-
                     boolean isRefreshing = swipeRefreshWidget.isRefreshing();
                     if (isRefreshing) {
                         adapter.notifyItemRemoved(adapter.getItemCount());
@@ -168,7 +131,7 @@ public abstract class BaseFragment extends Fragment implements IBase,IRefreshAnd
 
     @Override
     public void initEvent() {
-        adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+       adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Log.d("test", "item position = " + position);

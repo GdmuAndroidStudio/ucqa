@@ -3,10 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="gridview_height">130dp</dimen>
-<<<<<<< HEAD
-=======
     <dimen name="margin_10">10dp</dimen>
->>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
     <dimen name="margin_3">3dp</dimen>
     <dimen name="recyclerview_item_height">100dp</dimen>
     <dimen name="touch_raise">20dp</dimen>
@@ -27,8 +24,4 @@
     <dimen name="margin15">15dp</dimen>
     <dimen name="textsize12">12sp</dimen>
     <dimen name="textsize5">5sp</dimen>
-<<<<<<< HEAD
-
-=======
->>>>>>> b32f46cc8c5d3d896bbf7aab064c6c67b71af7ac
 </resources>
