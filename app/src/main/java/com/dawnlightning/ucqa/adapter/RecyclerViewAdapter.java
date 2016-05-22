@@ -21,30 +21,17 @@ import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends Adapter<ViewHolder> {
+public class RecyclerViewAdapter extends BaseAdapter {
 
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private static final int TYPE_HEADER = 2;
     private Context context;
-    private List data;
-
+    private OnItemClickListener onItemClickListener = null;
 
     public RecyclerViewAdapter(Context context,List data) {
         this.context = context;
         this.data = data;
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-
-        void onItemLongClick(View view, int position);
-    }
-
-    private OnItemClickListener onItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
     }
 
     @Override
@@ -64,10 +51,18 @@ public class RecyclerViewAdapter extends Adapter<ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         if (viewType == TYPE_ITEM) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_consult, parent,
+            final View view = LayoutInflater.from(context).inflate(R.layout.item_consult, parent,
                     false);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onItemClickListener != null){
+                        onItemClickListener.onItemClick(view,viewType);
+                    }
+                }
+            });
             return new ItemViewHolder(view);
         } else if (viewType == TYPE_FOOTER) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_foot, parent,
@@ -79,32 +74,6 @@ public class RecyclerViewAdapter extends Adapter<ViewHolder> {
             return new HeadViewHolder(context, view);
         }
         return null;
-    }
-
-
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        if (holder instanceof ItemViewHolder) {
-            //holder.tv.setText(data.get(position));
-            if (onItemClickListener != null) {
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int position = holder.getLayoutPosition();
-                        onItemClickListener.onItemClick(holder.itemView, position);
-                    }
-                });
-
-                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        int position = holder.getLayoutPosition();
-                        onItemClickListener.onItemLongClick(holder.itemView, position);
-                        return false;
-                    }
-                });
-            }
-        }
     }
 
 
@@ -128,7 +97,7 @@ public class RecyclerViewAdapter extends Adapter<ViewHolder> {
         }
     }
 
-    static     class FootViewHolder extends RecyclerView.ViewHolder {
+    static class FootViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
         TextView textView;
 
