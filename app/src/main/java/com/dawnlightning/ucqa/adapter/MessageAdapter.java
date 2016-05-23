@@ -46,6 +46,7 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        super.onBindViewHolder(holder,position);
         if (holder instanceof ItemViewHolder) {
             if (((ItemViewHolder) holder).photoView.getTag()!=null&&((ItemViewHolder)((ItemViewHolder) holder)).photoView.getTag().equals(position)){
             }else{
