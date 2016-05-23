@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.db.SharedPreferenceDb;
 import com.dawnlightning.ucqa.gesture.BackGestureListener;
-import com.dawnlightning.ucqa.gesture.IBase;
 
 import cn.jpush.android.api.JPushInterface;
 

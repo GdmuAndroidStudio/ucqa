@@ -48,7 +48,7 @@
     <com.dawnlightning.ucqa.widget.MyRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="@color/main_activity_bg"
         >
 
         <RelativeLayout

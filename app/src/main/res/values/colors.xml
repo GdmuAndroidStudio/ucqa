@@ -8,6 +8,7 @@
     <color name="nomalGray">#838B83</color>
     <color name="grey">#8C8C8C</color>
     <color name="dark">#424242</color>
+    <color name="main_activity_bg">#F0F0F0</color>
     <color name="txt_blue">#FF007CB0</color>
     <color name="red">#FFFF0000</color>
     <color name="green">#549D37</color>
