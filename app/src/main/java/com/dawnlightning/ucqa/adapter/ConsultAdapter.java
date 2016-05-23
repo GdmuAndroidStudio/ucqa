@@ -1,6 +1,7 @@
 package com.dawnlightning.ucqa.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ public class ConsultAdapter extends BaseAdapter {
     public static final int TYPE_FOOTER = 1;
     private Context context;
     private FootViewHolder footViewHolder;
+    private Handler handler = new Handler();
 
     public ConsultAdapter(Context context) {
         this.context = context;
@@ -41,6 +43,32 @@ public class ConsultAdapter extends BaseAdapter {
             return footViewHolder;
         }
         return null;
+    }
+
+    @Override
+    public void setOverFoot() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                footViewHolder.progressBar.setVisibility(View.GONE);
+                footViewHolder.textView.setText("已加载完毕");
+            }
+        }, 1000);
+
+    }
+
+    @Override
+    public void setBeforeFoot() {
+        footViewHolder.progressBar.setVisibility(View.GONE);
+        footViewHolder.textView.setText("下拉加载更多");
+
+    }
+
+    @Override
+    public void setFooting() {
+        footViewHolder.progressBar.setVisibility(View.VISIBLE);
+        footViewHolder.textView.setText("正在加载中");
+
     }
 
     @Override

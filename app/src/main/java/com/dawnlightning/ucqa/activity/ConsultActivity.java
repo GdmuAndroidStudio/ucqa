@@ -48,15 +48,6 @@ public class ConsultActivity extends BaseActivity {
     public UserBean userBean;
     public List<ConsultClassifyBean> consultClassifyBeanList;
 
-    public void initview() {
-        iv_consult_back = (ImageView) findViewById(R.id.iv_consult_back);
-        bt_consult_page1 = (Button) findViewById(R.id.bt_consult_page1);
-        bt_consult_page2 = (Button) findViewById(R.id.bt_consult_page2);
-        vp_consult_contentview = (MyViewPager) findViewById(R.id.vp_consult_pageconview);
-
-    }
-
-
     public void initdata() {
         consultPageOneFragment = new ConsultPageOneFragment();
         consultPageTwoFragment = new ConsultPageTwoFragment();
@@ -110,7 +101,6 @@ public class ConsultActivity extends BaseActivity {
         setContentView(R.layout.activity_consult);
         ButterKnife.bind(this);
         setUserBean(getIntent());
-        initview();
         initdata();
         initevent();
     }

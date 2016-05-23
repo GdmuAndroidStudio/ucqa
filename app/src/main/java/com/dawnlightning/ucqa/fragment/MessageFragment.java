@@ -46,7 +46,7 @@ public class MessageFragment extends BaseFragment implements IMessageView{
     @Override
     public void initAdapter() {
         consultMessageBeanList = new ArrayList<ConsultMessageBean>();
-        for(int i=0;i<10;i++)
+        for(int i=0;i<4;i++)
             consultMessageBeanList.add(new ConsultMessageBean());
         adapter = new MessageAdapter(getContext());
         adapter.setList(consultMessageBeanList);
@@ -55,7 +55,7 @@ public class MessageFragment extends BaseFragment implements IMessageView{
     @Override
     public void Refresh(Actions action) {
         consultMessageBeanList.clear();
-        for(int i=0;i<10;i++)
+        for(int i=0;i<4;i++)
             consultMessageBeanList.add(new ConsultMessageBean());
         adapter.notifyDataSetChanged();
     }
