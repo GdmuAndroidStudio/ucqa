@@ -3,6 +3,9 @@ package com.dawnlightning.ucqa.model;
 import android.util.Log;
 
 import com.dawnlightning.ucqa.api.AccountApiManager;
+import com.dawnlightning.ucqa.api.ConsultApiManager;
+import com.dawnlightning.ucqa.api.IssueApiManager;
+import com.dawnlightning.ucqa.api.OperateApiManager;
 import com.dawnlightning.ucqa.api.action.FailureAction;
 import com.dawnlightning.ucqa.api.action.SuccessAction;
 import com.dawnlightning.ucqa.api.requestbody.ProgressRequestBody;
@@ -12,6 +15,7 @@ import com.dawnlightning.ucqa.bean.response.account.GetSeccodeBean;
 import com.dawnlightning.ucqa.bean.response.account.LoginBean;
 import com.dawnlightning.ucqa.bean.response.account.RegisterBean;
 import com.dawnlightning.ucqa.utils.SdCardUtil;
+import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.utils.L;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 
@@ -31,7 +35,9 @@ import okhttp3.RequestBody;
  */
 public class TestModel {
     AccountApiManager apiManager=new AccountApiManager(0,0);
-
+    ConsultApiManager consultApiManager=new ConsultApiManager();
+    IssueApiManager issueApiManager=new IssueApiManager();
+    OperateApiManager operateApiManager=new OperateApiManager();
     /**
      * 登陆
      */
@@ -101,6 +107,7 @@ public class TestModel {
         map.put("birthyear",1990);
         map.put("birthmonth",8);
         map.put("birthday",1);
+                                //70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg
         apiManager.EditProfile("70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg",map)
                 .subscribe(new SuccessAction<String>() {
                     @Override
@@ -152,5 +159,136 @@ public class TestModel {
             }
         });
     }
+    public void GetClassify(){
+        consultApiManager.GetClassify().subscribe(new SuccessAction<JsonObject>() {
+            @Override
+            public void Success(JsonObject target) {
+                Log.e("success",target.toString());
+            }
+
+            @Override
+            public void Failure(int code, String msg) {
+                Log.e("failure",msg);
+            }
+        }, new FailureAction() {
+            @Override
+            public void Error(String msg) {
+                Log.e("error",msg);
+            }
+        });
+    }
+    public void GetConsultList(){
+        consultApiManager.GetAllConsultList(1).subscribe(new SuccessAction<JsonObject>() {
+            @Override
+            public void Success(JsonObject target) {
+                Log.e("success",target.toString());
+            }
+
+            @Override
+            public void Failure(int code, String msg) {
+                Log.e("failure",msg);
+            }
+        }, new FailureAction() {
+            @Override
+            public void Error(String msg) {
+                Log.e("error",msg);
+            }
+        });
+    }
+    public void GetSpecifyConsult(){
+        consultApiManager.GetSpecifyConsultList(1,1).subscribe(new SuccessAction<JsonObject>() {
+            @Override
+            public void Success(JsonObject target) {
+                Log.e("success",target.toString());
+            }
+
+            @Override
+            public void Failure(int code, String msg) {
+                Log.e("failure",msg);
+            }
+        }, new FailureAction() {
+            @Override
+            public void Error(String msg) {
+                Log.e("error",msg);
+            }
+        });
+    }
+    public void GetConsultDetailed(){
+        consultApiManager.GetConsultDetailed(11,"70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg",167)
+                .subscribe(new SuccessAction<JsonObject>() {
+                    @Override
+                    public void Success(JsonObject target) {
+                        Log.e("success",target.toString());
+                    }
+
+                    @Override
+                    public void Failure(int code, String msg) {
+                        Log.e("failure",msg);
+                    }
+                }, new FailureAction() {
+                    @Override
+                    public void Error(String msg) {
+                        Log.e("error",msg);
+                    }
+                });
+    }
+    public void GetNotice(){
+        consultApiManager.GetNotice("0c914G8pdYvAB6bEMUaRhPXfcBTKAqBeZdNTR1iWly7NG9t5%2FdEmD1VM2fvDW%2BFKDa5c9me5Hm4GeTH6KE59aQ",1)
+                .subscribe(new SuccessAction<JsonObject>() {
+                    @Override
+                    public void Success(JsonObject target) {
+                        Log.e("success",target.toString());
+                    }
+
+                    @Override
+                    public void Failure(int code, String msg) {
+                        Log.e("failure",msg);
+                    }
+                }, new FailureAction() {
+                    @Override
+                    public void Error(String msg) {
+                        Log.e("error",msg);
+                    }
+                });
+    }
+    public void GetMyConsult(){
+        consultApiManager.GetMyConsultList(11,"70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg",1)
+                .subscribe(new SuccessAction<JsonObject>() {
+                    @Override
+                    public void Success(JsonObject target) {
+                        Log.e("success",target.toString());
+                    }
+
+                    @Override
+                    public void Failure(int code, String msg) {
+                        Log.e("failure",msg);
+                    }
+                }, new FailureAction() {
+                    @Override
+                    public void Error(String msg) {
+                        Log.e("error",msg);
+                    }
+                });
+    }
+    public void GetCommentList(){
+        consultApiManager.GetConsultComment(11,"70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg",167,2)
+                .subscribe(new SuccessAction<JsonObject>() {
+                    @Override
+                    public void Success(JsonObject target) {
+                        Log.e("success",target.toString());
+                    }
+
+                    @Override
+                    public void Failure(int code, String msg) {
+                        Log.e("failure",msg);
+                    }
+                }, new FailureAction() {
+                    @Override
+                    public void Error(String msg) {
+                        Log.e("error",msg);
+                    }
+                });
+    }
+
 
 }

@@ -85,7 +85,13 @@ public class MainActivity extends BaseActivity implements IMainView{
         initDragLayout();
         initLeftContent();
         TestModel model=new TestModel();
-        model.edit();
+        //model.GetClassify();
+        //model.GetConsultList();
+        //model.GetConsultDetailed();
+        //model.GetSpecifyConsult();
+         model.GetNotice();
+//        model.GetCommentList();
+//        model.GetMyConsult();
     }
     public void test(){
 
