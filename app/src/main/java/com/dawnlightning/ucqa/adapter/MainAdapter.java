@@ -1,9 +1,11 @@
 package com.dawnlightning.ucqa.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,24 +14,27 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.MainActivity;
+import com.dawnlightning.ucqa.base.Actions;
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerViewAdapter extends BaseAdapter {
+public class MainAdapter extends BaseAdapter {
 
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private static final int TYPE_HEADER = 2;
     private Context context;
-    private OnItemClickListener onItemClickListener = null;
+    private FootViewHolder footViewHolder;
+    private Handler handler = new Handler();
 
-    public RecyclerViewAdapter(Context context,List data) {
+    public MainAdapter(Context context, List data) {
         this.context = context;
         this.data = data;
     }
@@ -40,12 +45,38 @@ public class RecyclerViewAdapter extends BaseAdapter {
     }
 
     @Override
+    public void setOverFoot() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                footViewHolder.progressBar.setVisibility(View.GONE);
+                footViewHolder.textView.setText("已加载完毕");
+            }
+        }, 1000);
+
+    }
+
+    @Override
+    public void setBeforeFoot() {
+        footViewHolder.progressBar.setVisibility(View.GONE);
+        footViewHolder.textView.setText("下拉加载更多");
+
+    }
+
+    @Override
+    public void setFooting() {
+        footViewHolder.progressBar.setVisibility(View.VISIBLE);
+        footViewHolder.textView.setText("正在加载中");
+
+    }
+
+    @Override
     public int getItemViewType(int position) {
         if (position + 1 == getItemCount()) {
             return TYPE_FOOTER;
-        } else if(position == 0){
+        } else if (position == 0) {
             return TYPE_HEADER;
-        }else{
+        } else {
             return TYPE_ITEM;
         }
     }
@@ -55,25 +86,33 @@ public class RecyclerViewAdapter extends BaseAdapter {
         if (viewType == TYPE_ITEM) {
             final View view = LayoutInflater.from(context).inflate(R.layout.item_consult, parent,
                     false);
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(onItemClickListener != null){
-                        onItemClickListener.onItemClick(view,viewType);
-                    }
-                }
-            });
             return new ItemViewHolder(view);
         } else if (viewType == TYPE_FOOTER) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_foot, parent,
                     false);
-            return new FootViewHolder(view);
+            footViewHolder = new FootViewHolder(view);
+            return footViewHolder;
         } else if (viewType == TYPE_HEADER) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_header_girdview, parent,
                     false);
             return new HeadViewHolder(context, view);
         }
         return null;
+    }
+
+    @Override
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof ItemViewHolder) {
+            if (onItemClickListener != null) {
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = holder.getLayoutPosition();
+                        onItemClickListener.onItemClick(holder.itemView, position);
+                    }
+                });
+            }
+        }
     }
 
 

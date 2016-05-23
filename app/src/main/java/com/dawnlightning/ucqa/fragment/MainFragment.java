@@ -1,12 +1,13 @@
 package com.dawnlightning.ucqa.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.dawnlightning.ucqa.adapter.BaseAdapter;
-import com.dawnlightning.ucqa.adapter.RecyclerViewAdapter;
+import com.dawnlightning.ucqa.R;
+import com.dawnlightning.ucqa.activity.ConsultDetailActivity;
+import com.dawnlightning.ucqa.adapter.MainAdapter;
 import com.dawnlightning.ucqa.base.Actions;
 import com.dawnlightning.ucqa.base.BaseFragment;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
@@ -29,16 +30,18 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void initAdapter() {
-        adapter = new RecyclerViewAdapter(getActivity(), data);
-        adapter.setOnItemClickListener(new RecyclerViewAdapter.OnItemClickListener() {
+        adapter = new MainAdapter(getActivity(), data);
+        adapter.setOnItemClickListener(new MainAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Log.d("test", "item position = " + position);
-                Toast.makeText(getActivity(),"test",Toast.LENGTH_SHORT);
-            }
-
-            @Override
-            public void onItemLongClick(View view, int position) {
+//                Toast.makeText(getActivity(),"test",Toast.LENGTH_SHORT).show();
+                Intent i = new Intent();
+                i.setClass(getActivity(), ConsultDetailActivity.class);
+                startActivity(i);
+                // 动画过渡
+                getActivity().overridePendingTransition(R.anim.slide_in_right,
+                        R.anim.slide_out_left);
 
             }
         });
@@ -47,7 +50,9 @@ public class MainFragment extends BaseFragment {
     @Override
     public void Refresh(Actions actions) {
         data.clear();
-        for (int i = 0; i < 6; i++) {
+        ConsultMessageBean nullBean = new ConsultMessageBean();
+        data.add(nullBean);
+        for (int i = 0; i < 4; i++) {
             ConsultMessageBean consultMessageBean = new ConsultMessageBean();
             data.add(consultMessageBean);
         }
@@ -56,7 +61,7 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public void LoadMore(Actions actions) {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 1; i++) {
             ConsultMessageBean consultMessageBean = new ConsultMessageBean();
             data.add(consultMessageBean);
         }
