@@ -21,11 +21,9 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
-
-        void onItemLongClick(View view, int position);
     }
 
-    private OnItemClickListener onItemClickListener;
+    public static OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
@@ -55,21 +53,11 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder,final int position){
         if (onItemClickListener != null) {
-
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = holder.getLayoutPosition();
                     onItemClickListener.onItemClick(holder.itemView, position);
-                }
-            });
-
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    int position = holder.getLayoutPosition();
-                    onItemClickListener.onItemLongClick(holder.itemView, position);
-                    return false;
                 }
             });
         }
@@ -87,6 +75,13 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public T getitem(int position){
         return this.data.get(position);
     }
+
+    //设置全部加载后的foot样式
+    public void setOverFoot(){};
+    //设置加载前的foot样式
+    public void setBeforeFoot(){};
+    //设置加载中的foot样式
+    public void setFooting(){};
 
 }
 
