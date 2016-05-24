@@ -2,6 +2,7 @@ package com.dawnlightning.ucqa.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.ConsultDetailActivity;
+import com.dawnlightning.ucqa.bean.response.consult.detailed.CommentBean;
 
 import java.util.List;
 
@@ -20,9 +22,9 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int TYPE_ITEM = 0;
     private Context context;
-    private List data;
+    private List<CommentBean> data;
 
-    public CommentListAdapter(Context context, List data) {
+    public CommentListAdapter(Context context, List<CommentBean> data) {
         this.context = context;
         this.data = data;
     }
@@ -42,7 +44,6 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(viewType == TYPE_ITEM){
             View view = LayoutInflater.from(context).inflate(R.layout.item_consult_comment, parent,
                     false);
-            view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
             return new ItemViewHolder(view);
         }
         return null;
@@ -51,6 +52,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
+
             //holder.tv.setText(data.get(position));
         }
     }

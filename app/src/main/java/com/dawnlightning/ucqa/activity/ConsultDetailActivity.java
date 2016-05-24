@@ -70,11 +70,12 @@ public class ConsultDetailActivity extends BaseActivity {
     }
 
     private void initData() {
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             CommentBean commentBean = new CommentBean();
             data.add(commentBean);
         }
-        commentListAdapter.notifyDataSetChanged();
+        commentListAdapter = new CommentListAdapter(this, data);
+        rvCommentList.setAdapter(commentListAdapter);
     }
 
     public void clickToReply() {

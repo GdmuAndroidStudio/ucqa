@@ -38,8 +38,8 @@ public class IssueApiManager {
                 .observeOn(AndroidSchedulers.mainThread());
 
     }
-    public  Observable<ApiBase> UploadPicture(String m_auth,Map<String,Object> data){
-        return IssueApiService.doUploadPicture(m_auth, data)
+    public  Observable<ApiBase> UploadPicture(String m_auth,Map<String,RequestBody> data){
+        return IssueApiService.doUploadPicture(m_auth,data)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -64,6 +64,6 @@ public class IssueApiManager {
          */
         @Multipart
         @POST("/capi/cp.php?ac=upload")
-        Observable<ApiBase> doUploadPicture(@Query("m_auth") String m_auth,@PartMap Map<String, Object> params);
+        Observable<ApiBase> doUploadPicture(@Query("m_auth") String m_auth,@PartMap  Map<String, RequestBody> data);
     }
 }

@@ -90,9 +90,18 @@ public class MainActivity extends BaseActivity implements IMainView{
         //model.GetConsultList();
         //model.GetConsultDetailed();
         //model.GetSpecifyConsult();
-         model.GetNotice();
+   //     model.GetNotice();
 //        model.GetCommentList();
 //        model.GetMyConsult();
+       // model.UploadPicture();
+       //  model.PublicIssuse();
+       // model.Solove();
+         //model.Comment();
+        //model.Reply();
+       // model.Report();
+       // model.Delete();
+       // model.Upadte();
+
     }
     public void test(){
 

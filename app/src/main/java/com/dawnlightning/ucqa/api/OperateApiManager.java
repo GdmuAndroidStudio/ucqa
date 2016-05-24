@@ -2,10 +2,12 @@ package com.dawnlightning.ucqa.api;
 
 import com.dawnlightning.ucqa.api.httphelper.RetrofitHelper;
 import com.dawnlightning.ucqa.bean.ApiBase;
+import com.google.gson.JsonObject;
 
 import java.util.Map;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
@@ -51,8 +53,13 @@ public class OperateApiManager {
                 .observeOn(AndroidSchedulers.mainThread());
 
     }
+    public  Observable<ApiBase> Reply(String m_auth,Map<String,Object> map){
+        return OperateApiService.doPublicReply(m_auth, map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
-    public  Observable<ApiBase> Report(String m_auth,int id,Map<String,Object> map){
+    }
+    public  Observable<JsonObject> Report(String m_auth, int id, Map<String,Object> map){
         return OperateApiService.doReport(m_auth,id, map)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -85,9 +92,18 @@ public class OperateApiManager {
          * @return
          */
         @FormUrlEncoded
-        @POST("/capi/cp.php?ac=comment")
+        @POST("/capi/cp.php?ac=comment&inajax=1")
         Observable<ApiBase> doPublicComment(@Query("m_auth") String m_auth, @FieldMap Map<String, Object> commentdata);
 
+        /**
+         * 回复评论
+         * @param m_auth 登陆返回的m_ath
+         * @param replydata 资料
+         * @return
+         */
+        @FormUrlEncoded
+        @POST("/capi/cp.php?ac=comment&inajax=1")
+        Observable<ApiBase> doPublicReply(@Query("m_auth") String m_auth, @FieldMap Map<String, Object> replydata);
         /**
          * 举报
          * @param m_auth 登陆返回的m_ath
@@ -97,7 +113,7 @@ public class OperateApiManager {
          */
         @FormUrlEncoded
         @POST("/capi/cp.php?ac=common&op=report&idtype=bwztid")
-        Observable<ApiBase> doReport(@Query("m_auth") String m_auth,@Query("id") int id, @FieldMap Map<String, Object> commentdata);
+        Observable<JsonObject> doReport(@Query("m_auth") String m_auth, @Query("id") int id, @FieldMap Map<String, Object> commentdata);
 
 
     }

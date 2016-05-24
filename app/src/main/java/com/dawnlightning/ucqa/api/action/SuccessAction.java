@@ -3,6 +3,7 @@ package com.dawnlightning.ucqa.api.action;
 import android.util.Log;
 import com.dawnlightning.ucqa.bean.ApiBase;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.utils.L;
 
 import java.lang.reflect.ParameterizedType;

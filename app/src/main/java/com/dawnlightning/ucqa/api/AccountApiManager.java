@@ -4,6 +4,7 @@ import com.dawnlightning.ucqa.api.httphelper.RetrofitHelper;
 import com.dawnlightning.ucqa.api.requestbody.ProgressRequestBody;
 import com.dawnlightning.ucqa.bean.ApiBase;
 import com.dawnlightning.ucqa.bean.response.account.GetSeccodeBean;
+import com.google.gson.JsonObject;
 
 import java.util.Map;
 
@@ -41,10 +42,15 @@ public class AccountApiManager {
         this.accountApiManager=retrofit.create(AccountApiService.class);
     }
     public  Observable<ApiBase> Login(String username,String password){
-       return accountApiManager.doLogin(username,password)
+        return accountApiManager.doLogin(username,password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
 
+    }
+    public Observable<ApiBase> Login(String m_auth){
+        return accountApiManager.doLogin(m_auth)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
     public  Observable<ApiBase> GetSeccode(){
         return accountApiManager.getSeccode()
@@ -71,6 +77,11 @@ public class AccountApiManager {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+    public Observable<JsonObject> CheckUpdate(){
+        return accountApiManager.doCheckUpdate()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
     public interface AccountApiService {
         /**
          * 登陆
@@ -83,6 +94,15 @@ public class AccountApiManager {
 
         @GET("/capi/do.php?ac=login&loginsubmit=true")
         Observable<ApiBase> doLogin(@Query("username") String username, @Query("password") String password);
+
+
+        /**
+         * 使用m_auth二次登陆（用于自动登陆）
+         * @param m_auth
+         * @return
+         */
+        @GET("/capi/do.php?ac=login")
+        Observable<ApiBase> doLogin(@Query("m_auth") String m_auth);
 
         /**
          * 获取防伪验证码
@@ -132,5 +152,12 @@ public class AccountApiManager {
         @FormUrlEncoded
         @POST("/capi/cp.php?ac=profile&op=base")
         Observable<ApiBase> doEditProfile(@Query("m_auth") String m_auth, @FieldMap Map<String, Object> options);
+
+        /**
+         * 检查更新
+         * @return
+         */
+        @GET("/m/index.php/version.json")
+        Observable<JsonObject> doCheckUpdate();
     }
 }
