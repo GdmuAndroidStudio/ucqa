@@ -86,7 +86,8 @@ public class ConsultDetailActivity extends BaseActivity {
             commentBean.setName("user" + (i+1));
             data.add(commentBean);
         }
-        commentListAdapter.notifyDataSetChanged();
+        commentListAdapter = new CommentListAdapter(this, data);
+        rvCommentList.setAdapter(commentListAdapter);
     }
 
     public void clickToReply(String name) {
