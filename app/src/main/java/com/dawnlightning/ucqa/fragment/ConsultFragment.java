@@ -28,7 +28,7 @@ public class ConsultFragment extends BaseFragment implements IConsultMessageView
     @Override
     public void Refresh(Actions action) {
         consultBeanList.clear();
-        for(int i=0;i<4;i++)
+        for(int i=0;i<10;i++)
             consultBeanList.add(new ConsultBean());
         adapter.notifyDataSetChanged();
     }

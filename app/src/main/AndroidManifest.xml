@@ -22,6 +22,12 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
 
+        <activity
+            android:name=".activity.DisplayActivity"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+
+
 
         <!--自动更新 -->
         <service android:name=".update.UpdateService"></service>
@@ -193,6 +199,8 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".activity.ConsultActivity" android:windowSoftInputMode="stateHidden"/>
+        <activity android:name="." android:theme="@android:style/Theme.Holo.Light.Dialog" android:launchMode="singleInstance" android:screenOrientation="portrait"/>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
     </application>

@@ -1,9 +1,15 @@
+
 package com.dawnlightning.ucqa.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +26,8 @@ import com.dawnlightning.ucqa.widget.ProcessImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +35,9 @@ import java.util.List;
 /**
  * Created by Administrator on 2016/4/14.
  */
-public class ConsultPicsAdapter extends BaseAdapter{
+public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapter{
     private Context context;
     private List<ProcessImageView> processImageViewList=new ArrayList<ProcessImageView>();
-    private HashMap<String,ProcessImageView> hashMap=new HashMap<String,ProcessImageView>();
     private List<UploadPicsBean> list;
     private ViewHolder viewHolder;
     private LayoutInflater layoutInflater;
@@ -44,48 +51,42 @@ public class ConsultPicsAdapter extends BaseAdapter{
         layoutInflater = (LayoutInflater) LayoutInflater.from(context);
         options = ImageLoaderOptions.getConsultLoadPictureOptions();
     }
-    public void setlist(List<UploadPicsBean> list){
-        this.list=list;
-    }
-    @Override
-    public int getCount() {
-        return list.size();
-    }
 
-    public List<UploadPicsBean> getlist(){
-        return this.list;
-    }
-    @Override
-    public Object getItem(int position) {
-
-
-        return list.get(position);
-    }
-    public void addlist(UploadPicsBean bean){
-        this.list.add(bean);
-    }
     public void  setDeletePicture(DeletePicture deletePicture){
         this.deletePicture=deletePicture;
     }
     public void setEditTextListener( EditTextListener editTextListener){
         this.editTextListener=editTextListener;
     }
+
+    @Override
+    public int getItemCount() {
+
+        return list.size();
+    }
+
+    public UploadPicsBean getitem(int position){
+        return list.get(position);
+    }
+
+    public void add(UploadPicsBean uploadPicsBean){
+        list.add(uploadPicsBean);
+    }
     @Override
     public long getItemId(int position) {
         return position;
     }
-
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(context).inflate(R.layout.item_consult_pics, parent,
+                false);
+        view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
+        return new ViewHolder(view);
+    }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-
-//        if (null == convertView) {
-            //此处不能用复用的方法，否则会导致刷新，焦点不准确
-            convertView = layoutInflater.inflate(R.layout.item_consult_pics, null);
-            viewHolder=new ViewHolder();
-            viewHolder.img=(ProcessImageView)convertView.findViewById(R.id.piv_consult_picture);
-            viewHolder.title=(EditText)convertView.findViewById(R.id.et_consult_picture_title);
-            hashMap.put(String.valueOf(position),viewHolder.img);
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+            viewHolder=((ViewHolder) holder);
             viewHolder.title.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -109,42 +110,70 @@ public class ConsultPicsAdapter extends BaseAdapter{
 
                 }
             });
-            viewHolder.delete=(ImageView)convertView.findViewById(R.id.iv_consult_picture_delete);
-            convertView.setTag(viewHolder);
-//        } else {
-//            viewHolder = (ViewHolder) convertView.getTag();
-//        }
-        final  UploadPicsBean bean=list.get(position);
-        if(bean!=null){
-            imageLoader.displayImage("file://" + bean.getPicture().getPath(), viewHolder.img, options);
-            viewHolder.img.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setClass(context, DisplayActivity.class);
-                    intent.putExtra("image", "file://" + bean.getPicture().getPath());
-                    context.startActivity(intent);
-
-                }
-            });
-
-            viewHolder.img.setProgress(bean.getPresent());
-            viewHolder.title.setText(bean.getPicturetitle());
-
-            viewHolder.delete.setBackgroundResource(R.mipmap.ic_delete);
-            viewHolder.delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (deletePicture != null) {
-                        deletePicture.Detele(position);
+            UploadPicsBean bean = list.get(position);
+            Log.d("test",""+position);
+            if (bean != null) {
+                imageLoader.displayImage("file://" + bean.getPicture().getPath(), viewHolder.img);
+                viewHolder.img.setOnClickListener(new OnClickListener(viewHolder,position));
+                viewHolder.img.setProgress(bean.getPresent());
+                viewHolder.title.setText(bean.getPicturetitle());
+                viewHolder.img.setOnLongClickListener(new LongClickListener(viewHolder));
+                viewHolder.delete.setBackgroundResource(R.mipmap.ic_delete);
+                viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (deletePicture != null) {
+                            viewHolder.delete.setVisibility(View.INVISIBLE);
+                            deletePicture.Detele(position);
+                        }
                     }
-                }
-            });
+                });
         }
+    }
+
+    public Bitmap getLoacalBitmap(String url) {
+        try {
+            FileInputStream fis = new FileInputStream(url);
+            return BitmapFactory.decodeStream(fis);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private class OnClickListener implements View.OnClickListener{
+        private ViewHolder viewHolder;
+        private int position;
+        public OnClickListener(ViewHolder viewHolder,int position){
+            this.viewHolder=viewHolder;
+            this.position=position;
+        }
+        @Override
+        public void onClick(View view) {
+            if(viewHolder.delete.getVisibility()==View.VISIBLE) {
+                viewHolder.delete.setVisibility(View.INVISIBLE);
+            }else {
+                Intent intent = new Intent();
+                intent.setClass(context, DisplayActivity.class);
+                intent.putExtra("image",list.get(position).getPicture().getPath());
+                context.startActivity(intent);
+            }
+
+        }
+    }
 
 
-        return convertView;
+    private class LongClickListener implements View.OnLongClickListener{
+        private ViewHolder viewHolder;
 
+        public LongClickListener(ViewHolder viewHolder){
+            this.viewHolder = viewHolder;
+        }
+        @Override
+        public boolean onLongClick(View view) {
+            viewHolder.delete.setVisibility(View.VISIBLE);
+            return true;
+        }
     }
     //获取待上传或者要重新上传的图片
     public List<UploadPicsBean> getUploadPicsBeans(){
@@ -161,16 +190,19 @@ public class ConsultPicsAdapter extends BaseAdapter{
         this.list.remove(postion);
     }
     //
-    public class ViewHolder{
-        public ProcessImageView img;
-        public TextView title;
-        public ImageView delete;
+    public final class ViewHolder extends RecyclerView.ViewHolder {
+        private ProcessImageView img;
+        private EditText title;
+        private ImageView delete;
+        public ViewHolder(View view){
+            super(view);
+            img =(ProcessImageView)view.findViewById(R.id.piv_consult_picture) ;
+            title = (EditText)view.findViewById(R.id.et_consult_picture_title);
+            delete=(ImageView)view.findViewById(R.id.iv_consult_picture_delete) ;
+        }
     }
     public interface DeletePicture{
         public void Detele(int postion);
-    }
-    public ProcessImageView getProcessImageView(String id){
-        return  this.hashMap.get(id);
     }
     public interface EditTextListener{
         public void AdapterTextChaged(int postion, String str);

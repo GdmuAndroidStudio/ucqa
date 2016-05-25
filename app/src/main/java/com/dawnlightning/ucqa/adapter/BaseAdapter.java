@@ -12,12 +12,7 @@ import java.util.List;
 public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     public  static final int TYPE_ITEM = 0;
     public  static final  int TYPE_FOOTER = 1;
-    private int count=10;
     public List<T> data;
-
-    public void setCount(int count){
-        this.count=count;
-    }
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
@@ -32,7 +27,7 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
 
-        return count+ 1;
+        return data.size()+ 1;
     }
 
     @Override
@@ -66,6 +61,7 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void setList(List<T> list){
         this.data=list;
     }
+
     public void addAll(List<T> list){
         this.data.addAll(list);
     }

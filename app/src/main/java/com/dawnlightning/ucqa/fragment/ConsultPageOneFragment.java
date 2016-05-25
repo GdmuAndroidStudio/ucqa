@@ -100,9 +100,9 @@ public class ConsultPageOneFragment extends Fragment implements OnItemClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_patient_info, container, false);
+        ButterKnife.bind(this, view);
         initdata();
         initevent();
-        ButterKnife.bind(this, view);
         return view;
     }
 

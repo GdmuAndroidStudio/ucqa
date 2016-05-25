@@ -24,7 +24,7 @@ public class MessageAdapter extends BaseAdapter {
     public  static final  int TYPE_FOOTER = 1;
     private Context context;
     private FootViewHolder footViewHolder;
-    private Handler handler;
+    private Handler handler=new Handler();
 
     public MessageAdapter(Context context) {
         this.context = context;
