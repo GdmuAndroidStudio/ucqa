@@ -43,6 +43,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 public class MessageFragment extends BaseFragment implements IMessageView{
 
     private List<ConsultMessageBean> consultMessageBeanList;
+
     @Override
     public void initAdapter() {
         consultMessageBeanList = new ArrayList<ConsultMessageBean>();

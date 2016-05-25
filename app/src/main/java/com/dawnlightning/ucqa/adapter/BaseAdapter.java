@@ -23,7 +23,7 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
         void onItemClick(View view, int position);
     }
 
-    public static OnItemClickListener onItemClickListener;
+    public OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;

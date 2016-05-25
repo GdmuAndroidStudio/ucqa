@@ -1,10 +1,15 @@
 package com.dawnlightning.ucqa.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.holder.Holder;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.ConsultDetailActivity;
 import com.dawnlightning.ucqa.adapter.MainAdapter;
@@ -12,6 +17,7 @@ import com.dawnlightning.ucqa.base.Actions;
 import com.dawnlightning.ucqa.base.BaseFragment;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +56,10 @@ public class MainFragment extends BaseFragment {
     @Override
     public void Refresh(Actions actions) {
         data.clear();
-        ConsultMessageBean nullBean = new ConsultMessageBean();
-        data.add(nullBean);
+        for (int i = 0; i < 2; i++) {
+            ConsultMessageBean nullBean = new ConsultMessageBean();
+            data.add(nullBean);
+        }
         for (int i = 0; i < 4; i++) {
             ConsultMessageBean consultMessageBean = new ConsultMessageBean();
             data.add(consultMessageBean);
@@ -68,4 +76,5 @@ public class MainFragment extends BaseFragment {
         adapter.notifyDataSetChanged();
         adapter.notifyItemRemoved(adapter.getItemCount());
     }
+
 }

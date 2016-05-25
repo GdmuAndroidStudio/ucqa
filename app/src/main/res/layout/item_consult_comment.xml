@@ -7,14 +7,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_margin="10dp"
         >
         <com.dawnlightning.ucqa.widget.RoundImageView
             android:id="@+id/iv_comment_icon"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:src="@mipmap/mylogo"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:src="@mipmap/default_round_head"
             android:scaleType="center"
+            android:layout_margin="5dp"
             />
         <LinearLayout
             android:layout_marginLeft="20dp"
@@ -25,17 +26,20 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
                 >
                 <TextView
                     android:id="@+id/tv_comment_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15.0sp"
+                    android:textSize="14.0sp"
                     android:textColor="#020202"
                     android:text="如何有效地在海外市场推广产品？"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     />
                 <ImageView
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="8dp"
                     android:id="@+id/iv_comment_flag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -50,13 +54,18 @@
                     android:layout_height="wrap_content"
                     android:text="回复TA"
                     android:textColor="@color/txt_blue"
-                    android:textSize="10.0sp"
-                    android:layout_alignBottom="@+id/iv_comment_flag"
+                    android:textSize="11.0sp"
+                    android:padding="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_below="@+id/tv_comment_message"
                     android:layout_toRightOf="@+id/iv_comment_flag"
-                    android:layout_toEndOf="@+id/iv_comment_flag" />
+                    android:layout_toEndOf="@+id/iv_comment_flag"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layout_marginStart="5dp" />
                 <TextView
                     android:id="@+id/tv_comment_time"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
