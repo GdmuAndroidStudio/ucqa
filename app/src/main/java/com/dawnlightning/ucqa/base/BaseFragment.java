@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.BaseAdapter;
 import com.dawnlightning.ucqa.viewinterface.IBase;
@@ -32,6 +33,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     SwipeRefreshLayout swipeRefreshWidget;
     private Handler handler = new Handler();
     public BaseAdapter adapter;
+
 
     public abstract void initAdapter();
 
@@ -99,7 +101,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
                 int lastCompleteVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 //设置加载前foot样式
-                if(lastVisibleItemPosition + 1 == adapter.getItemCount()){
+                if (lastVisibleItemPosition + 1 == adapter.getItemCount()) {
                     adapter.setBeforeFoot();
                 }
                 //当foot完全出现在屏幕中进行加载更多操作
@@ -148,7 +150,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
                 Refresh(Actions.Refresh);
                 swipeRefreshWidget.setRefreshing(false);
             }
-        }, 2000);
+        }, 3000);
     }
 
     @Override

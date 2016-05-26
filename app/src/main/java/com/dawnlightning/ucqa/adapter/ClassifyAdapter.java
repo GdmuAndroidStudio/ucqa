@@ -1,29 +1,35 @@
 package com.dawnlightning.ucqa.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
+import com.dawnlightning.ucqa.utils.BaseTools;
 
 import java.io.Serializable;
 import java.util.List;
+import android.view.ViewGroup.LayoutParams;
 
 /**
  * Created by Administrator on 2016/4/2.
  */
 public class ClassifyAdapter extends BaseAdapter implements Serializable {
+    private Activity activity;
     private Context context;
     private List<ConsultClassifyBean> list;
     private ViewHolder viewHolder;
     private  LayoutInflater layoutInflater;
-    public ClassifyAdapter( Context context ,List<ConsultClassifyBean> list){
-       this.context=context;
+    public ClassifyAdapter( Activity activity ,Context context,List<ConsultClassifyBean> list){
+       this.activity=activity;
+        this.context=context;
         this.list=list;
         layoutInflater = (LayoutInflater) LayoutInflater.from(context);
     }
@@ -59,6 +65,7 @@ public class ClassifyAdapter extends BaseAdapter implements Serializable {
             convertView = layoutInflater.inflate(R.layout.item_classify, null);
             viewHolder=new ViewHolder();
             viewHolder.img=(ImageView)convertView.findViewById(R.id.iv_classify);
+            viewHolder.title=(TextView)convertView.findViewById(R.id.tv_classify);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -67,22 +74,28 @@ public class ClassifyAdapter extends BaseAdapter implements Serializable {
         ConsultClassifyBean bean=list.get(position);
         switch(bean.getBwztclassarrid()){
             case 1:
-                viewHolder.img.setBackgroundResource(R.mipmap.ic_classifyitem_03);
+                viewHolder.img.setBackgroundResource(R.drawable.ic_classifyitem_02_normal);
+                viewHolder.title.setText("激光治近视");
                 break;
             case 2:
-                viewHolder.img.setBackgroundResource(R.mipmap.ic_classifyitem_02);
+                viewHolder.img.setBackgroundResource(R.drawable.classify_item3_selector);
+                viewHolder.title.setText("白内障");
                 break;
             case 3:
-                viewHolder.img.setBackgroundResource(R.mipmap.ic_classifyitem_06);
+                viewHolder.img.setBackgroundResource(R.drawable.classify_item4_selector);
+                viewHolder.title.setText("青光眼");
                 break;
             case 4:
-                viewHolder.img.setBackgroundResource(R.mipmap.ic_classifyitem_05);
+                viewHolder.img.setBackgroundResource(R.drawable.classify_item5_selector);
+                viewHolder.title.setText("青少年近视");
                 break;
             case 5:
-                viewHolder.img.setBackgroundResource(R.mipmap.ic_classifyitem_01);
+                viewHolder.img.setBackgroundResource(R.drawable.classify_item6_selector);
+                viewHolder.title.setText("防盲治盲");
                 break;
            default:
-               viewHolder.img.setBackgroundResource(R.mipmap.ic_classifyitem_04);
+               viewHolder.img.setBackgroundResource(R.drawable.classify_item1_selector);
+               viewHolder.title.setText("全部");
                 break;
 
 
@@ -92,5 +105,6 @@ public class ClassifyAdapter extends BaseAdapter implements Serializable {
     }
     public class ViewHolder{
         public ImageView img;
+        public TextView title;
     }
 }
