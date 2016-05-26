@@ -39,10 +39,6 @@
                 android:divider="@null"
                 android:textColor="#ffffff" />
         </LinearLayout>
-
-
-
-
     </RelativeLayout>
 
     <com.dawnlightning.ucqa.widget.MyRelativeLayout

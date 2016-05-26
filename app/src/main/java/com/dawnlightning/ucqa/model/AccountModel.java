@@ -27,6 +27,10 @@ import rx.functions.Action1;
  * 邮箱：823894716@qq.com
  */
 public class AccountModel {
+    public interface  LoginListener{
+        void getSuccess(LoginBean bean);
+        void getFailure(int code ,String msg);
+    }
     AccountApiManager accountApiManager=new AccountApiManager();
     /**
      * 登陆
@@ -34,15 +38,17 @@ public class AccountModel {
      * @param username    用户名
      * @param password    密码
      */
-    public void Login(String username,String password){
+    public void Login(String username,String password,final  LoginListener listener){
         new AccountApiManager(14400,345600)
                 .Login(username,password).subscribe(new SuccessAction<LoginBean>() {
             @Override
             public void Success(LoginBean target) {
+                listener.getSuccess(target);
                 Log.e("Success",target.toString());
             }
             @Override
             public void Failure(int code, String msg) {
+                listener.getFailure(code,msg);
                 Log.e("Failure",msg);
             }
         }, new FailureAction() {
