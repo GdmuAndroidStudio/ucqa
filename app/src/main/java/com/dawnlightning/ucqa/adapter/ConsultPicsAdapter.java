@@ -16,12 +16,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.DisplayActivity;
 import com.dawnlightning.ucqa.bean.others.UploadPicsBean;
 import com.dawnlightning.ucqa.utils.ImageLoaderOptions;
+import com.dawnlightning.ucqa.widget.PictureTitleEdittext;
 import com.dawnlightning.ucqa.widget.ProcessImageView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,9 +42,7 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
     private Context context;
     private List<ProcessImageView> processImageViewList=new ArrayList<ProcessImageView>();
     private List<UploadPicsBean> list;
-    private ViewHolder viewHolder;
     private LayoutInflater layoutInflater;
-    private ImageLoader imageLoader = ImageLoader.getInstance();
     private DisplayImageOptions options;
     private  DeletePicture  deletePicture;
     private EditTextListener editTextListener;
@@ -78,57 +79,91 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
     }
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(context).inflate(R.layout.item_consult_pics, parent,
-                false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_consult_pics, null);
         view.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT));
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-            viewHolder=((ViewHolder) holder);
-            viewHolder.title.addTextChangedListener(new TextWatcher() {
+            UploadPicsBean bean = list.get(position);
+            final   RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((ViewHolder) holder).img.getLayoutParams();
+            ((ViewHolder) holder).delete.setVisibility(View.INVISIBLE);
+            ((ViewHolder) holder).delete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                    if (s != null && !"".equals(s.toString())) {
-                        if (editTextListener != null) {
-                            editTextListener.AdapterTextChaged(position, s.toString());
-                        }
+                public void onClick(View v) {
+                    if (deletePicture != null) {
+                        ((ViewHolder) holder).delete.setVisibility(View.INVISIBLE);
+                        deletePicture.Detele(position);
                     }
-
-
                 }
             });
-            UploadPicsBean bean = list.get(position);
-            Log.d("test",""+position);
+            ((ViewHolder) holder).title.clearTextChangedListeners();
+              ((ViewHolder) holder).title.addTextChangedListener(new TextWatcher() {
+                  @Override
+                  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                  }
+
+                  @Override
+                  public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                  }
+
+                  @Override
+                  public void afterTextChanged(Editable s) {
+
+                      if (s != null && !"".equals(s.toString())) {
+                          if (editTextListener != null) {
+                              editTextListener.AdapterTextChaged(position, s.toString());
+
+                          }
+                      }
+                  }
+              });
+        ((ViewHolder) holder).title.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){//获得焦点
+                    ((ViewHolder) holder).title.setTop(((ViewHolder) holder).title.getBottom()-params.height/2);
+                }else{//失去焦点
+                    ((ViewHolder) holder).title.setTop(((ViewHolder) holder).title.getBottom()-params.height);
+                }
+            }
+        });
+            ((ViewHolder) holder).img.setOnClickListener(new OnClickListener(((ViewHolder) holder), position));
+            ((ViewHolder) holder).img.setOnLongClickListener(new LongClickListener(((ViewHolder) holder)));
+            Log.d("test", "" + position);
             if (bean != null) {
-                imageLoader.displayImage("file://" + bean.getPicture().getPath(), viewHolder.img);
-                viewHolder.img.setOnClickListener(new OnClickListener(viewHolder,position));
-                viewHolder.img.setProgress(bean.getPresent());
-                viewHolder.title.setText(bean.getPicturetitle());
-                viewHolder.img.setOnLongClickListener(new LongClickListener(viewHolder));
-                viewHolder.delete.setBackgroundResource(R.mipmap.ic_delete);
-                viewHolder.delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (deletePicture != null) {
-                            viewHolder.delete.setVisibility(View.INVISIBLE);
-                            deletePicture.Detele(position);
-                        }
-                    }
-                });
+//               imageLoader.displayImage("file://" + bean.getPicture().getPath(), viewHolder.img);
+                Bitmap bitmap = getLoacalBitmap(bean.getPicture().getPath());
+                ((ViewHolder) holder).img.setImageBitmap(upImageSize(bitmap, params.height));
+                ((ViewHolder) holder).img.setProgress(bean.getPresent());
+                ((ViewHolder) holder).title.setText(bean.getPicturetitle());
+                Log.d("test", bean.getPicturetitle());
+                ((ViewHolder) holder).delete.setBackgroundResource(R.mipmap.ic_delete);
+            }
+            ((ViewHolder) holder).title.clearFocus();
+    }
+
+    private Bitmap upImageSize(Bitmap bmp,int height) {
+        if(bmp==null){
+            return null;
         }
+        // 计算比例
+        float scaleY = (float)height / bmp.getHeight();// 高的比例
+        //新的宽高
+        int newW = 0;
+        int newH = 0;
+//        if(scaleX > scaleY){
+//            newW = (int) (bmp.getWidth() * scaleX);
+//            newH = (int) (bmp.getHeight() * scaleX);
+//        }else if(scaleX <= scaleY){
+            newW = (int) (bmp.getWidth() * scaleY);
+            newH = (int) (bmp.getHeight() * scaleY);
+//        }
+        Log.d("test",height+"  "+bmp.getHeight()+"   "+newW+"  "+newH);
+        return Bitmap.createScaledBitmap(bmp, newW, newH, true);
     }
 
     public Bitmap getLoacalBitmap(String url) {
@@ -190,14 +225,14 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
         this.list.remove(postion);
     }
     //
-    public final class ViewHolder extends RecyclerView.ViewHolder {
-        private ProcessImageView img;
-        private EditText title;
-        private ImageView delete;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        ProcessImageView img;
+        PictureTitleEdittext title;
+        ImageView delete;
         public ViewHolder(View view){
             super(view);
             img =(ProcessImageView)view.findViewById(R.id.piv_consult_picture) ;
-            title = (EditText)view.findViewById(R.id.et_consult_picture_title);
+            title = (PictureTitleEdittext)view.findViewById(R.id.et_consult_picture_title);
             delete=(ImageView)view.findViewById(R.id.iv_consult_picture_delete) ;
         }
     }

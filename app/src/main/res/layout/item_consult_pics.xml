@@ -7,7 +7,7 @@
     >
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 >
                 <com.dawnlightning.ucqa.widget.ProcessImageView
                     android:id="@+id/piv_consult_picture"
@@ -28,11 +28,12 @@
                     android:background="@null"
                     android:id="@+id/et_consult_picture_title"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:hint="请输入图片描述"
                     android:textColor="@color/black"
+                    android:inputType="textMultiLine"
                     android:textSize="16.0sp"
-                    android:layout_below="@+id/piv_consult_picture"
+                    android:layout_alignParentBottom="true"
                     android:layout_alignLeft="@id/piv_consult_picture"
                     android:layout_alignRight="@id/piv_consult_picture" />
             </RelativeLayout>

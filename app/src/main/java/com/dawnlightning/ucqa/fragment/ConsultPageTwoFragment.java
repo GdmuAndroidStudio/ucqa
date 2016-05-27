@@ -132,7 +132,6 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
         consultPicsAdapter =new ConsultPicsAdapter(getActivity(),list);
         lvConsultPic.setAdapter(consultPicsAdapter);
 //        lvConsultPic.addView(headview);
-        setButtonClickable();
     }
 
     public void initevent() {
@@ -157,7 +156,7 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
         consultPicsAdapter.setDeletePicture(new ConsultPicsAdapter.DeletePicture() {
             @Override
             public void Detele(int postion) {
-                consultPicsAdapter.remove(postion);
+                list.remove(postion);
                 consultPicsAdapter.notifyDataSetChanged();
             }
         });
@@ -165,10 +164,9 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
         consultPicsAdapter.setEditTextListener(new ConsultPicsAdapter.EditTextListener() {
             @Override
             public void AdapterTextChaged(int postion, String str) {
-                if(postion+1<=list.size()) {
                     UploadPicsBean bean = (UploadPicsBean) consultPicsAdapter.getitem(postion);
                     bean.setPicturetitle(str);
-                }
+                    Log.d("test",postion+"   "+str+"  ");
             }
         });
         //咨询正文的输入监听
@@ -230,6 +228,7 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
                 setButtonClickable();
             }
         });
+        btConsultSubmit.setClickable(false);
     }
 
     //设置提交的背景颜色
