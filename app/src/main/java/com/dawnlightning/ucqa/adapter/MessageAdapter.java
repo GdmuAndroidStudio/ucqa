@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.base.BaseFragment;
+import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
@@ -76,6 +77,8 @@ public class MessageAdapter extends BaseAdapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder,position);
         if (holder instanceof ItemViewHolder) {
+            ConsultMessageBean consultMessageBean=(ConsultMessageBean)data.get(position);
+            ((ItemViewHolder) holder).content.setText(consultMessageBean.getMessage());
             if (((ItemViewHolder) holder).photoView.getTag()!=null&&((ItemViewHolder)((ItemViewHolder) holder)).photoView.getTag().equals(position)){
             }else{
                 ((ItemViewHolder) holder).photoView.setTag(position);

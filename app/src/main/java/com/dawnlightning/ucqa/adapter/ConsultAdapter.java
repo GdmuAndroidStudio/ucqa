@@ -12,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
+import com.dawnlightning.ucqa.bean.others.ConsultBean;
+import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.widget.RoundImageView;
 
 import butterknife.Bind;
@@ -75,6 +77,10 @@ public class ConsultAdapter extends BaseAdapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder,position);
         if (holder instanceof ItemViewHolder) {
+            ConsultBean consultBean = (ConsultBean)data.get(position);
+            ((ItemViewHolder) holder).content.setText(consultBean.getMessage());
+            ((ItemViewHolder) holder).numreply.setText(Integer.toString(consultBean.getBwztclassid()));
+            ((ItemViewHolder) holder).numview.setText(Integer.toString(consultBean.getBwztdivisionid()));
             if (((ItemViewHolder) holder).photoView.getTag() != null && ((ItemViewHolder) ((ItemViewHolder) holder)).photoView.getTag().equals(position)) {
             } else {
                 ((ItemViewHolder) holder).photoView.setTag(position);
