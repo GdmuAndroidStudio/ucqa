@@ -40,4 +40,6 @@
     <color name="subscribe_item_disabled_bg_night">#ff2b2b2b</color>
     <color name="subscribe_seperate_line">#ffcdcdcd</color>
     <color name="jianshured">#E78271</color>
+    <drawable name="lightgrey">#DCDCDC</drawable>
+    <drawable name="nocolor">#00ffffff</drawable>
 </resources>

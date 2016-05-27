@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_detail_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/rl_detail_title"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/detail_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="#549D37">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:fitsSystemWindows="true"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <ImageView
             android:id="@+id/iv_detail_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:src="@mipmap/ic_back" />
 
         <TextView
             android:id="@+id/tv_detail_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:text="问题详细"
             android:textColor="#ffffff"
             android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/iv_detail_actions"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp"
             android:src="@mipmap/ic_add" />
-    </RelativeLayout>
+
+    </android.support.v7.widget.Toolbar>
 
     <com.dawnlightning.ucqa.widget.UserDefineScrollView
         android:id="@+id/sv_detail_parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -250,8 +251,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="20dp"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardBackgroundColor="@color/white"
+                app:cardElevation="2dp">
                 >
 
                 <LinearLayout
@@ -259,8 +260,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@mipmap/bg_white"
-                    android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:orientation="vertical">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_comment_list"
@@ -268,8 +269,7 @@
                         android:layout_height="0dp"
                         android:layout_weight="1"
                         android:cacheColorHint="@null"
-                        android:scrollbars="none"
-                        />
+                        android:scrollbars="none" />
 
                     <TextView
                         android:id="@+id/tv_detail_nocomment"
@@ -288,13 +288,13 @@
     <LinearLayout
         android:id="@+id/ll_detail_setcomment"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="54dp"
         android:background="@mipmap/bg_white"
         android:orientation="vertical">
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="0.5dp"
             android:background="@drawable/default_line" />
 
         <LinearLayout
@@ -302,13 +302,18 @@
             android:layout_height="match_parent"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:gravity="center"
             android:orientation="vertical"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp">
+            android:paddingBottom="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="8dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/ed_comment_bg"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <EditText
@@ -316,78 +321,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:layout_toLeftOf="@+id/bt_sentcomment"
                     android:background="@null"
-                    android:hint="写下你的想法和大家交流吧" />
+                    android:hint="写下你的想法和大家交流吧"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textSize="14sp" />
 
-                <Button
-                    android:id="@+id/bt_sentcomment"
-                    android:layout_width="48dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/btn_comment"
+                <View
+                    android:layout_width="1.0dp"
+                    android:layout_height="match_parent"
+                    android:background="#DCDCDC"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_toLeftOf="@+id/tv_sentcomment"/>
+
+                <TextView
+                    android:id="@+id/tv_sentcomment"
+                    android:layout_width="wrap_content"
+                    android:background="@drawable/btn_selector"
+                    android:layout_height="match_parent"
                     android:text="评论"
+                    android:padding="6dp"
+                    android:layout_margin="3dp"
+                    android:textSize="14sp"
                     android:textColor="@color/nomalGray"
-                    android:textSize="15.0sp" />
+                    android:layout_alignParentRight="true"
+                    android:gravity="center"
+                    android:clickable="true"/>
             </RelativeLayout>
-
-            <View
-
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/edittext_line" />
         </LinearLayout>
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/rl_detail_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@mipmap/bg_white"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iv_detail_error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:src="@mipmap/nomessage" />
-
-            <TextView
-                android:id="@+id/tv_detail_error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginTop="5dp"
-                android:text="暂无咨询"
-                android:textColor="@color/nomalGray"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/bt_detail_error"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginTop="20dp"
-                android:background="#549D37"
-                android:text="发布咨询"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-    </RelativeLayout>
+    <include layout="@layout/consult_error" />
 </LinearLayout>

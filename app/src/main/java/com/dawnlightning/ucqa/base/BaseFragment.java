@@ -31,25 +31,20 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshWidget;
-    private Handler handler = new Handler();
+    private Handler handler;
     public BaseAdapter adapter;
 
 
     public abstract void initAdapter();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        initAdapter();
-        initData();
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("base oncreate");
         final View view = inflater.inflate(setContentLayout(), container, false);
         ButterKnife.bind(this, view);
+        initAdapter();
         initView();
+        initData();
         initEvent();
         return view;
     }
@@ -144,6 +139,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     @Override
     public void initData() {
+        handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
