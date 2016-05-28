@@ -86,9 +86,10 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-            UploadPicsBean bean = list.get(position);
+            final UploadPicsBean bean = list.get(position);
             final   RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((ViewHolder) holder).img.getLayoutParams();
             ((ViewHolder) holder).delete.setVisibility(View.INVISIBLE);
+             ((ViewHolder) holder).title.setVisibility(View.INVISIBLE);
             ((ViewHolder) holder).delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -98,28 +99,14 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
                     }
                 }
             });
-            ((ViewHolder) holder).title.clearTextChangedListeners();
-              ((ViewHolder) holder).title.addTextChangedListener(new TextWatcher() {
-                  @Override
-                  public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                  }
-
-                  @Override
-                  public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                  }
-
-                  @Override
-                  public void afterTextChanged(Editable s) {
-
-                      if (s != null && !"".equals(s.toString())) {
-                          if (editTextListener != null) {
-                              editTextListener.AdapterTextChaged(position, s.toString());
-
-                          }
-                      }
-                  }
-              });
+            ((ViewHolder) holder).title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (editTextListener != null) {
+                        editTextListener.AdapterTextChaged(position, bean.getPicturetitle());
+                    }
+                }
+            });
         ((ViewHolder) holder).title.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -139,9 +126,12 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
                 Bitmap bitmap = getLoacalBitmap(bean.getPicture().getPath());
                 ((ViewHolder) holder).img.setImageBitmap(upImageSize(bitmap, params.height));
                 ((ViewHolder) holder).img.setProgress(bean.getPresent());
-                ((ViewHolder) holder).title.setText(bean.getPicturetitle());
+                if(bean.getPicturetitle()!=""&&bean.getPicturetitle()!=null) {
+                    ((ViewHolder) holder).title.setText("修改");
+                }else{
+                    ((ViewHolder) holder).title.setText("描述");
+                }
                 Log.d("test", bean.getPicturetitle());
-                ((ViewHolder) holder).delete.setBackgroundResource(R.mipmap.ic_delete);
             }
             ((ViewHolder) holder).title.clearFocus();
     }
@@ -187,6 +177,7 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
         public void onClick(View view) {
             if(viewHolder.delete.getVisibility()==View.VISIBLE) {
                 viewHolder.delete.setVisibility(View.INVISIBLE);
+                viewHolder.title.setVisibility(View.INVISIBLE);
             }else {
                 Intent intent = new Intent();
                 intent.setClass(context, DisplayActivity.class);
@@ -207,6 +198,7 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
         @Override
         public boolean onLongClick(View view) {
             viewHolder.delete.setVisibility(View.VISIBLE);
+            viewHolder.title.setVisibility(View.VISIBLE);
             return true;
         }
     }
@@ -227,13 +219,13 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
     //
     public class ViewHolder extends RecyclerView.ViewHolder {
         ProcessImageView img;
-        PictureTitleEdittext title;
-        ImageView delete;
+        TextView title;
+        TextView delete;
         public ViewHolder(View view){
             super(view);
             img =(ProcessImageView)view.findViewById(R.id.piv_consult_picture) ;
-            title = (PictureTitleEdittext)view.findViewById(R.id.et_consult_picture_title);
-            delete=(ImageView)view.findViewById(R.id.iv_consult_picture_delete) ;
+            title = (TextView)view.findViewById(R.id.et_consult_picture_title);
+            delete=(TextView)view.findViewById(R.id.iv_consult_picture_delete) ;
         }
     }
     public interface DeletePicture{
