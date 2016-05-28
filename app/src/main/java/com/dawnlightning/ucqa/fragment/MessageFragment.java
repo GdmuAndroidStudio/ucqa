@@ -27,6 +27,7 @@ import com.dawnlightning.ucqa.base.Actions;
 import com.dawnlightning.ucqa.base.BaseFragment;
 import com.dawnlightning.ucqa.bean.others.ConsultBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
+import com.dawnlightning.ucqa.presenter.MessagePresenter;
 import com.dawnlightning.ucqa.viewinterface.IMessageView;
 
 import java.util.ArrayList;
@@ -41,41 +42,37 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
  * Created by Administrator on 2016/4/18.
  */
 public class MessageFragment extends BaseFragment implements IMessageView{
-
+    private MessagePresenter messagePresenter;
+    private IMessageView iMessageView;
     private List<ConsultMessageBean> consultMessageBeanList;
 
     @Override
     public void initAdapter() {
         consultMessageBeanList = new ArrayList<ConsultMessageBean>();
-        for(int i=0;i<10;i++)
-            consultMessageBeanList.add(new ConsultMessageBean());
         adapter = new MessageAdapter(getContext());
+        messagePresenter = new MessagePresenter(this,getContext());
+        for(int i=0;i<4;i++)
+            consultMessageBeanList.add(new ConsultMessageBean());
         adapter.setList(consultMessageBeanList);
     }
 
     @Override
     public void Refresh(Actions action) {
-        consultMessageBeanList.clear();
-        for(int i=0;i<10;i++)
-            consultMessageBeanList.add(new ConsultMessageBean());
-        adapter.notifyDataSetChanged();
+        messagePresenter.refresh();
     }
 
     @Override
     public void LoadMore(Actions action) {
-        for(int i=0;i<2;i++)
-            consultMessageBeanList.add(new ConsultMessageBean());
-        adapter.notifyDataSetChanged();
-        adapter.notifyItemRemoved(adapter.getItemCount());
+        messagePresenter.loadMore();
     }
 
     @Override
-    public void showerror(int code, String msg) {
-
+    public MessageAdapter getMessageAdapter() {
+        return (MessageAdapter)adapter;
     }
 
     @Override
-    public void showConsultMessageList(List<ConsultMessageBean> list, Actions action) {
-
+    public List<ConsultMessageBean> getConsultMessageBeanList() {
+        return consultMessageBeanList;
     }
 }

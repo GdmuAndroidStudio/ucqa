@@ -1,6 +1,7 @@
 package com.dawnlightning.ucqa.adapter;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
+import com.dawnlightning.ucqa.bean.others.ConsultBean;
+import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.widget.RoundImageView;
 
 import butterknife.Bind;
@@ -23,6 +26,7 @@ public class ConsultAdapter extends BaseAdapter {
     public static final int TYPE_FOOTER = 1;
     private Context context;
     private FootViewHolder footViewHolder;
+    private Handler handler = new Handler();
 
     public ConsultAdapter(Context context) {
         this.context = context;
@@ -44,9 +48,39 @@ public class ConsultAdapter extends BaseAdapter {
     }
 
     @Override
+    public void setOverFoot() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                footViewHolder.progressBar.setVisibility(View.GONE);
+                footViewHolder.textView.setText("已加载完毕");
+            }
+        }, 1000);
+
+    }
+
+    @Override
+    public void setBeforeFoot() {
+        footViewHolder.progressBar.setVisibility(View.GONE);
+        footViewHolder.textView.setText("下拉加载更多");
+
+    }
+
+    @Override
+    public void setFooting() {
+        footViewHolder.progressBar.setVisibility(View.VISIBLE);
+        footViewHolder.textView.setText("正在加载中");
+
+    }
+
+    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder,position);
         if (holder instanceof ItemViewHolder) {
+            ConsultBean consultBean = (ConsultBean)data.get(position);
+            ((ItemViewHolder) holder).content.setText(consultBean.getMessage());
+            ((ItemViewHolder) holder).numreply.setText(Integer.toString(consultBean.getBwztclassid()));
+            ((ItemViewHolder) holder).numview.setText(Integer.toString(consultBean.getBwztdivisionid()));
             if (((ItemViewHolder) holder).photoView.getTag() != null && ((ItemViewHolder) ((ItemViewHolder) holder)).photoView.getTag().equals(position)) {
             } else {
                 ((ItemViewHolder) holder).photoView.setTag(position);
