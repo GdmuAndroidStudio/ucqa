@@ -6,12 +6,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+<<<<<<< HEAD
     android:layout_marginLeft="0dp"
     android:layout_marginRight="0dp"
+=======
+>>>>>>> 954e9c9b7c484a979d40f7f28b4d6cd85190b90a
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="@color/white"
-    app:contentPadding="@dimen/consult_item_content_padding">
-    >
+    app:cardElevation="0dp"
+    app:contentPaddingLeft="@dimen/consult_item_content_padding"
+    app:contentPaddingRight="@dimen/consult_item_content_padding"
+    app:contentPaddingTop="@dimen/consult_item_content_padding">
 <LinearLayout 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -165,6 +170,10 @@
                 android:textColor="@color/nomalGray" />
 
         </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/bg_lightgray"></View>
     </LinearLayout>
 </LinearLayout>
 </android.support.v7.widget.CardView>

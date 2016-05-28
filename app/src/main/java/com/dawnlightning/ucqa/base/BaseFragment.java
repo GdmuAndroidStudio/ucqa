@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.BaseAdapter;
 import com.dawnlightning.ucqa.viewinterface.IBase;
@@ -30,24 +31,20 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_widget)
     SwipeRefreshLayout swipeRefreshWidget;
-    private Handler handler = new Handler();
+    private Handler handler;
     public BaseAdapter adapter;
+
 
     public abstract void initAdapter();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        initAdapter();
-        initData();
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        System.out.println("base oncreate");
         final View view = inflater.inflate(setContentLayout(), container, false);
         ButterKnife.bind(this, view);
+        initAdapter();
         initView();
+        initData();
         initEvent();
         return view;
     }
@@ -99,7 +96,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
                 int lastCompleteVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
                 int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
                 //设置加载前foot样式
-                if(lastVisibleItemPosition + 1 == adapter.getItemCount()){
+                if (lastVisibleItemPosition + 1 == adapter.getItemCount()) {
                     adapter.setBeforeFoot();
                 }
                 //当foot完全出现在屏幕中进行加载更多操作
@@ -142,13 +139,14 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     @Override
     public void initData() {
+        handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 Refresh(Actions.Refresh);
                 swipeRefreshWidget.setRefreshing(false);
             }
-        }, 2000);
+        }, 3000);
     }
 
     @Override

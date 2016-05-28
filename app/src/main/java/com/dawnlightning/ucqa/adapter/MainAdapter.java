@@ -1,5 +1,6 @@
 package com.dawnlightning.ucqa.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
@@ -16,12 +17,16 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.holder.Holder;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.MainActivity;
 import com.dawnlightning.ucqa.base.Actions;
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +35,7 @@ public class MainAdapter extends BaseAdapter {
     private static final int TYPE_ITEM = 0;
     private static final int TYPE_FOOTER = 1;
     private static final int TYPE_HEADER = 2;
+    private static final int TYPE_BANNER = 3;
     private Context context;
     private FootViewHolder footViewHolder;
     private Handler handler = new Handler();
@@ -50,7 +56,8 @@ public class MainAdapter extends BaseAdapter {
             @Override
             public void run() {
                 footViewHolder.progressBar.setVisibility(View.GONE);
-                footViewHolder.textView.setText("已加载完毕");
+                footViewHolder.textView.setText("已全部加载完毕");
+                footViewHolder.itemView.setClickable(false);
             }
         }, 1000);
 
@@ -74,8 +81,10 @@ public class MainAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         if (position + 1 == getItemCount()) {
             return TYPE_FOOTER;
-        } else if (position == 0) {
+        } else if (position == 1) {
             return TYPE_HEADER;
+        } else if (position == 0) {
+            return TYPE_BANNER;
         } else {
             return TYPE_ITEM;
         }
@@ -96,6 +105,10 @@ public class MainAdapter extends BaseAdapter {
             View view = LayoutInflater.from(context).inflate(R.layout.item_header_girdview, parent,
                     false);
             return new HeadViewHolder(context, view);
+        }else if(viewType == TYPE_BANNER){
+            final View view = LayoutInflater.from(context).inflate(R.layout.item_banner, parent,
+                    false);
+            return new BannerViewHolder(view);
         }
         return null;
     }
@@ -157,15 +170,15 @@ public class MainAdapter extends BaseAdapter {
 
         public HeadViewHolder(Context context, View view) {
             super(view);
+            mainActivity = (MainActivity) context;
             gridView = (GridView) itemView.findViewById(R.id.gv_classify);
             for (int i = 0; i < 6; i++) {
                 ConsultClassifyBean consultClassifyBean = new ConsultClassifyBean();
-                consultClassifyBean.setBwztclassarrid("" + (i + 1));
+                consultClassifyBean.setBwztclassarrid("" + i);
                 consultClassifyBean.setBwztclassarrname("" + (i + 1));
                 classifylist.add(consultClassifyBean);
             }
-            classifyAdapter = new ClassifyAdapter(context, classifylist);
-            mainActivity = (MainActivity) context;
+            classifyAdapter = new ClassifyAdapter(mainActivity,context, classifylist);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -174,6 +187,74 @@ public class MainAdapter extends BaseAdapter {
                 }
             });
             gridView.setAdapter(classifyAdapter);
+        }
+    }
+
+    static class BannerViewHolder extends ViewHolder {
+
+        private ConvenientBanner convenientBanner;
+        private ArrayList<Integer> localImages = new ArrayList<Integer>();
+
+        public BannerViewHolder(View view) {
+            super(view);
+            convenientBanner = (ConvenientBanner) view.findViewById(R.id.banner);
+            loadLocalImages();
+            convenientBanner.setPages(
+                    new CBViewHolderCreator<LocalImageHolderView>() {
+                        @Override
+                        public LocalImageHolderView createHolder() {
+                            return new LocalImageHolderView();
+                        }
+                    }, localImages)
+                    //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+                    .setPageIndicator(new int[]{R.mipmap.indicator, R.mipmap.indicator_focused})
+                    //设置指示器的方向
+                    .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
+            //开始自动翻页
+            convenientBanner.startTurning(3000);
+        }
+
+        private void loadLocalImages() {
+            //本地图片集合
+            for (int position = 0; position < 2; position++)
+                localImages.add(getResId("banner" + position, R.mipmap.class));
+
+        }
+
+        /**
+         * 通过文件名获取资源id 例子：getResId("icon", R.drawable.class);
+         *
+         * @param variableName
+         * @param c
+         * @return
+         */
+        public static int getResId(String variableName, Class<?> c) {
+            try {
+                Field idField = c.getDeclaredField(variableName);
+                return idField.getInt(idField);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -1;
+            }
+        }
+
+        /*
+        本地图片Holder例子
+        */
+        public class LocalImageHolderView implements Holder<Integer> {
+            private ImageView imageView;
+
+            @Override
+            public View createView(Context context) {
+                imageView = new ImageView(context);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                return imageView;
+            }
+
+            @Override
+            public void UpdateUI(Context context, int position, Integer data) {
+                imageView.setImageResource(data);
+            }
         }
     }
 }

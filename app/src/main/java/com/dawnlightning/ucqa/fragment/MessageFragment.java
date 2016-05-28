@@ -45,6 +45,7 @@ public class MessageFragment extends BaseFragment implements IMessageView{
     private MessagePresenter messagePresenter;
     private IMessageView iMessageView;
     private List<ConsultMessageBean> consultMessageBeanList;
+
     @Override
     public void initAdapter() {
         consultMessageBeanList = new ArrayList<ConsultMessageBean>();

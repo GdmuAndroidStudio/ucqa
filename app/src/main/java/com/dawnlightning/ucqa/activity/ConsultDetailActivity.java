@@ -1,17 +1,22 @@
 package com.dawnlightning.ucqa.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.CommentListAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.CommentBean;
+import com.dawnlightning.ucqa.widget.DividerLine;
+import com.dawnlightning.ucqa.widget.FullyLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,30 +30,38 @@ import butterknife.OnClick;
  */
 public class ConsultDetailActivity extends BaseActivity {
 
-    @Bind(R.id.iv_detail_back)
-    ImageView ivDetailBack;
     @Bind(R.id.rv_comment_list)
     RecyclerView rvCommentList;
+    @Bind(R.id.ed_setcomment)
+    EditText edSetcomment;
+    @Bind(R.id.detail_toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.iv_detail_back)
+    ImageView ivDetailBack;
 
     private Handler handler = new Handler();
     private List<CommentBean> data = new ArrayList<>();
     private CommentListAdapter commentListAdapter;
-
+    private final FullyLinearLayoutManager fullyLinearLayoutManager = new FullyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);//false参数设置是否逆布局
+    private final DividerLine dividerLine = new DividerLine(DividerLine.VERTICAL);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         initView();
         initData();
-        System.out.println("size = " + commentListAdapter.getItemCount());
     }
 
     private void initView() {
         commentListAdapter = new CommentListAdapter(this, data);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        rvCommentList.setLayoutManager(linearLayoutManager);
+        dividerLine.setSize(1);
+        dividerLine.setColor(this.getResources().getColor(R.color.lightgray));
+        rvCommentList.addItemDecoration(dividerLine);
+        rvCommentList.setLayoutManager(fullyLinearLayoutManager);
         rvCommentList.setAdapter(commentListAdapter);
         rvCommentList.setHasFixedSize(true);
         rvCommentList.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -70,15 +83,33 @@ public class ConsultDetailActivity extends BaseActivity {
     }
 
     private void initData() {
-        for (int i = 0; i < 1; i++) {
+        data.clear();
+        for (int i = 0; i < 10; i++) {
             CommentBean commentBean = new CommentBean();
+            commentBean.setName("user" + (i + 1));
             data.add(commentBean);
         }
         commentListAdapter.notifyDataSetChanged();
     }
 
-    public void clickToReply() {
-        Toast.makeText(this, "test", Toast.LENGTH_SHORT).show();
+    public void clickToReply(String name) {
+        edSetcomment.setHint("@" + name);
+        edSetcomment.setFocusable(true);
+        edSetcomment.setFocusableInTouchMode(true);
+        edSetcomment.requestFocus();
+        edSetcomment.requestFocusFromTouch();
+        InputMethodManager inputManager =
+                (InputMethodManager) edSetcomment.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.showSoftInput(edSetcomment, 0);
+    }
+
+    public void LoadMore() {
+        for (int i = 0; i < 1; i++) {
+            CommentBean commentBean = new CommentBean();
+            commentBean.setName("add user");
+            data.add(commentBean);
+        }
+        commentListAdapter.notifyDataSetChanged();
     }
 
     @OnClick(R.id.iv_detail_back)

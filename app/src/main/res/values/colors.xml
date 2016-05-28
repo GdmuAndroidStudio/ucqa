@@ -5,6 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="white">#ffffffff</color>
     <color name="black">#FF000000</color>
+    <color name="colorless">#00ffffff</color>
     <color name="nomalGray">#838B83</color>
     <color name="grey">#8C8C8C</color>
     <color name="dark">#424242</color>
@@ -13,6 +14,7 @@
     <color name="red">#FFFF0000</color>
     <color name="green">#549D37</color>
     <color name="lightgray">#DCDCDC</color>
+    <color name="bg_lightgray">#f2f2f2</color>
     <color name="morelightgray">#EEEEEE</color>
     <color name="default_text_night">#ff747474</color>
     <color name="subscribe_item_text_color_pressed">#ffb9b9b9</color>
@@ -38,4 +40,6 @@
     <color name="subscribe_item_disabled_bg_night">#ff2b2b2b</color>
     <color name="subscribe_seperate_line">#ffcdcdcd</color>
     <color name="jianshured">#E78271</color>
+    <drawable name="lightgrey">#DCDCDC</drawable>
+    <drawable name="nocolor">#00ffffff</drawable>
 </resources>
