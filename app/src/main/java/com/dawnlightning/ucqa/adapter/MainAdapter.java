@@ -20,14 +20,18 @@ import android.widget.Toast;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
+import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.MainActivity;
 import com.dawnlightning.ucqa.base.Actions;
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
+import com.dawnlightning.ucqa.fragment.MainFragment;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainAdapter extends BaseAdapter {
@@ -105,10 +109,10 @@ public class MainAdapter extends BaseAdapter {
             View view = LayoutInflater.from(context).inflate(R.layout.item_header_girdview, parent,
                     false);
             return new HeadViewHolder(context, view);
-        }else if(viewType == TYPE_BANNER){
+        } else if (viewType == TYPE_BANNER) {
             final View view = LayoutInflater.from(context).inflate(R.layout.item_banner, parent,
                     false);
-            return new BannerViewHolder(view);
+            return new BannerViewHolder(context,view);
         }
         return null;
     }
@@ -178,7 +182,7 @@ public class MainAdapter extends BaseAdapter {
                 consultClassifyBean.setBwztclassarrname("" + (i + 1));
                 classifylist.add(consultClassifyBean);
             }
-            classifyAdapter = new ClassifyAdapter(mainActivity,context, classifylist);
+            classifyAdapter = new ClassifyAdapter(mainActivity, context, classifylist);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -194,22 +198,52 @@ public class MainAdapter extends BaseAdapter {
 
         private ConvenientBanner convenientBanner;
         private ArrayList<Integer> localImages = new ArrayList<Integer>();
+        private List<String> networkImages;
+        private String[] images = {"http://img2.imgtn.bdimg.com/it/u=3093785514,1341050958&fm=21&gp=0.jpg",
+                "http://img2.3lian.com/2014/f2/37/d/40.jpg",
+                "http://d.3987.com/sqmy_131219/001.jpg",
+                "http://img2.3lian.com/2014/f2/37/d/39.jpg",
+                "http://www.8kmm.com/UploadFiles/2012/8/201208140920132659.jpg",
+                "http://f.hiphotos.baidu.com/image/h%3D200/sign=1478eb74d5a20cf45990f9df460b4b0c/d058ccbf6c81800a5422e5fdb43533fa838b4779.jpg",
+                "http://f.hiphotos.baidu.com/image/pic/item/09fa513d269759ee50f1971ab6fb43166c22dfba.jpg"
+        };
 
-        public BannerViewHolder(View view) {
+        public BannerViewHolder(final Context context, View view) {
             super(view);
             convenientBanner = (ConvenientBanner) view.findViewById(R.id.banner);
             loadLocalImages();
-            convenientBanner.setPages(
-                    new CBViewHolderCreator<LocalImageHolderView>() {
-                        @Override
-                        public LocalImageHolderView createHolder() {
-                            return new LocalImageHolderView();
-                        }
-                    }, localImages)
+//            convenientBanner.setPages(
+//                    new CBViewHolderCreator<LocalImageHolderView>() {
+//                        @Override
+//                        public LocalImageHolderView createHolder() {
+//                            return new LocalImageHolderView();
+//                        }
+//                    }, localImages)
+//                    //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+//                    .setPageIndicator(new int[]{R.mipmap.indicator, R.mipmap.indicator_focused})
+//                    //设置指示器的方向
+//                    .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
+//            //开始自动翻页
+//            convenientBanner.startTurning(3000);
+
+//            网络加载例子
+            networkImages = Arrays.asList(images);
+            convenientBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
+                @Override
+                public NetworkImageHolderView createHolder() {
+                    return new NetworkImageHolderView();
+                }
+            }, networkImages)
                     //设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
                     .setPageIndicator(new int[]{R.mipmap.indicator, R.mipmap.indicator_focused})
                     //设置指示器的方向
-                    .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL);
+                    .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
+            .setOnItemClickListener(new com.bigkoo.convenientbanner.listener.OnItemClickListener() {
+                @Override
+                public void onItemClick(int position) {
+                    Toast.makeText(context,"banner" + position,Toast.LENGTH_SHORT).show();
+                }
+            });
             //开始自动翻页
             convenientBanner.startTurning(3000);
         }
@@ -254,6 +288,28 @@ public class MainAdapter extends BaseAdapter {
             @Override
             public void UpdateUI(Context context, int position, Integer data) {
                 imageView.setImageResource(data);
+            }
+        }
+
+        /**
+         * Created by Sai on 15/8/4.
+         * 网络图片加载例子
+         */
+        public class NetworkImageHolderView implements Holder<String> {
+            private ImageView imageView;
+
+            @Override
+            public View createView(Context context) {
+                //你可以通过layout文件来创建，也可以像我一样用代码创建，不一定是Image，任何控件都可以进行翻页
+                imageView = new ImageView(context);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                return imageView;
+            }
+
+            @Override
+            public void UpdateUI(Context context, int position, String data) {
+                imageView.setImageResource(R.mipmap.ic_default_adimage);
+                ImageLoader.getInstance().displayImage(data, imageView);
             }
         }
     }
