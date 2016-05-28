@@ -39,6 +39,7 @@ import com.dawnlightning.ucqa.utils.JsonParser;
 import com.dawnlightning.ucqa.utils.SdCardUtil;
 import com.dawnlightning.ucqa.utils.TimeUtil;
 import com.dawnlightning.ucqa.viewinterface.IConsultView;
+import com.dawnlightning.ucqa.widget.ColorDialog;
 import com.dawnlightning.ucqa.widget.ExpandListView;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -67,7 +68,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2016/4/13.
  */
-public class ConsultPageTwoFragment extends Fragment implements IConsultView{
+public class ConsultPageTwoFragment extends Fragment implements IConsultView,ColorDialog.OnNegativeListener,ColorDialog.OnPositiveListener{
 
     @Bind(R.id.et_consult_subject)
     EditText etConsultSubject;
@@ -90,6 +91,8 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
     private List<UploadPicsBean> list = new ArrayList<UploadPicsBean>();
     private List<String> picids = new ArrayList<String>();//用于存储服务器回调的picsid
     private Handler handler;
+    private ColorDialog colorDialog;
+
 
     //    private ConsultPresenter consultPresenter;
     String fileName = String.valueOf(System.currentTimeMillis()) + ".jpg";
@@ -131,6 +134,9 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
         final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         lvConsultPic.setLayoutManager(layoutManager);
         consultPicsAdapter =new ConsultPicsAdapter(getActivity(),list);
+        colorDialog = new ColorDialog(getContext());
+        colorDialog.setPositiveListener("确定",this);
+        colorDialog.setNegativeListener("取消",this);
         lvConsultPic.setAdapter(consultPicsAdapter);
 //        lvConsultPic.addView(headview);
     }
@@ -165,9 +171,11 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
         consultPicsAdapter.setEditTextListener(new ConsultPicsAdapter.EditTextListener() {
             @Override
             public void AdapterTextChaged(int postion, String str) {
-                    UploadPicsBean bean = (UploadPicsBean) consultPicsAdapter.getitem(postion);
-                    bean.setPicturetitle(str);
-                    Log.d("test",postion+"   "+str+"  ");
+//                    UploadPicsBean bean = (UploadPicsBean) consultPicsAdapter.getitem(postion);
+//                    bean.setPicturetitle(str);
+//                    Log.d("test",postion+"   "+str+"  ");
+                colorDialog.show();
+                colorDialog.setContentText(str,postion);
             }
         });
         //咨询正文的输入监听
@@ -678,5 +686,18 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onClicks(ColorDialog dialog,int position) {
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onClick(ColorDialog dialog,int position) {
+        UploadPicsBean bean = (UploadPicsBean) consultPicsAdapter.getitem(position);
+        bean.setPicturetitle(dialog.getContentText().toString());
+        consultPicsAdapter.notifyDataSetChanged();
+        dialog.dismiss();
     }
 }
