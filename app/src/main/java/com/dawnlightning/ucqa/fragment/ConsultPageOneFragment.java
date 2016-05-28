@@ -97,6 +97,10 @@ public class ConsultPageOneFragment extends Fragment implements OnItemClickListe
     boolean isMove = false;
     private Boolean isShowInput = false;
 
+    public ConsultPageOneFragment(){
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_patient_info, container, false);
