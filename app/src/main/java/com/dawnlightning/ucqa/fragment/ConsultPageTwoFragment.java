@@ -90,6 +90,7 @@ public class ConsultPageTwoFragment extends Fragment implements IConsultView{
     private List<UploadPicsBean> list = new ArrayList<UploadPicsBean>();
     private List<String> picids = new ArrayList<String>();//用于存储服务器回调的picsid
     private Handler handler;
+
     //    private ConsultPresenter consultPresenter;
     String fileName = String.valueOf(System.currentTimeMillis()) + ".jpg";
 
