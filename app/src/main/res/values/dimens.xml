@@ -24,4 +24,5 @@
     <dimen name="margin15">15dp</dimen>
     <dimen name="textsize12">12sp</dimen>
     <dimen name="textsize5">5sp</dimen>
+    <dimen name="alert_width">290dp</dimen>
 </resources>

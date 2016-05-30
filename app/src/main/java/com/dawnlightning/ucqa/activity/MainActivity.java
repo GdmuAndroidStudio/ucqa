@@ -1,22 +1,20 @@
 package com.dawnlightning.ucqa.activity;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.LeftMenuAdapter;
 import com.dawnlightning.ucqa.adapter.MyFragmentPagerAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
-import com.dawnlightning.ucqa.base.BaseFragment;
+import com.dawnlightning.ucqa.base.Menu;
 import com.dawnlightning.ucqa.fragment.ConsultFragment;
 import com.dawnlightning.ucqa.fragment.MainFragment;
 import com.dawnlightning.ucqa.fragment.MessageFragment;
@@ -26,7 +24,6 @@ import com.dawnlightning.ucqa.viewinterface.IMainView;
 import com.dawnlightning.ucqa.widget.DragLayout;
 import com.dawnlightning.ucqa.widget.MyViewPager;
 import com.dawnlightning.ucqa.widget.RoundImageView;
-import com.dawnlightning.ucqa.base.Menu;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.ArrayList;
@@ -38,7 +35,7 @@ import butterknife.ButterKnife;
 /**
  *
  */
-public class MainActivity extends BaseActivity implements IMainView{
+public class MainActivity extends BaseActivity implements IMainView {
     @Bind(R.id.iv_icon)
     RoundImageView ivIcon;
     @Bind(R.id.tv_username)
@@ -53,8 +50,6 @@ public class MainActivity extends BaseActivity implements IMainView{
     TextView unreadMsgNumber;
     @Bind(R.id.title)
     TextView title;
-    @Bind(R.id.rl_title)
-    RelativeLayout rlTitle;
     @Bind(R.id.mvp_mainactivity)
     MyViewPager mvpMainactivity;
     @Bind(R.id.dl_main)
@@ -69,7 +64,7 @@ public class MainActivity extends BaseActivity implements IMainView{
      * 屏幕高度
      */
     private int mScreenHeight = 0;
-    private List<Menu> menuList=new ArrayList<Menu>();
+    private List<Menu> menuList = new ArrayList<Menu>();
     private LeftMenuAdapter menuadapter;
     private MyFragmentPagerAdapter myFragmentPagerAdapter;
     private MainFragment mainFragment;
@@ -85,30 +80,32 @@ public class MainActivity extends BaseActivity implements IMainView{
         initView();
         initDragLayout();
         initLeftContent();
-        TestModel model=new TestModel();
+        TestModel model = new TestModel();
         //model.GetClassify();
         //model.GetConsultList();
         //model.GetConsultDetailed();
         //model.GetSpecifyConsult();
-   //     model.GetNotice();
+        //     model.GetNotice();
 //        model.GetCommentList();
 //        model.GetMyConsult();
-       // model.UploadPicture();
-       //  model.PublicIssuse();
-       // model.Solove();
-         //model.Comment();
+        // model.UploadPicture();
+        //  model.PublicIssuse();
+        // model.Solove();
+        //model.Comment();
         //model.Reply();
-       // model.Report();
-       // model.Delete();
-       // model.Upadte();
+        // model.Report();
+        // model.Delete();
+        // model.Upadte();
 
     }
-    public void test(){
+
+    public void test() {
 
     }
+
     @Override
     public void showupdate() {
-        ((Menu)menuadapter.getItem(4)).setStatus(1);
+        ((Menu) menuadapter.getItem(4)).setStatus(1);
         menuadapter.notifyDataSetChanged();
     }
 
@@ -120,7 +117,7 @@ public class MainActivity extends BaseActivity implements IMainView{
         title.setText(strclassify);
     }
 
-    private void initView(){
+    private void initView() {
         showtitleclassift("全部");
         mvpMainactivity.setPagingEnabled(false);//不允许滑动
         ivMenu.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +132,7 @@ public class MainActivity extends BaseActivity implements IMainView{
         fragmentArrayList.add(mainFragment);
         fragmentArrayList.add(messageFragment);
         fragmentArrayList.add(consultFragment);
-        myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(),fragmentArrayList);
+        myFragmentPagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentArrayList);
         mvpMainactivity.setAdapter(myFragmentPagerAdapter);
         lvMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -168,21 +165,23 @@ public class MainActivity extends BaseActivity implements IMainView{
                 showtitleclassift("咨询");
                 dlMain.close();
                 Intent consult = new Intent();
-                consult.setClass(this,ConsultActivity.class);
+                consult.setClass(this, ConsultActivity.class);
                 startActivity(consult);
                 break;
         }
-        }
+    }
+
     /**
      * 初始化侧拉栏
      */
-    private void initDragLayout(){
+    private void initDragLayout() {
         dlMain.setDragListener(new DragLayout.DragListener() {
             //界面打开的时候
             @Override
             public void onOpen() {
 
             }
+
             //界面关闭的时候
             @Override
             public void onClose() {
@@ -191,7 +190,7 @@ public class MainActivity extends BaseActivity implements IMainView{
             //界面滑动的时候
             @Override
             public void onDrag(float percent) {
-                ViewHelper.setAlpha(ivMenu,1 - percent);
+                ViewHelper.setAlpha(ivMenu, 1 - percent);
             }
         });
     }
@@ -211,10 +210,10 @@ public class MainActivity extends BaseActivity implements IMainView{
         tvUsername.setLayoutParams(NameParams);
         menuList.add(new Menu("主        页", 0));
         menuList.add(new Menu("我的消息", 0));
-        menuList.add(new Menu("我的咨询",0));
-        menuList.add(new Menu("我要咨询",0));
-        menuList.add(new Menu("设        置",0));
-        menuadapter=new LeftMenuAdapter(MainActivity.this,menuList);
+        menuList.add(new Menu("我的咨询", 0));
+        menuList.add(new Menu("我要咨询", 0));
+        menuList.add(new Menu("设        置", 0));
+        menuadapter = new LeftMenuAdapter(MainActivity.this, menuList);
         lvMenu.setAdapter(menuadapter);
 
     }

@@ -13,6 +13,7 @@
     <color name="txt_blue">#FF007CB0</color>
     <color name="red">#FFFF0000</color>
     <color name="green">#549D37</color>
+    <color name="trangreen">#60549D37</color>
     <color name="lightgray">#DCDCDC</color>
     <color name="bg_lightgray">#f2f2f2</color>
     <color name="morelightgray">#EEEEEE</color>
@@ -40,4 +41,21 @@
     <color name="subscribe_item_disabled_bg_night">#ff2b2b2b</color>
     <color name="subscribe_seperate_line">#ffcdcdcd</color>
     <color name="jianshured">#E78271</color>
+    <drawable name="lightgrey">#DCDCDC</drawable>
+    <drawable name="nocolor">#00ffffff</drawable>
+    <color name="float_transparent">#00000000</color>
+    <color name="color_dialog_gray">#ededf3</color>
+    <color name="color_dialog_content">#ed7861</color>
+    <color name="color_dialog_title">#303030</color>
+    <color name="color_dialog_content_prompt">#343434</color>
+
+    <color name="color_type_info">#79b3e4</color>
+    <color name="color_type_help">#e8bd4b</color>
+    <color name="color_type_wrong">#ed7861</color>
+    <color name="color_type_warning">#e8bd4b</color>
+    <color name="color_type_success">#90b06e</color>
+    <color name="blue_btn_bg_color">#AEDEF4</color>
+    <color name="blue_btn_bg_pressed_color">#96BFD2</color>
+    <color name="gray_btn_bg_color">#D0D0D0</color>
+    <color name="gray_btn_bg_pressed_color">#B6B6B6</color>
 </resources>

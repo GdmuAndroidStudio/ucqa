@@ -2,6 +2,7 @@ package com.dawnlightning.ucqa.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.base.BaseFragment;
+import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
@@ -23,9 +25,36 @@ public class MessageAdapter extends BaseAdapter {
     public  static final  int TYPE_FOOTER = 1;
     private Context context;
     private FootViewHolder footViewHolder;
+    private Handler handler=new Handler();
 
     public MessageAdapter(Context context) {
         this.context = context;
+    }
+
+    @Override
+    public void setOverFoot() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                footViewHolder.progressBar.setVisibility(View.GONE);
+                footViewHolder.textView.setText("已加载完毕");
+            }
+        }, 1000);
+
+    }
+
+    @Override
+    public void setBeforeFoot() {
+        footViewHolder.progressBar.setVisibility(View.GONE);
+        footViewHolder.textView.setText("下拉加载更多");
+
+    }
+
+    @Override
+    public void setFooting() {
+        footViewHolder.progressBar.setVisibility(View.VISIBLE);
+        footViewHolder.textView.setText("正在加载中");
+
     }
 
     @Override
@@ -48,6 +77,8 @@ public class MessageAdapter extends BaseAdapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder,position);
         if (holder instanceof ItemViewHolder) {
+            ConsultMessageBean consultMessageBean=(ConsultMessageBean)data.get(position);
+            ((ItemViewHolder) holder).content.setText(consultMessageBean.getMessage());
             if (((ItemViewHolder) holder).photoView.getTag()!=null&&((ItemViewHolder)((ItemViewHolder) holder)).photoView.getTag().equals(position)){
             }else{
                 ((ItemViewHolder) holder).photoView.setTag(position);
