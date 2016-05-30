@@ -2,13 +2,24 @@ package com.dawnlightning.ucqa.model;
 
 import android.util.Log;
 
-import com.dawnlightning.ucqa.api.ConsultApiManager;
-import com.dawnlightning.ucqa.api.OperateApiManager;
+import com.dawnlightning.ucqa.api.apimanager.ConsultApiManager;
+import com.dawnlightning.ucqa.api.apimanager.OperateApiManager;
 import com.dawnlightning.ucqa.api.action.FailureAction;
 import com.dawnlightning.ucqa.api.action.SuccessAction;
+import com.dawnlightning.ucqa.api.jsonparse.JsonParseHelper;
+import com.dawnlightning.ucqa.bean.response.consult.detailed.CommentBean;
+import com.dawnlightning.ucqa.bean.response.consult.detailed.DetailedBean;
+import com.dawnlightning.ucqa.bean.response.consult.detailed.PicsBean;
+import com.dawnlightning.ucqa.common.Code;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import rx.functions.Action1;
@@ -18,6 +29,25 @@ import rx.functions.Action1;
  * 邮箱：823894716@qq.com
  */
 public class ConsultDetailedModel {
+    public static final int MaxCommentSize=30;
+    public interface DetailedListener{
+        void getSuccess(DetailedBean bean);
+        void getFailure(String msg);
+        void getError(String msg);
+    }
+    public interface GetCommentListener{
+        void getSuccess(List<CommentBean> list );
+        void getFailure(String msg);
+        void getError(String msg);
+        void noNextPage();
+        void noData();
+    }
+   public interface OperateListener{
+        void doSuccess(String msg);
+        void doFailure(String msg);
+        void doError(String msg);
+    }
+
     ConsultApiManager consultApiManager=new ConsultApiManager();
     OperateApiManager operateApiManager=new OperateApiManager();
     /**
@@ -27,22 +57,56 @@ public class ConsultDetailedModel {
      * @param m_auth 登陆后秘钥
      * @param bwztid  咨询id
      */
-    public void GetConsultDetailed(int uid,String m_auth,int bwztid){
-        consultApiManager .GetConsultDetailed(11,"70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg",167)
+    public void GetConsultDetailed(int uid, String m_auth, int bwztid, final DetailedListener listener){
+        consultApiManager .GetConsultDetailed(uid,m_auth,bwztid)
                 .subscribe(new SuccessAction<JsonObject>() {
+                    /**
+                     * @param target
+                     */
                     @Override
                     public void Success(JsonObject target) {
-                        Log.e("success",target.toString());
+                        /*
+                        * 咨询详细
+                        * */
+                        DetailedBean  detailedBean=new DetailedBean();
+                        JsonObject js=target.getAsJsonObject("bwzt");
+                        detailedBean.setAge(js.get("age").toString());
+                        detailedBean.setContent(js.get("message").toString());
+                        detailedBean.setDatetime(js.get("dateline").toString());
+                        detailedBean.setSubject(js.get("subject").toString());
+                        detailedBean.setUid(js.get("uid").toString());
+                        detailedBean.setUsename(js.get("username").toString());
+                        detailedBean.setAvatar_url(js.get("avatar_url").toString());
+                        detailedBean.setName(js.get("name").toString());
+                        detailedBean.setViewnum(js.get("viewnum").toString());
+                        detailedBean.setName(js.get("name").toString());
+                        detailedBean.setReplynum(js.get("replynum").toString());
+                        detailedBean.setBwztid(Integer.parseInt(js.get("bwztid").toString()));
+                        detailedBean.setStatus(Integer.parseInt(js.get("status").toString()));
+                        detailedBean.setSex(js.get("sex").toString());
+                        /*
+                        * 解析评论
+                        * */
+                        detailedBean.setComment(JsonParseHelper.ParseComment(target));
+                          /*
+                        * 解析2级回复
+                        * */
+                        detailedBean.setComment( JsonParseHelper.ParseReply(detailedBean.getComment()));
+                        /*
+                        * 获取图片列表
+                        * */
+                        detailedBean.setPics(JsonParseHelper.ParsePictureList(target));
+                      listener.getSuccess(detailedBean);
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("failure",msg);
+                    public void Failure(String msg) {
+                     listener.getFailure(msg);
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error",msg);
+                       listener.getError(msg);
                     }
                 });
     }
@@ -55,22 +119,31 @@ public class ConsultDetailedModel {
      * @param bwztid  咨询id
      * @param page 页数
      */
-    public void GetCommentList(int uid,String m_auth,int bwztid,int page){
+    public void GetCommentList(int uid,String m_auth,int bwztid,int page,final  GetCommentListener listener){
         consultApiManager.GetConsultComment(uid,m_auth,bwztid,page)
                 .subscribe(new SuccessAction<JsonObject>() {
                     @Override
                     public void Success(JsonObject target) {
-                        Log.e("success",target.toString());
+                        List<CommentBean> list=JsonParseHelper.ParseComment(target);//一级评论列表
+                        List<CommentBean> newlist=JsonParseHelper.ParseReply(list);//二级评论列表
+                        if (newlist.size()==0){
+                            listener.noData();
+                        }else if (newlist.size()< MaxCommentSize&&newlist.size()>0){
+                            listener.getSuccess(newlist);
+                            listener.noNextPage();
+                        }else if(newlist.size()>=MaxCommentSize){
+                            listener.getSuccess(newlist);
+                        }
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("failure",msg);
+                    public void Failure( String msg) {
+                        listener.getFailure(msg);
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error",msg);
+                        listener.getError(msg);
                     }
                 });
     }
@@ -82,28 +155,29 @@ public class ConsultDetailedModel {
      * @param formhash 登陆后返回的formhash
      * @param m_auth   登陆后返回
      */
-    public void Comment(String message,int bwztid,String formhash,String m_auth){
+    public void Comment(String message,int bwztid,String formhash,String m_auth,final OperateListener listener){
         Map<String,Object> params=new HashMap<String,Object>();
         params.put("message",message);
         params.put("id",bwztid);
-        params.put("idtype","bwztid");
+        params.put("idtype","bwztid").toString();
         params.put("formhash",formhash);
         params.put("commentsubmit", true);
        operateApiManager.Comment(m_auth,params)
                 .subscribe(new SuccessAction<JsonObject>() {
                     @Override
                     public void Success(JsonObject target) {
-                        Log.e("success",target.toString());
+                        listener.doSuccess("评论成功");
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("failure",msg);
+                    public void Failure( String msg) {
+                        listener.doFailure("评论失败");
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error",msg);
+
+                        listener.doError("服务器失去响应");
                     }
                 });
     }
@@ -116,29 +190,33 @@ public class ConsultDetailedModel {
      * @param m_auth   登陆后返回
      * @param cid   要回复的评论id
      */
-    public void Reply(String message,int bwztid,int cid,String formhash,String m_auth){
+    public void Reply(String message,int bwztid,int cid,String formhash,String m_auth,final OperateListener listener){
         Map<String,Object> params=new HashMap<String,Object>();
         params.put("message",message);
         params.put("id",bwztid);
         params.put("cid",cid);
-        params.put("idtype","bwztid");
+        params.put("idtype","bwztid").toString();
         params.put("formhash",formhash);
         params.put("commentsubmit", true);
         operateApiManager.Reply(m_auth,params)
                 .subscribe(new SuccessAction<JsonObject>() {
                     @Override
                     public void Success(JsonObject target) {
-                        Log.e("success",target.toString());
+
+                        listener.doSuccess("回复成功");
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("failure",msg);
+                    public void Failure( String msg) {
+
+                        listener.doFailure("回复失败");
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error",msg);
+
+                        listener.doError("服务器失去响应");
+
                     }
                 });
     }
@@ -148,22 +226,26 @@ public class ConsultDetailedModel {
      * @param m_auth 登陆后返回
      * @param bwztid 咨询id
      */
-    public void Solove(String m_auth,int bwztid){
+    public void Solove(String m_auth,int bwztid,final OperateListener listener){
         operateApiManager.Solve(m_auth,bwztid)
                 .subscribe(new SuccessAction<JsonObject>() {
                     @Override
                     public void Success(JsonObject target) {
-                        Log.e("success",target.toString());
+
+                        listener.doSuccess("采纳成功");
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("failure",msg);
+                    public void Failure( String msg) {
+
+                        listener.doFailure("采纳失败");
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error",msg);
+
+                        listener.doError("服务器失去响应");
+
                     }
                 });
     }
@@ -174,7 +256,7 @@ public class ConsultDetailedModel {
      * @param bwztid bwztid 咨询id
      * @param reason 举报的原因
      */
-    public void Report(String m_auth,int bwztid,String reason){
+    public void Report(String m_auth,int bwztid,String reason,final OperateListener listener){
         Map<String,Object> params=new HashMap<String,Object>();
         params.put("reportsubmit",true);
         params.put("reason",reason);
@@ -182,12 +264,12 @@ public class ConsultDetailedModel {
                 .subscribe(new Action1<JsonObject>() {
                     @Override
                     public void call(JsonObject jsonObject) {
-                        Log.e("jsonobject",jsonObject.toString());
+                       listener.doSuccess("举报成功");
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-
+                        listener.doSuccess("举报失败");
                     }
                 });
     }
@@ -197,22 +279,26 @@ public class ConsultDetailedModel {
      * @param m_auth 登陆后返回
      * @param bwztid 咨询id
      */
-    public void Delete(String m_auth,int bwztid){
+    public void Delete(String m_auth,int bwztid,final  OperateListener listener){
         operateApiManager.Delete(m_auth,bwztid)
                 .subscribe(new SuccessAction<JsonObject>() {
                     @Override
                     public void Success(JsonObject target) {
-                        Log.e("success",target.toString());
+
+                        listener.doSuccess("删除成功");
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("failure",msg);
+                    public void Failure( String msg) {
+
+                        listener.doFailure("删除失败");
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error",msg);
+
+                        listener.doError("服务器失去响应");
+
                     }
                 });
     }

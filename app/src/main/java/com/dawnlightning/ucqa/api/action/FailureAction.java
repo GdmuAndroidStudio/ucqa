@@ -1,5 +1,7 @@
 package com.dawnlightning.ucqa.api.action;
 
+import com.dawnlightning.ucqa.common.Code;
+
 import rx.functions.Action1;
 
 /**

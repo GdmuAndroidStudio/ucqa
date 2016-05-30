@@ -5,8 +5,10 @@ package com.dawnlightning.ucqa.common;
  */
 public class Code {
     public static final int PAGESIZE = 10;//页数
+
     public static final int SERVER_LOAD_FAILURE = -1;//服务器无响应
     public static final int LOAD_FAILURE = 1;//服务器有响应但是失败
+
     public static final int LOAD_FULL_SUCCESS = 0;//加载成功，可能有下一页
     public static final int LOAD_NOFULL_SUCCESS = 2;//加载成功但是没有下一页
     public static final int LOAD_NODATA = 3;//没有咨询

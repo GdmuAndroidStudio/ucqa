@@ -2,7 +2,7 @@ package com.dawnlightning.ucqa.model;
 
 import android.util.Log;
 
-import com.dawnlightning.ucqa.api.ConsultApiManager;
+import com.dawnlightning.ucqa.api.apimanager.ConsultApiManager;
 import com.dawnlightning.ucqa.api.action.FailureAction;
 import com.dawnlightning.ucqa.api.action.SuccessAction;
 import com.google.gson.JsonObject;
@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 public class MessageModel {
     ConsultApiManager consultApiManager=new ConsultApiManager();
     /**
+     * 尚未与后端沟通，先搁置
      * 获取消息列表
      * @param m_auth 登陆后返回
      * @param page  页数
@@ -27,7 +28,7 @@ public class MessageModel {
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
+                    public void Failure( String msg) {
                         Log.e("failure",msg);
                     }
                 }, new FailureAction() {

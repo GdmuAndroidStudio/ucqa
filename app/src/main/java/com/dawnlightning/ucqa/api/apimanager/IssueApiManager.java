@@ -1,4 +1,4 @@
-package com.dawnlightning.ucqa.api;
+package com.dawnlightning.ucqa.api.apimanager;
 
 import com.dawnlightning.ucqa.api.httphelper.RetrofitHelper;
 import com.dawnlightning.ucqa.bean.ApiBase;
