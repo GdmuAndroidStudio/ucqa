@@ -135,7 +135,7 @@ public class ConsultApiManager {
          * 获取所有通知
          ** @return
          */
-        @GET("/capi/space.php?/do=notice")
+        @GET("/capi/space.php?do=notice")
         Observable<ApiBase> doGetNotice(@Query(value = "m_auth",encoded = false) String m_auth,@Query("page") int page);
 
 

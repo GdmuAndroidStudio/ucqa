@@ -13,6 +13,7 @@ import com.dawnlightning.ucqa.bean.response.account.GetAvatarBean;
 import com.dawnlightning.ucqa.bean.response.account.GetSeccodeBean;
 import com.dawnlightning.ucqa.bean.response.account.LoginBean;
 import com.dawnlightning.ucqa.bean.response.account.RegisterBean;
+import com.dawnlightning.ucqa.bean.response.consult.NoticeBean;
 import com.google.gson.JsonObject;
 
 import java.io.File;
@@ -245,25 +246,25 @@ public class TestModel {
 //                    }
 //                });
 //    }
-//    public void GetNotice(){
-//        consultApiManager.GetNotice("0c914G8pdYvAB6bEMUaRhPXfcBTKAqBeZdNTR1iWly7NG9t5%2FdEmD1VM2fvDW%2BFKDa5c9me5Hm4GeTH6KE59aQ",1)
-//                .subscribe(new SuccessAction<JsonObject>() {
-//                    @Override
-//                    public void Success(JsonObject target) {
-//                        Log.e("success",target.toString());
-//                    }
-//
-//                    @Override
-//                    public void Failure(int code, String msg) {
-//                        Log.e("failure",msg);
-//                    }
-//                }, new FailureAction() {
-//                    @Override
-//                    public void Error(String msg) {
-//                        Log.e("error",msg);
-//                    }
-//                });
-//    }
+    public void GetNotice(){
+       new ConsultApiManager().GetNotice("0c914G8pdYvAB6bEMUaRhPXfcBTKAqBeZdNTR1iWly7NG9t5%2FdEmD1VM2fvDW%2BFKDa5c9me5Hm4GeTH6KE59aQ",1)
+                .subscribe(new SuccessAction<NoticeBean>() {
+                    @Override
+                    public void Success(NoticeBean target) {
+                        Log.e("success",target.toString());
+                    }
+
+                    @Override
+                    public void Failure(String msg) {
+                        Log.e("failure",msg);
+                    }
+                }, new FailureAction() {
+                    @Override
+                    public void Error(String msg) {
+                        Log.e("error",msg);
+                    }
+                });
+    }
 //    public void GetMyConsult(){
 //        consultApiManager.GetMyConsultList(11,"70cf2VjWzAADPMb5Q2X7ZORDbiUIHk3guj9k0HD2qlAAtpNNraFgpy1cqAfE%2FG%2BIG2kNIR5kPdsOjbNqrz8FRg",1)
 //                .subscribe(new SuccessAction<JsonObject>() {
