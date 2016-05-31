@@ -359,8 +359,8 @@ public class ColorDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
-    public CharSequence getContentText() {
-        return mContentTv.getText();
+    public String getContentText() {
+        return mContentTv.getText().toString();
     }
 
     public CharSequence getTitleText() {

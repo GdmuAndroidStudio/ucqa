@@ -1,8 +1,9 @@
 package com.dawnlightning.ucqa.model;
 
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 
-import com.dawnlightning.ucqa.api.AccountApiManager;
+import com.dawnlightning.ucqa.api.apimanager.AccountApiManager;
 import com.dawnlightning.ucqa.api.action.FailureAction;
 import com.dawnlightning.ucqa.api.action.SuccessAction;
 import com.dawnlightning.ucqa.api.requestbody.ProgressRequestBody;
@@ -12,9 +13,10 @@ import com.dawnlightning.ucqa.bean.response.account.GetAvatarBean;
 import com.dawnlightning.ucqa.bean.response.account.GetSeccodeBean;
 import com.dawnlightning.ucqa.bean.response.account.LoginBean;
 import com.dawnlightning.ucqa.bean.response.account.RegisterBean;
+import com.dawnlightning.ucqa.bean.response.account.UpdateBean;
+import com.dawnlightning.ucqa.common.Code;
 import com.google.gson.JsonObject;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,15 @@ import rx.functions.Action1;
  * 邮箱：823894716@qq.com
  */
 public class AccountModel {
+   public interface AccountListener{
+       void doSuccess(Object bean);
+       void doFailure(String msg);
+       void doError(String msg);
+   }
+    public interface UpdateListener{
+        void needUpdate(UpdateBean bean);
+        void noUpdate();
+    }
     AccountApiManager accountApiManager=new AccountApiManager();
     /**
      * 登陆
@@ -34,21 +45,23 @@ public class AccountModel {
      * @param username    用户名
      * @param password    密码
      */
-    public void Login(String username,String password){
+    public void Login(String username,String password,final  AccountListener listener){
         new AccountApiManager(14400,345600)
                 .Login(username,password).subscribe(new SuccessAction<LoginBean>() {
             @Override
             public void Success(LoginBean target) {
-                Log.e("Success",target.toString());
+              listener.doSuccess(target);
+
             }
             @Override
-            public void Failure(int code, String msg) {
-                Log.e("Failure",msg);
+            public void Failure(String msg) {
+               listener.doFailure(msg);
+
             }
         }, new FailureAction() {
             @Override
             public void Error(String msg) {
-                Log.e("Error",msg);
+             listener.doError(msg);
             }
         });
     }
@@ -58,35 +71,35 @@ public class AccountModel {
      * @param username    用户名
      * @param pssword     密码
      */
-    public void Register(final  String username,final  String pssword){
+    public void Register(final  String username,final  String pssword,final  AccountListener listener){
         accountApiManager.GetSeccode().subscribe(new SuccessAction<GetSeccodeBean>() {
             @Override
             public void Success(GetSeccodeBean target) {
                 new AccountApiManager().Register(username,pssword,target).subscribe(new SuccessAction<RegisterBean>() {
                     @Override
                     public void Success(RegisterBean target) {
-                        Log.e("register",target.getSpace().toString());
+                       listener.doSuccess(target);
                     }
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("registerfailure",msg);
+                    public void Failure( String msg) {
+                        listener.doFailure(msg);
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error",msg);
+                      listener.doError(msg);
                     }
                 });
             }
 
             @Override
-            public void Failure(int code, String msg) {
-
+            public void Failure( String msg) {
+                listener.doFailure(msg);
             }
         }, new FailureAction() {
             @Override
             public void Error(String msg) {
-
+                listener.doError(msg);
             }
         });
     }
@@ -97,7 +110,7 @@ public class AccountModel {
      * @param m_auth    登陆返回的秘钥
      * @param bean   用户资料修改后的数据
      */
-    public void EditPersonalData(String m_auth,UserDataBean bean){
+    public void EditPersonalData(String m_auth, UserDataBean bean, final AccountListener listener){
         Map<String,Object> map=new HashMap<String,Object>();
         map.put("profilesubmit","true");
         map.put("formhash",bean.getFormhash());
@@ -110,17 +123,19 @@ public class AccountModel {
                 .subscribe(new SuccessAction<String>() {
                     @Override
                     public void Success(String target) {
-                        Log.e("成功","修改资料成功");
+                        String msg="修改资料成功";
+                         listener.doSuccess(msg);
+
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("失败","修改资料失败");
+                    public void Failure(String msg) {
+                       listener.doFailure(msg);
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("提交失败","修改资料失败");
+                        listener.doError(msg);
                     }
                 });
     }
@@ -129,13 +144,17 @@ public class AccountModel {
      * 上传用户头像
      * @param bean  图片上传实体类
      */
-    public void UploadAvater(UploadPicsBean bean){
+    public void UploadAvater(UploadPicsBean bean, final Handler handler){
         RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),bean.getPicture());
+       final Message message = handler.obtainMessage();
         ProgressRequestBody progressRequestBody=new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressListener() {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
                 int count = (int) ((bytesRead * 1.0 / contentLength) * 100);
-                Log.e("progress",count+"%");
+                message.what = Code.UPLOADCHANGE;
+                message.obj =count;
+                message.sendToTarget();
+
             }
         });
         Map<String, RequestBody> map = new HashMap<>();
@@ -144,17 +163,23 @@ public class AccountModel {
                 .subscribe(new SuccessAction<GetAvatarBean>() {
                     @Override
                     public void Success(GetAvatarBean target) {
-                        Log.e("bean", target.toString());
+                        message.what = Code.UPLOADSUCCESS;
+                        message.obj =target.getAvatar_url();
+                        message.sendToTarget();
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("bean", msg);
+                    public void Failure( String msg) {
+                        message.what = Code.UPLOADFAILURE;
+                        message.obj =msg;
+                        message.sendToTarget();
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error", msg);
+                        message.what = Code.UPLOADFAILURE;
+                        message.obj =msg;
+                        message.sendToTarget();
                     }
                 });
     }
@@ -162,17 +187,24 @@ public class AccountModel {
     /**
      * 检查App更新
      */
-    public void CheckUpdate(){
+    public void CheckUpdate(final  UpdateListener listener){
         accountApiManager.CheckUpdate()
                 .subscribe(new Action1<JsonObject>() {
                     @Override
                     public void call(JsonObject jsonObject) {
-                        Log.e("jsonobject",jsonObject.toString());
+                        JsonObject update=jsonObject.getAsJsonObject("update");
+                        JsonObject android=update.getAsJsonObject("Android");
+                        UpdateBean bean=new UpdateBean();
+                        bean.setVersioncode(Integer.parseInt(String.valueOf(android.get("version"))));
+                        bean.setNote(android.get("note").toString());
+                        bean.setName(android.get("name").toString());
+                        bean.setUrl(android.get("url").toString());
+                        listener.needUpdate(bean);
                     }
                 }, new Action1<Throwable>() {
                     @Override
                     public void call(Throwable throwable) {
-                        Log.e("jsonobject",throwable.toString());
+                        listener.noUpdate();
                     }
                 });
     }

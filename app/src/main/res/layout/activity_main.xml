@@ -41,10 +41,6 @@
                 android:textColor="#ffffff"
                 android:listSelector="@drawable/main_listview_selector"/>
         </LinearLayout>
-
-
-
-
     </RelativeLayout>
 
     <com.dawnlightning.ucqa.widget.MyRelativeLayout

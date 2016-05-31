@@ -11,6 +11,12 @@ import java.util.List;
  */
 public class NoticeBean {
 
+    @Override
+    public String toString() {
+        return "NoticeBean{" +
+                "notices=" + notices +
+                '}';
+    }
 
     /**
      * notices : {"pages":1,"count":2,"list":[{"name":"doctor","id":"2","uid":"1","type":"bwztcomment","isnew":"0","authorid":"2","author":"doctor","note":"评论了你的咨询 眼睛有点干","dateline":"1449848160","isfriend":1,"style":"","link":"space.php?uid=1&do=bwzt&id=4&cid=2","message":"没多大问题了吧，看了医生之后。","do":"bwzt","bwztid":"102"},{"name":"doctor","id":"1","uid":"1","type":"bwztcomment","isnew":"0","authorid":"2","author":"doctor","note":"评论了你的咨询 眼睛有点干","dateline":"1449842584","isfriend":1,"style":"","link":"space.php?uid=1&do=bwzt&id=4&cid=1","message":"没多大问题了吧，看了医生之后。","do":"bwzt","bwztid":"102"}]}
@@ -26,7 +32,17 @@ public class NoticeBean {
         return notices;
     }
 
+
     public static class NoticesEntity {
+        @Override
+        public String toString() {
+            return "NoticesEntity{" +
+                    "pages=" + pages +
+                    ", count=" + count +
+                    ", list=" + list +
+                    '}';
+        }
+
         /**
          * pages : 1
          * count : 2
@@ -62,6 +78,27 @@ public class NoticeBean {
         }
 
         public static class ListEntity {
+            @Override
+            public String toString() {
+                return "ListEntity{" +
+                        "name='" + name + '\'' +
+                        ", id='" + id + '\'' +
+                        ", uid='" + uid + '\'' +
+                        ", type='" + type + '\'' +
+                        ", isnew='" + isnew + '\'' +
+                        ", authorid='" + authorid + '\'' +
+                        ", author='" + author + '\'' +
+                        ", note='" + note + '\'' +
+                        ", dateline='" + dateline + '\'' +
+                        ", isfriend=" + isfriend +
+                        ", style='" + style + '\'' +
+                        ", link='" + link + '\'' +
+                        ", message='" + message + '\'' +
+                        ", doX='" + doX + '\'' +
+                        ", bwztid='" + bwztid + '\'' +
+                        '}';
+            }
+
             /**
              * name : doctor
              * id : 2

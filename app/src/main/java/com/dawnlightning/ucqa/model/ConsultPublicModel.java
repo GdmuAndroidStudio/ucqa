@@ -1,17 +1,17 @@
 package com.dawnlightning.ucqa.model;
 
-import android.util.Log;
+import android.os.Handler;
+import android.os.Message;
 
-import com.dawnlightning.ucqa.api.IssueApiManager;
+import com.dawnlightning.ucqa.api.apimanager.IssueApiManager;
 import com.dawnlightning.ucqa.api.action.FailureAction;
 import com.dawnlightning.ucqa.api.action.SuccessAction;
 import com.dawnlightning.ucqa.api.requestbody.ProgressRequestBody;
 import com.dawnlightning.ucqa.bean.others.ConsultBean;
 import com.dawnlightning.ucqa.bean.others.UploadPicsBean;
-import com.dawnlightning.ucqa.bean.response.consult.ListBean;
+import com.dawnlightning.ucqa.common.Code;
 import com.google.gson.JsonObject;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +25,17 @@ import okhttp3.RequestBody;
  */
 public class ConsultPublicModel {
     IssueApiManager issueApiManager=new IssueApiManager();
-
+    public interface PublicListener{
+        void sendSuccess(Object object);
+        void sendFailure(String msg);
+        void sendError(String msg);
+    }
     /**
      * 发布咨询
      * @param bean 咨询实体对象
      * @param m_auth 登陆后返回
      */
-    public void PublicIssuse(ConsultBean bean,String m_auth){
+    public void PublicIssuse(ConsultBean bean,String m_auth,final PublicListener listener){
         Map<String,Object> params=new HashMap<String,Object>();
         params.put("subject",bean.getSubject());
         params.put("bwztclassid", bean.getBwztclassid());
@@ -52,17 +56,17 @@ public class ConsultPublicModel {
                 .subscribe(new SuccessAction<JsonObject>() {
                     @Override
                     public void Success(JsonObject target) {
-                        Log.e("success",target.toString());
+                        listener.sendSuccess(target.get("url"));
                     }
 
                     @Override
-                    public void Failure(int code, String msg) {
-                        Log.e("failure",msg);
+                    public void Failure(String msg) {
+                        listener.sendFailure(msg);
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                        Log.e("error",msg);
+                      listener.sendError(msg);
                     }
                 });
     }
@@ -72,14 +76,18 @@ public class ConsultPublicModel {
      * @param list 图片数组
      * @param m_auth 登陆后返回
      */
-    public void UploadPicture(List<UploadPicsBean> list, String m_auth){
+    public void UploadPicture(List<UploadPicsBean> list, final String m_auth, final  Handler handler){
+        final Message message=handler.obtainMessage();
       for (final  UploadPicsBean bean :list){
           RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),bean.getPicture());
           ProgressRequestBody progressRequestBody=new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressListener() {
               @Override
               public void update(long bytesRead, long contentLength, boolean done) {
                   int count = (int) ((bytesRead * 1.0 / contentLength) * 100);
-                  Log.e("progress",count+"%");
+                  message.what= Code.UPLOADCHANGE;
+                  message.arg1=bean.getPictureid();
+                  message.obj=count;
+                  message.sendToTarget();
               }
           });
           Map<String,RequestBody> data=new HashMap<String,RequestBody>();
@@ -94,17 +102,27 @@ public class ConsultPublicModel {
                   .subscribe(new SuccessAction<JsonObject>() {
                       @Override
                       public void Success(JsonObject target) {
-                          Log.e("success",target.toString());
+                          message.what= Code.UPLOADSUCCESS;
+                          message.arg1=bean.getPictureid();
+                          message.obj=target.getAsJsonObject("pic").get("picid");
+                          message.sendToTarget();
                       }
 
                       @Override
-                      public void Failure(int code, String msg) {
-                          Log.e("failure",msg);
+                      public void Failure( String msg) {
+
+                          message.what= Code.UPLOADFAILURE;
+                          message.arg1=bean.getPictureid();
+                          message.obj=bean.getPicture();
+                          message.sendToTarget();
                       }
                   }, new FailureAction() {
                       @Override
                       public void Error(String msg) {
-                          Log.e("error",msg);
+                          message.what= Code.UPLOADFAILURE;
+                          message.arg1=bean.getPictureid();
+                          message.obj=bean.getPicture();
+                          message.sendToTarget();
                       }
                   });
       }

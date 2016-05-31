@@ -35,7 +35,7 @@ public class CommentListAdapter extends BaseAdapter {
 
     @Override
     public int getItemCount() {
-        return data.size() == 0 ? 0 : data.size() + 1;
+        return data.size() == 0 ? 0 : data.size()+1;
     }
 
     @Override
@@ -72,17 +72,17 @@ public class CommentListAdapter extends BaseAdapter {
         if(viewType == TYPE_ITEM){
             View view = LayoutInflater.from(context).inflate(R.layout.item_consult_comment, parent,
                     false);
-            System.out.println("create item");
+
             return new ItemViewHolder(view);
         }else if(viewType == TYPE_FOOTER){
-            View view = LayoutInflater.from(context).inflate(R.layout.item_foot, parent,
+            View view = LayoutInflater.from(context).inflate(R.layout.item_foot,parent,
                     false);
             footViewHolder = new FootViewHolder(view);
             setFooting();
             System.out.println("create foot");
             return footViewHolder;
         }
-        System.out.println("create null");
+
         return null;
     }
 

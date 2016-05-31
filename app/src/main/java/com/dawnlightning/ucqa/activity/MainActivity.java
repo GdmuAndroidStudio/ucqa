@@ -100,7 +100,7 @@ public class MainActivity extends BaseActivity implements IMainView {
         //model.GetConsultList();
         //model.GetConsultDetailed();
         //model.GetSpecifyConsult();
-        //     model.GetNotice();
+         model.GetNotice();
 //        model.GetCommentList();
 //        model.GetMyConsult();
         // model.UploadPicture();

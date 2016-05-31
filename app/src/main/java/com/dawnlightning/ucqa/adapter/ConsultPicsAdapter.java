@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,14 +127,13 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
                 Bitmap bitmap = getLoacalBitmap(bean.getPicture().getPath());
                 ((ViewHolder) holder).img.setImageBitmap(upImageSize(bitmap, params.height));
                 ((ViewHolder) holder).img.setProgress(bean.getPresent());
-                if(bean.getPicturetitle()!=""&&bean.getPicturetitle()!=null) {
+                if(bean.getPicturetitle()!="") {
                     ((ViewHolder) holder).title.setText("修改");
                 }else{
                     ((ViewHolder) holder).title.setText("描述");
                 }
                 Log.d("test", bean.getPicturetitle());
             }
-            ((ViewHolder) holder).title.clearFocus();
     }
 
     private Bitmap upImageSize(Bitmap bmp,int height) {

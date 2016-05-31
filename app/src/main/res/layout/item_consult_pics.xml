@@ -22,7 +22,6 @@
                     android:id="@+id/iv_consult_picture_delete"
                     android:layout_width="50dp"
                     android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:text="删除"
@@ -38,8 +37,8 @@
                     android:id="@+id/et_consult_picture_title"
                     android:layout_width="50dp"
                     android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
+                    android:textAlignment="center"
+
                     android:textColor="@color/white"
                     android:text="描述"
                     android:layout_marginBottom="@dimen/margin5"
