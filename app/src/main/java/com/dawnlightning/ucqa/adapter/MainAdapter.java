@@ -24,6 +24,7 @@ import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.MainActivity;
 import com.dawnlightning.ucqa.base.Actions;
+import com.dawnlightning.ucqa.bean.others.BannerBean;
 import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.fragment.MainFragment;
@@ -45,10 +46,14 @@ public class MainAdapter extends BaseAdapter {
     private Context context;
     private FootViewHolder footViewHolder;
     private Handler handler = new Handler();
+    private List<BannerBean> bannerBeanList;
+    private MainFragment mainFragment;
 
-    public MainAdapter(Context context, List data) {
-        this.context = context;
+    public MainAdapter(MainFragment mainFragment, List data,List<BannerBean> bannerBeanList) {
+        this.mainFragment = mainFragment;
+        this.context = mainFragment.getContext();
         this.data = data;
+        this.bannerBeanList = bannerBeanList;
     }
 
     @Override
@@ -114,7 +119,7 @@ public class MainAdapter extends BaseAdapter {
         } else if (viewType == TYPE_BANNER) {
             final View view = LayoutInflater.from(context).inflate(R.layout.item_banner, parent,
                     false);
-            return new BannerViewHolder(context,view);
+            return new BannerViewHolder(context, view);
         }
         return null;
     }
@@ -133,7 +138,6 @@ public class MainAdapter extends BaseAdapter {
             }
         }
     }
-
 
     static class ItemViewHolder extends ViewHolder {
 
@@ -167,46 +171,64 @@ public class MainAdapter extends BaseAdapter {
         }
     }
 
-    static class HeadViewHolder extends ViewHolder {
+    class HeadViewHolder extends ViewHolder {
 
         private GridView gridView;
         private List<ConsultClassifyBean> classifylist = new ArrayList<>(6);
         private ClassifyAdapter classifyAdapter;
-        private MainActivity mainActivity;
 
-        public HeadViewHolder(Context context, View view) {
+        public HeadViewHolder(final Context context, View view) {
             super(view);
-            mainActivity = (MainActivity) context;
             gridView = (GridView) itemView.findViewById(R.id.gv_classify);
             for (int i = 0; i < 6; i++) {
                 ConsultClassifyBean consultClassifyBean = new ConsultClassifyBean();
                 consultClassifyBean.setBwztclassarrid("" + i);
-                consultClassifyBean.setBwztclassarrname("" + (i + 1));
+                switch (i) {
+                    case 0:
+                        consultClassifyBean.setBwztclassarrname("全部");
+                        break;
+                    case 1:
+                        consultClassifyBean.setBwztclassarrname("激光治近视");
+                        break;
+                    case 2:
+                        consultClassifyBean.setBwztclassarrname("白内障");
+                        break;
+                    case 3:
+                        consultClassifyBean.setBwztclassarrname("青光眼");
+                        break;
+                    case 4:
+                        consultClassifyBean.setBwztclassarrname("青少年近视");
+                        break;
+                    case 5:
+                        consultClassifyBean.setBwztclassarrname("防盲治盲");
+                        break;
+                    default:
+                        break;
+
+                }
                 classifylist.add(consultClassifyBean);
             }
-            classifyAdapter = new ClassifyAdapter(mainActivity, context, classifylist);
+            classifyAdapter = new ClassifyAdapter(context, classifylist);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     ConsultClassifyBean bean = (ConsultClassifyBean) classifyAdapter.getItem(position);
-                    mainActivity.showtitleclassift(bean.getBwztclassarrname());
+                    ((MainActivity)mainFragment.getActivity()).showtitleclassift(bean.getBwztclassarrname());
+                    mainFragment.setClassifyName(bean.getBwztclassarrname());
+
                 }
             });
             gridView.setAdapter(classifyAdapter);
         }
     }
 
-    static class BannerViewHolder extends ViewHolder {
+    class BannerViewHolder extends ViewHolder {
 
         private ConvenientBanner convenientBanner;
         private ImageLoader imageLoader = ImageLoader.getInstance();
         private DisplayImageOptions options = Options.getListOptions();
         private ArrayList<Integer> localImages = new ArrayList<Integer>();
-        private List<String> networkImages;
-        private String[] images = {"http://img2.imgtn.bdimg.com/it/u=1514107744,1001213722&fm=21&gp=0.jpg",
-                "http://b.hiphotos.baidu.com/image/h%3D200/sign=2a1d57fa08b30f242a9aeb03f894d192/4d086e061d950a7b539cb25f0dd162d9f3d3c984.jpg",
-                "http://img3.imgtn.bdimg.com/it/u=882887467,2910558374&fm=21&gp=0.jpg"
-        };
+        private List<String> networkImages = new ArrayList<>();
 
         public BannerViewHolder(final Context context, View view) {
             super(view);
@@ -227,7 +249,10 @@ public class MainAdapter extends BaseAdapter {
 //            convenientBanner.startTurning(3000);
 
 //            网络加载例子
-            networkImages = Arrays.asList(images);
+            for(int i = 0; i< MainAdapter.this.bannerBeanList.size(); i++){
+                String img = MainAdapter.this.bannerBeanList.get(i).getImg();
+                networkImages.add(img);
+            }
             convenientBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
                 @Override
                 public NetworkImageHolderView createHolder() {
@@ -238,12 +263,12 @@ public class MainAdapter extends BaseAdapter {
                     .setPageIndicator(new int[]{R.mipmap.indicator, R.mipmap.indicator_focused})
                     //设置指示器的方向
                     .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.CENTER_HORIZONTAL)
-            .setOnItemClickListener(new com.bigkoo.convenientbanner.listener.OnItemClickListener() {
-                @Override
-                public void onItemClick(int position) {
-                    Toast.makeText(context,"banner" + position,Toast.LENGTH_SHORT).show();
-                }
-            });
+                    .setOnItemClickListener(new com.bigkoo.convenientbanner.listener.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(int position) {
+                            Toast.makeText(context, "banner" + position, Toast.LENGTH_SHORT).show();
+                        }
+                    });
             //开始自动翻页
             convenientBanner.startTurning(3000);
         }
@@ -262,7 +287,7 @@ public class MainAdapter extends BaseAdapter {
          * @param c
          * @return
          */
-        public static int getResId(String variableName, Class<?> c) {
+        public int getResId(String variableName, Class<?> c) {
             try {
                 Field idField = c.getDeclaredField(variableName);
                 return idField.getInt(idField);
@@ -308,7 +333,7 @@ public class MainAdapter extends BaseAdapter {
 
             @Override
             public void UpdateUI(Context context, int position, String data) {
-                imageLoader.displayImage(data, imageView,options);
+                imageLoader.displayImage(data, imageView, options);
             }
         }
     }
