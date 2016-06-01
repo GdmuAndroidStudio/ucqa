@@ -24,19 +24,12 @@ import java.util.List;
 /**
  * Created by Kyo on 2016/5/21.
  */
-<<<<<<< HEAD
-public class MainFragment extends BaseFragment {
-    private List<ConsultMessageBean> data = new ArrayList<>();
-=======
-public class MainFragment extends BaseFragment implements IMainFragView {
-
+public class MainFragment extends BaseFragment implements IMainFragView{
     private List<ConsultMessageBean> data = new ArrayList<>();
     private List<BannerBean> bannerBeanList = new ArrayList<>();
     private MainFragPresenter mainFragPresenter;
     private String classifyName = "全部";  //分类名称，初始化为全部
     private boolean isFirst = true;
-
->>>>>>> a1328d9bdd27d980e1d419df5796b63073e240ac
     public static MainFragment newInstance(Bundle bundle) {
         MainFragment mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);

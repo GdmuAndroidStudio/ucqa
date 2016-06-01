@@ -107,13 +107,4 @@ public class MessageFragment extends BaseFragment implements IMessageView{
         return consultMessageBeanList;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        firstLoad = isVisibleToUser;
-    }
     }
