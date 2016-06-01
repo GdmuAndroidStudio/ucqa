@@ -29,71 +29,82 @@ import rx.functions.Action1;
  * 邮箱：823894716@qq.com
  */
 public class AccountModel {
-   public interface AccountListener{
-       void doSuccess(Object bean);
-       void doFailure(String msg);
-       void doError(String msg);
-   }
-    public interface UpdateListener{
+    public interface AccountListener {
+        void doSuccess(Object bean);
+
+        void doFailure(String msg);
+
+        void doError(String msg);
+    }
+
+    public interface UpdateListener {
         void needUpdate(UpdateBean bean);
+
         void noUpdate();
     }
-    AccountApiManager accountApiManager=new AccountApiManager();
+
+    AccountApiManager accountApiManager = new AccountApiManager();
+
     /**
      * 登陆
      * 登陆信息缓存4小时，最大寿命为4天，4天后失效
-     * @param username    用户名
-     * @param password    密码
+     *
+     * @param username 用户名
+     * @param password 密码
      */
-    public void Login(String username,String password,final  AccountListener listener){
-        new AccountApiManager(14400,345600)
-                .Login(username,password).subscribe(new SuccessAction<LoginBean>() {
+    public void Login(String username, String password, final AccountListener listener) {
+        new AccountApiManager(14400, 345600)
+                .Login(username, password).subscribe(new SuccessAction<LoginBean>() {
             @Override
             public void Success(LoginBean target) {
-              listener.doSuccess(target);
+                listener.doSuccess(target);
 
             }
+
             @Override
             public void Failure(String msg) {
-               listener.doFailure(msg);
+                listener.doFailure(msg);
 
             }
         }, new FailureAction() {
             @Override
             public void Error(String msg) {
-             listener.doError(msg);
+                listener.doError(msg);
             }
         });
     }
+
     /**
      * 不做数据缓存
      * 注册
-     * @param username    用户名
-     * @param pssword     密码
+     *
+     * @param username 用户名
+     * @param pssword  密码
      */
-    public void Register(final  String username,final  String pssword,final  AccountListener listener){
+    public void Register(final String username, final String pssword, final AccountListener listener) {
         accountApiManager.GetSeccode().subscribe(new SuccessAction<GetSeccodeBean>() {
             @Override
             public void Success(GetSeccodeBean target) {
-                new AccountApiManager().Register(username,pssword,target).subscribe(new SuccessAction<RegisterBean>() {
+                new AccountApiManager().Register(username, pssword, target).subscribe(new SuccessAction<RegisterBean>() {
                     @Override
                     public void Success(RegisterBean target) {
-                       listener.doSuccess(target);
+                        listener.doSuccess(target);
                     }
+
                     @Override
-                    public void Failure( String msg) {
+                    public void Failure(String msg) {
                         listener.doFailure(msg);
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
-                      listener.doError(msg);
+                        listener.doError(msg);
                     }
                 });
             }
 
             @Override
-            public void Failure( String msg) {
+            public void Failure(String msg) {
                 listener.doFailure(msg);
             }
         }, new FailureAction() {
@@ -107,30 +118,31 @@ public class AccountModel {
     /**
      * 无缓存
      * 修改用户资料
-     * @param m_auth    登陆返回的秘钥
+     *
+     * @param m_auth 登陆返回的秘钥
      * @param bean   用户资料修改后的数据
      */
-    public void EditPersonalData(String m_auth, UserDataBean bean, final AccountListener listener){
-        Map<String,Object> map=new HashMap<String,Object>();
-        map.put("profilesubmit","true");
-        map.put("formhash",bean.getFormhash());
-        map.put("name",bean.getName());
-        map.put("sex",bean.getSex());
-        map.put("birthyear",bean.getBirthyear());
-        map.put("birthmonth",bean.getBirthmonth());
-        map.put("birthday",bean.getBirthday());
-        accountApiManager.EditProfile(m_auth,map)
+    public void EditPersonalData(String m_auth, UserDataBean bean, final AccountListener listener) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("profilesubmit", "true");
+        map.put("formhash", bean.getFormhash());
+        map.put("name", bean.getName());
+        map.put("sex", bean.getSex());
+        map.put("birthyear", bean.getBirthyear());
+        map.put("birthmonth", bean.getBirthmonth());
+        map.put("birthday", bean.getBirthday());
+        accountApiManager.EditProfile(m_auth, map)
                 .subscribe(new SuccessAction<String>() {
                     @Override
                     public void Success(String target) {
-                        String msg="修改资料成功";
-                         listener.doSuccess(msg);
+                        String msg = "修改资料成功";
+                        listener.doSuccess(msg);
 
                     }
 
                     @Override
                     public void Failure(String msg) {
-                       listener.doFailure(msg);
+                        listener.doFailure(msg);
                     }
                 }, new FailureAction() {
                     @Override
@@ -139,46 +151,48 @@ public class AccountModel {
                     }
                 });
     }
+
     /**
      * 无缓存
      * 上传用户头像
-     * @param bean  图片上传实体类
+     *
+     * @param bean 图片上传实体类
      */
-    public void UploadAvater(UploadPicsBean bean, final Handler handler){
-        RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),bean.getPicture());
-       final Message message = handler.obtainMessage();
-        ProgressRequestBody progressRequestBody=new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressListener() {
+    public void UploadAvater(UploadPicsBean bean, final Handler handler) {
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), bean.getPicture());
+        final Message message = handler.obtainMessage();
+        ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressListener() {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
                 int count = (int) ((bytesRead * 1.0 / contentLength) * 100);
                 message.what = Code.UPLOADCHANGE;
-                message.obj =count;
+                message.obj = count;
                 message.sendToTarget();
 
             }
         });
         Map<String, RequestBody> map = new HashMap<>();
-        map.put("Filedata\";filename=\"+"+bean.getPicture().getName()+"",progressRequestBody);
-        accountApiManager.UploadAvater(bean.getM_auth(),map)
+        map.put("Filedata\";filename=\"+" + bean.getPicture().getName() + "", progressRequestBody);
+        accountApiManager.UploadAvater(bean.getM_auth(), map)
                 .subscribe(new SuccessAction<GetAvatarBean>() {
                     @Override
                     public void Success(GetAvatarBean target) {
                         message.what = Code.UPLOADSUCCESS;
-                        message.obj =target.getAvatar_url();
+                        message.obj = target.getAvatar_url();
                         message.sendToTarget();
                     }
 
                     @Override
-                    public void Failure( String msg) {
+                    public void Failure(String msg) {
                         message.what = Code.UPLOADFAILURE;
-                        message.obj =msg;
+                        message.obj = msg;
                         message.sendToTarget();
                     }
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
                         message.what = Code.UPLOADFAILURE;
-                        message.obj =msg;
+                        message.obj = msg;
                         message.sendToTarget();
                     }
                 });
@@ -187,14 +201,14 @@ public class AccountModel {
     /**
      * 检查App更新
      */
-    public void CheckUpdate(final  UpdateListener listener){
+    public void CheckUpdate(final UpdateListener listener) {
         accountApiManager.CheckUpdate()
                 .subscribe(new Action1<JsonObject>() {
                     @Override
                     public void call(JsonObject jsonObject) {
-                        JsonObject update=jsonObject.getAsJsonObject("update");
-                        JsonObject android=update.getAsJsonObject("Android");
-                        UpdateBean bean=new UpdateBean();
+                        JsonObject update = jsonObject.getAsJsonObject("update");
+                        JsonObject android = update.getAsJsonObject("Android");
+                        UpdateBean bean = new UpdateBean();
                         bean.setVersioncode(Integer.parseInt(String.valueOf(android.get("version"))));
                         bean.setNote(android.get("note").toString());
                         bean.setName(android.get("name").toString());
