@@ -47,7 +47,7 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
     private DisplayImageOptions options;
     private  DeletePicture  deletePicture;
     private EditTextListener editTextListener;
-    private List<EditText> ediTexts;
+    private List<PictureTitleEdittext> ediTexts;
 
     public ConsultPicsAdapter(Context context, List<UploadPicsBean> list){
         this.context=context;
@@ -60,7 +60,7 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
         this.deletePicture=deletePicture;
     }
     
-    public void setEdiTexts(List<EditText> ediTexts){
+    public void setEdiTexts(List<PictureTitleEdittext> ediTexts){
         this.ediTexts = ediTexts;
     }
     
@@ -107,7 +107,7 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
                     }
                 }
             });
-            ediTexts.get(position).cle
+            ediTexts.get(position).clearTextChangedListeners();
             ediTexts.get(position).addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
