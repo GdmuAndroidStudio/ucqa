@@ -71,7 +71,9 @@ public class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public T getitem(int position){
         return this.data.get(position);
     }
-
+    public void add(T obj){
+        this.data.add(obj);
+    }
     //设置全部加载后的foot样式
     public void setOverFoot(){};
     //设置加载前的foot样式

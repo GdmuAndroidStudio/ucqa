@@ -30,12 +30,13 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_widget)
-    SwipeRefreshLayout swipeRefreshWidget;
-    private Handler handler;
+    public SwipeRefreshLayout swipeRefreshWidget;
+    private Handler handler = new Handler();
     public BaseAdapter adapter;
 
 
     public abstract void initAdapter();
+    public abstract void doRefresh();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,6 +47,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
         initView();
         initData();
         initEvent();
+//        doRefresh();
         return view;
     }
 
@@ -57,12 +59,13 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     @Override
     public void initView() {
         swipeRefreshWidget.setColorSchemeResources(R.color.green);
-        swipeRefreshWidget.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshWidget.setRefreshing(true);
-            }
-        });
+//        swipeRefreshWidget.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                System.out.println("do refresh");
+//                swipeRefreshWidget.setRefreshing(true);
+//            }
+//        });
         swipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -140,14 +143,14 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     @Override
     public void initData() {
-        handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Refresh(Actions.Refresh);
-                swipeRefreshWidget.setRefreshing(false);
-            }
-        }, 3000);
+//        handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Refresh(Actions.Refresh);
+//                swipeRefreshWidget.setRefreshing(false);
+//            }
+//        }, 3000);
     }
 
     @Override

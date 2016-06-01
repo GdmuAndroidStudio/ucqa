@@ -46,6 +46,38 @@ public class MessageFragment extends BaseFragment implements IMessageView{
     private IMessageView iMessageView;
     private boolean firstLoad;
     private List<ConsultMessageBean> consultMessageBeanList;
+    private boolean isFirst = true;
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            doRefresh();
+        }
+    }
+
+
+    @Override
+    public void doRefresh() {
+        if (isFirst == true) {
+            swipeRefreshWidget.post(new Runnable() {
+                @Override
+                public void run() {
+                    System.out.println("do refresh2");
+                    swipeRefreshWidget.setRefreshing(true);
+                }
+            });
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Refresh(Actions.Refresh);
+                    swipeRefreshWidget.setRefreshing(false);
+                }
+            }, 3000);
+            isFirst = false;
+        }
+    }
 
     @Override
     public void initAdapter() {

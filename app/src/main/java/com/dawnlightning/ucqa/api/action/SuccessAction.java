@@ -2,6 +2,7 @@ package com.dawnlightning.ucqa.api.action;
 
 import android.util.Log;
 import com.dawnlightning.ucqa.bean.ApiBase;
+import com.dawnlightning.ucqa.common.Code;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.nostra13.universalimageloader.utils.L;
@@ -25,7 +26,7 @@ public abstract  class SuccessAction<T> implements Action1<ApiBase> {
         if (apiBase.getCode()==0){
             Success(Convert(apiBase,type));
         }else{
-            Failure(apiBase.getCode(),apiBase.getMsg());
+            Failure(apiBase.getMsg());
         }
 
     }
@@ -40,5 +41,5 @@ public abstract  class SuccessAction<T> implements Action1<ApiBase> {
         return gson.fromJson(base.getData().toString(), type);
     }
     public abstract void Success(T target);
-    public abstract void Failure(int code,String msg);
+    public abstract void Failure(String msg);
 }
