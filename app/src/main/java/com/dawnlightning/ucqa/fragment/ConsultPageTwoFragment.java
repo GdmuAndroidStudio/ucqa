@@ -39,10 +39,8 @@ import com.dawnlightning.ucqa.presenter.PublishConsultPresenter;
 import com.dawnlightning.ucqa.utils.JsonParser;
 import com.dawnlightning.ucqa.utils.SdCardUtil;
 import com.dawnlightning.ucqa.utils.TimeUtil;
-import com.dawnlightning.ucqa.viewinterface.IConsultView;
 import com.dawnlightning.ucqa.viewinterface.IPublishConsultView;
 import com.dawnlightning.ucqa.widget.ColorDialog;
-import com.dawnlightning.ucqa.widget.ExpandListView;
 import com.dawnlightning.ucqa.widget.FullyLinearLayoutManager;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -63,7 +61,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.logging.LogRecord;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -71,7 +68,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Administrator on 2016/4/13.
  */
-public class ConsultPageTwoFragment extends Fragment implements IPublishConsultView,ColorDialog.OnNegativeListener,ColorDialog.OnPositiveListener{
+public class ConsultPageTwoFragment extends Fragment implements IPublishConsultView {
 
     @Bind(R.id.et_consult_subject)
     EditText etConsultSubject;
@@ -87,13 +84,14 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     ImageView ivConsultSentcamera;
     @Bind(R.id.bt_consult_submit)
     Button btConsultSubmit;
+    @Bind(R.id.lv_consult_edit)
+    RecyclerView lvConsultEdit;
     private View headview;
     private EditText etConsultMessage;
     private ConsultPicsAdapter consultPicsAdapter;
     private ConsultActivity consultActivity;
     private List<UploadPicsBean> list = new ArrayList<UploadPicsBean>();
     private Handler handler;
-    private ColorDialog colorDialog;
     private PublishConsultPresenter publishConsultPresenter;
 
 
@@ -105,8 +103,8 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_condition, container, false);
         headview = inflater.inflate(R.layout.consult_girdview_head, null);
-        etConsultMessage=(EditText)view.findViewById(R.id.et_consult_message);
-        handler=new Handler();
+        etConsultMessage = (EditText) view.findViewById(R.id.et_consult_message);
+        handler = new Handler();
         ButterKnife.bind(this, view);
         initdata();
         initevent();
@@ -136,11 +134,8 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     public void initdata() {
         final FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         lvConsultPic.setLayoutManager(layoutManager);
-        consultPicsAdapter =new ConsultPicsAdapter(getActivity(),list);
-        publishConsultPresenter = new PublishConsultPresenter(this,getContext());
-        colorDialog = new ColorDialog(getContext());
-        colorDialog.setPositiveListener("确定",this);
-        colorDialog.setNegativeListener("取消",this);
+        consultPicsAdapter = new ConsultPicsAdapter(getActivity(), list);
+        publishConsultPresenter = new PublishConsultPresenter(this, getContext());
         lvConsultPic.setAdapter(consultPicsAdapter);
 //        lvConsultPic.addView(headview);
     }
@@ -178,8 +173,6 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
 //                    UploadPicsBean bean = (UploadPicsBean) consultPicsAdapter.getitem(postion);
 //                    bean.setPicturetitle(str);
 //                    Log.d("test",postion+"   "+str+"  ");
-                colorDialog.show();
-                colorDialog.setContentText(str,postion);
             }
         });
         //咨询正文的输入监听
@@ -227,9 +220,9 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
 //                if (consultPicsAdapter.getUploadPicsBeans().size() > 0) {
 //                    list.clear();
 //                } else {
-                    publishConsultPresenter.sendconsult();
-                    setButtonClickable();
-                }
+                publishConsultPresenter.sendconsult();
+                setButtonClickable();
+            }
 
         });
         btConsultSubmit.setClickable(false);
@@ -370,7 +363,7 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     private void saveImageToFile(Bitmap bitmap) {
         shownotification("正在保存图片...");
         SdCardUtil.createFileDir(SdCardUtil.FILEDIR + "/" + SdCardUtil.FILEPHOTO + "/");
-        String fileName = SdCardUtil.getSdPath() + SdCardUtil.FILEDIR  + SdCardUtil.FILEPHOTO + "/" + TimeUtil.getCurrentTimeForImage();
+        String fileName = SdCardUtil.getSdPath() + SdCardUtil.FILEDIR + SdCardUtil.FILEPHOTO + "/" + TimeUtil.getCurrentTimeForImage();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int options = 100;
         bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);
@@ -383,17 +376,17 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
             }
             bitmap.compress(Bitmap.CompressFormat.JPEG, options, baos);
         }
-        Log.d("test",fileName);
+        Log.d("test", fileName);
         try {
             FileOutputStream fos = new FileOutputStream(fileName);
             fos.write(baos.toByteArray());
             fos.flush();
-            Log.d("test","addpictrue-1");
+            Log.d("test", "addpictrue-1");
             if (bitmap != null) {
                 bitmap.recycle();
-                Log.d("test","addpictrue0");
+                Log.d("test", "addpictrue0");
             }
-            Log.d("test","addpictrue1");
+            Log.d("test", "addpictrue1");
             UploadPicsBean bean = new UploadPicsBean();
 //            bean.setM_auth(consultActivity.userBean.getM_auth());
             bean.setM_auth("");
@@ -402,15 +395,15 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
             bean.setPictureid(consultPicsAdapter.getItemCount());
 //            bean.setUid(consultActivity.userBean.getUserdata().getUid());
             bean.setUid("");
-            Log.d("test","addpictrue2");
+            Log.d("test", "addpictrue2");
             bean.setPresent(0);
             cancelnotification();
             consultPicsAdapter.add(bean);
             consultPicsAdapter.notifyDataSetChanged();
-            Log.d("test","addpictrue3");
+            Log.d("test", "addpictrue3");
             fos.close();
         } catch (Exception e) {
-            Log.d("test","addpictruefalse");
+            Log.d("test", "addpictruefalse");
             e.printStackTrace();
         }
     }
@@ -448,14 +441,14 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     private InitListener mInitListener =
             new InitListener() {
 
-        @Override
-        public void onInit(int code) {
-            if (code != ErrorCode.SUCCESS) {
-                showerror(code, "初始化失败");
-                //showTip("初始化失败，错误码：" + code);
-            }
-        }
-    };
+                @Override
+                public void onInit(int code) {
+                    if (code != ErrorCode.SUCCESS) {
+                        showerror(code, "初始化失败");
+                        //showTip("初始化失败，错误码：" + code);
+                    }
+                }
+            };
 
     private void printResult(RecognizerResult results) {
         String text = JsonParser.parseIatResult(results.getResultString());
@@ -627,21 +620,6 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-    }
-
-    @Override
-    public void onClicks(ColorDialog dialog,int position) {
-        dialog.dismiss();
-    }
-
-    @Override
-    public void onClick(ColorDialog dialog,int position) {
-        if(dialog.getContentText().toString()!="") {
-            UploadPicsBean bean = (UploadPicsBean) consultPicsAdapter.getitem(position);
-            bean.setPicturetitle(dialog.getContentText().toString());
-            consultPicsAdapter.notifyDataSetChanged();
-        }
-        dialog.dismiss();
     }
 
     @Override

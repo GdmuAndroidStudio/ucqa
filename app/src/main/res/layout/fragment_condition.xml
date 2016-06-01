@@ -59,6 +59,13 @@
                     android:layout_below="@+id/include"
                     android:layout_alignRight="@+id/include"
                     android:layout_alignEnd="@+id/include" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/lv_consult_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lv_consult_pic"
+                    android:layout_alignRight="@+id/include"
+                    android:layout_alignEnd="@+id/include" />
             </RelativeLayout>
             <LinearLayout
                 android:orientation="horizontal"

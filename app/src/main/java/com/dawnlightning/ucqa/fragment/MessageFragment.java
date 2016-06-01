@@ -44,6 +44,7 @@ import fr.castorflex.android.circularprogressbar.CircularProgressBar;
 public class MessageFragment extends BaseFragment implements IMessageView{
     private MessagePresenter messagePresenter;
     private IMessageView iMessageView;
+    private boolean firstLoad;
     private List<ConsultMessageBean> consultMessageBeanList;
 
     @Override
@@ -51,8 +52,6 @@ public class MessageFragment extends BaseFragment implements IMessageView{
         consultMessageBeanList = new ArrayList<ConsultMessageBean>();
         adapter = new MessageAdapter(getContext());
         messagePresenter = new MessagePresenter(this,getContext());
-        for(int i=0;i<4;i++)
-            consultMessageBeanList.add(new ConsultMessageBean());
         adapter.setList(consultMessageBeanList);
     }
 
@@ -75,4 +74,14 @@ public class MessageFragment extends BaseFragment implements IMessageView{
     public List<ConsultMessageBean> getConsultMessageBeanList() {
         return consultMessageBeanList;
     }
-}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        firstLoad = isVisibleToUser;
+    }
+    }

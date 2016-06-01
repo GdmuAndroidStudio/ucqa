@@ -23,8 +23,6 @@ public class ConsultFragment extends BaseFragment implements IConsultMessageView
         consultBeanList = new ArrayList<ConsultBean>();
         adapter = new ConsultAdapter(getContext());
         consultPresenter = new ConsultPresenter(this,getContext());
-        for(int i=0;i<4;i++)
-            consultBeanList.add(new ConsultBean());
         adapter.setList(consultBeanList);
     }
 

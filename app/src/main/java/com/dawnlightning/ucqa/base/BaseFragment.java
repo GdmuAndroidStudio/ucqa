@@ -133,7 +133,8 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     }
 
-    @Override
+
+        @Override
     public void initEvent() {
     }
 

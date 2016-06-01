@@ -25,9 +25,7 @@ import java.util.List;
  * Created by Kyo on 2016/5/21.
  */
 public class MainFragment extends BaseFragment {
-
     private List<ConsultMessageBean> data = new ArrayList<>();
-
     public static MainFragment newInstance(Bundle bundle) {
         MainFragment mainFragment = new MainFragment();
         mainFragment.setArguments(bundle);
