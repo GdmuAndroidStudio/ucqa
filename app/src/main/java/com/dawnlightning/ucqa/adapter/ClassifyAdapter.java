@@ -22,13 +22,11 @@ import android.view.ViewGroup.LayoutParams;
  * Created by Administrator on 2016/4/2.
  */
 public class ClassifyAdapter extends BaseAdapter implements Serializable {
-    private Activity activity;
     private Context context;
     private List<ConsultClassifyBean> list;
     private ViewHolder viewHolder;
     private  LayoutInflater layoutInflater;
-    public ClassifyAdapter( Activity activity ,Context context,List<ConsultClassifyBean> list){
-       this.activity=activity;
+    public ClassifyAdapter( Context context,List<ConsultClassifyBean> list){
         this.context=context;
         this.list=list;
         layoutInflater = (LayoutInflater) LayoutInflater.from(context);
