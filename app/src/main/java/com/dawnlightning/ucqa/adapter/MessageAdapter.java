@@ -8,12 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.base.BaseFragment;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
+import com.dawnlightning.ucqa.bean.others.MessageBean;
+import com.dawnlightning.ucqa.utils.ImageLoaderOptions;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
@@ -26,9 +31,12 @@ public class MessageAdapter extends BaseAdapter {
     private Context context;
     private FootViewHolder footViewHolder;
     private Handler handler=new Handler();
+    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private DisplayImageOptions options;
 
     public MessageAdapter(Context context) {
         this.context = context;
+        options = ImageLoaderOptions.getConsultLoadPictureOptions();
     }
 
     @Override
@@ -40,7 +48,6 @@ public class MessageAdapter extends BaseAdapter {
                 footViewHolder.textView.setText("已加载完毕");
             }
         }, 1000);
-
     }
 
     @Override
@@ -77,11 +84,20 @@ public class MessageAdapter extends BaseAdapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder,position);
         if (holder instanceof ItemViewHolder) {
-            ConsultMessageBean consultMessageBean=(ConsultMessageBean)data.get(position);
+            MessageBean consultMessageBean=(MessageBean)data.get(position);
             ((ItemViewHolder) holder).content.setText(consultMessageBean.getMessage());
+            ((ItemViewHolder) holder).host.setText(consultMessageBean.getAuthor());
+            imageLoader.displayImage(consultMessageBean.getAvatar_url(), ((ItemViewHolder) holder).photoView, options);
             if (((ItemViewHolder) holder).photoView.getTag()!=null&&((ItemViewHolder)((ItemViewHolder) holder)).photoView.getTag().equals(position)){
             }else{
                 ((ItemViewHolder) holder).photoView.setTag(position);
+            }
+        }
+        if(data.size()==0&&position==data.size()){
+            ((FootViewHolder)holder).linearLayout.setVisibility(View.INVISIBLE);
+        }else{
+            if(data.size()>0&&position==data.size()) {
+                ((FootViewHolder) holder).linearLayout.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -90,22 +106,26 @@ public class MessageAdapter extends BaseAdapter {
         TextView content;
         TextView textView;
         ImageView photoView;
+        TextView host;
 
         public ItemViewHolder(View view) {
             super(view);
             photoView = (ImageView) view.findViewById(R.id.rv_message_icon);
             content=(TextView)view.findViewById(R.id.tv_message_content);
             textView=(TextView)view.findViewById(R.id.tv_messsage_note);
+            host=(TextView)view.findViewById(R.id.tv_message_host);
         }
     }
 
     class FootViewHolder extends RecyclerView.ViewHolder {
         ProgressBar progressBar;
         TextView textView;
+        LinearLayout linearLayout;
         public FootViewHolder(View view) {
             super(view);
             progressBar=(ProgressBar)view.findViewById(R.id.progressBar);
             textView=(TextView)view.findViewById(R.id.tv_recyclerview_foot);
+            linearLayout= (LinearLayout) view.findViewById(R.id.item_foot);
 
         }
     }

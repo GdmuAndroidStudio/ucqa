@@ -28,7 +28,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     boolean isLoading = false;
     @Bind(R.id.recyclerView)
-    RecyclerView recyclerView;
+    public RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_widget)
     public SwipeRefreshLayout swipeRefreshWidget;
     private Handler handler = new Handler();
@@ -37,11 +37,12 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     public abstract void initAdapter();
     public abstract void doRefresh();
+    public View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         System.out.println("base oncreate");
-        final View view = inflater.inflate(setContentLayout(), container, false);
+        view = inflater.inflate(setContentLayout(), container, false);
         ButterKnife.bind(this, view);
         initAdapter();
         initView();
@@ -86,14 +87,12 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                Log.d("test", "StateChanged = " + newState);
 
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.d("test", "onScrolled");
                 //设置滑动至顶部菜能刷新
                 swipeRefreshWidget.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
                 int lastCompleteVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();

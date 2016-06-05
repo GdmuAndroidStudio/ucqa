@@ -77,12 +77,12 @@ public class ConsultPublicModel {
      * @param m_auth 登陆后返回
      */
     public void UploadPicture(List<UploadPicsBean> list, final String m_auth, final  Handler handler){
-        final Message message=handler.obtainMessage();
       for (final  UploadPicsBean bean :list){
           RequestBody requestBody=RequestBody.create(MediaType.parse("image/jpeg"),bean.getPicture());
           ProgressRequestBody progressRequestBody=new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressListener() {
               @Override
               public void update(long bytesRead, long contentLength, boolean done) {
+                  Message message=handler.obtainMessage();
                   int count = (int) ((bytesRead * 1.0 / contentLength) * 100);
                   message.what= Code.UPLOADCHANGE;
                   message.arg1=bean.getPictureid();
@@ -102,6 +102,7 @@ public class ConsultPublicModel {
                   .subscribe(new SuccessAction<JsonObject>() {
                       @Override
                       public void Success(JsonObject target) {
+                          Message message=handler.obtainMessage();
                           message.what= Code.UPLOADSUCCESS;
                           message.arg1=bean.getPictureid();
                           message.obj=target.getAsJsonObject("pic").get("picid");
@@ -110,7 +111,7 @@ public class ConsultPublicModel {
 
                       @Override
                       public void Failure( String msg) {
-
+                          Message message=handler.obtainMessage();
                           message.what= Code.UPLOADFAILURE;
                           message.arg1=bean.getPictureid();
                           message.obj=bean.getPicture();
@@ -119,6 +120,7 @@ public class ConsultPublicModel {
                   }, new FailureAction() {
                       @Override
                       public void Error(String msg) {
+                          Message message=handler.obtainMessage();
                           message.what= Code.UPLOADFAILURE;
                           message.arg1=bean.getPictureid();
                           message.obj=bean.getPicture();

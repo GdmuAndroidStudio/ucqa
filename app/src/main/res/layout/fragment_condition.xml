@@ -52,21 +52,18 @@
                     android:id="@+id/include2"
                     android:background="@color/main_activity_bg">
                     </RelativeLayout>
-                <android.support.v7.widget.RecyclerView
+                <com.dawnlightning.ucqa.widget.MyRecycleView
                     android:id="@+id/lv_consult_pic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/include"
-                    android:layout_alignRight="@+id/include"
-                    android:layout_alignEnd="@+id/include" />
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/lv_consult_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lv_consult_pic"
-                    android:layout_alignRight="@+id/include"
-                    android:layout_alignEnd="@+id/include" />
+                    android:layout_alignRight="@+id/include" />
             </RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/lv_consult_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@+id/include" />
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

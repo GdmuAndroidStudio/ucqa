@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.ConsultActivity;
+import com.dawnlightning.ucqa.adapter.ConsultEditTextAdapter;
 import com.dawnlightning.ucqa.adapter.ConsultPicsAdapter;
 import com.dawnlightning.ucqa.bean.others.UploadPicsBean;
 import com.dawnlightning.ucqa.presenter.PublishConsultPresenter;
@@ -42,6 +43,7 @@ import com.dawnlightning.ucqa.utils.TimeUtil;
 import com.dawnlightning.ucqa.viewinterface.IPublishConsultView;
 import com.dawnlightning.ucqa.widget.ColorDialog;
 import com.dawnlightning.ucqa.widget.FullyLinearLayoutManager;
+import com.dawnlightning.ucqa.widget.MyRecycleView;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerResult;
@@ -60,6 +62,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -75,7 +78,7 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     @Bind(R.id.re_setting_help)
     RelativeLayout reSettingHelp;
     @Bind(R.id.lv_consult_pic)
-    RecyclerView lvConsultPic;
+    MyRecycleView lvConsultPic;
     @Bind(R.id.iv_consult_sentvoice)
     ImageView ivConsultSentvoice;
     @Bind(R.id.iv_consult_sentphotos)
@@ -92,11 +95,14 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     private ConsultActivity consultActivity;
     private List<UploadPicsBean> list = new ArrayList<UploadPicsBean>();
     private Handler handler;
+    private ConsultEditTextAdapter consultEditAdapter;
     private PublishConsultPresenter publishConsultPresenter;
 
 
     //    private ConsultPresenter consultPresenter;
     String fileName = String.valueOf(System.currentTimeMillis()) + ".jpg";
+    private LinkedList picids = new LinkedList();
+    private String othur = "86dbHma%2FLr19gbGC%2FCH16GG%2FmBowm8P5Lai2amtBgoBerRxT5F34SPqeqC%2FbTg6zX%2FTjhlAEGtLKTbozWIZm%2FKk";
 
     //List<String> imageUrl=new ArrayList<String>();
     @Override
@@ -133,10 +139,15 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
 
     public void initdata() {
         final FullyLinearLayoutManager layoutManager = new FullyLinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        final FullyLinearLayoutManager editLayoutManager = new FullyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         lvConsultPic.setLayoutManager(layoutManager);
+        lvConsultEdit.setLayoutManager(editLayoutManager);
         consultPicsAdapter = new ConsultPicsAdapter(getActivity(), list);
-        publishConsultPresenter = new PublishConsultPresenter(this, getContext());
+        consultEditAdapter = new ConsultEditTextAdapter(getActivity());
+        publishConsultPresenter = new PublishConsultPresenter(this);
         lvConsultPic.setAdapter(consultPicsAdapter);
+        consultEditAdapter.setUploadNeanList(list);
+        lvConsultEdit.setAdapter(consultEditAdapter);
 //        lvConsultPic.addView(headview);
     }
 
@@ -163,16 +174,17 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
             @Override
             public void Detele(int postion) {
                 list.remove(postion);
+                consultEditAdapter.notifyDataSetChanged();
                 consultPicsAdapter.notifyDataSetChanged();
             }
         });
         //图片描述的输入监听
-        consultPicsAdapter.setEditTextListener(new ConsultPicsAdapter.EditTextListener() {
+        consultEditAdapter.setEditTextListener(new ConsultEditTextAdapter.EditTextListener() {
             @Override
             public void AdapterTextChaged(int postion, String str) {
-//                    UploadPicsBean bean = (UploadPicsBean) consultPicsAdapter.getitem(postion);
-//                    bean.setPicturetitle(str);
-//                    Log.d("test",postion+"   "+str+"  ");
+                      UploadPicsBean bean = list.get(postion);
+                      bean.setPicturetitle(str);
+                      Log.d("test",postion+"   "+str+"  ");
             }
         });
         //咨询正文的输入监听
@@ -217,27 +229,16 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
         btConsultSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (consultPicsAdapter.getUploadPicsBeans().size() > 0) {
-//                    list.clear();
-//                } else {
-                publishConsultPresenter.sendconsult();
+                if (consultPicsAdapter.getUploadPicsBeans().size() > 0) {
+                    uploadpic(consultPicsAdapter.getUploadPicsBeans());
+                } else {
+                sendconsult();
+            }
                 setButtonClickable();
             }
 
         });
         btConsultSubmit.setClickable(false);
-    }
-
-    //设置提交按钮是否可点击
-    private void setButtonClickable() {
-        if (btConsultSubmit.isClickable()) {
-            btConsultSubmit.setBackgroundColor(getActivity().getResources().getColor(R.color.lightgray));
-            btConsultSubmit.setClickable(false);
-
-        } else {
-            btConsultSubmit.setBackgroundColor(getActivity().getResources().getColor(R.color.green));
-            btConsultSubmit.setClickable(true);
-        }
     }
 
     //设置提交的背景颜色
@@ -399,6 +400,9 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
             bean.setPresent(0);
             cancelnotification();
             consultPicsAdapter.add(bean);
+            Log.d("test", "list size"+list.size());
+            consultEditAdapter.setUploadNeanList(list);
+            consultEditAdapter.notifyDataSetChanged();
             consultPicsAdapter.notifyDataSetChanged();
             Log.d("test", "addpictrue3");
             fos.close();
@@ -406,10 +410,6 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
             Log.d("test", "addpictruefalse");
             e.printStackTrace();
         }
-    }
-
-    private void showerror(int code, String msg) {
-        consultActivity.showmessage(msg, Toast.LENGTH_SHORT);
     }
 
     // 语音听写UI
@@ -632,18 +632,83 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
         return list;
     }
 
-    @Override
-    public Button getSubmitButton() {
-        return btConsultSubmit;
+
+    public void uploadpicerror(int picid, File file) {
+        setButtonClickable();
+        showerror(0, "图片上传失败");
+        btConsultSubmit.setText("继续上传");
+    }
+
+
+    public void showerror(int code, String msg) {
+        consultActivity.showmessage(msg, Toast.LENGTH_SHORT);
+    }
+
+    //设置提交按钮是否可点击
+    private void setButtonClickable() {
+        if (btConsultSubmit.isClickable()) {
+            btConsultSubmit.setBackgroundColor(this.getResources().getColor(R.color.lightgray));
+            btConsultSubmit.setClickable(false);
+
+        } else {
+            btConsultSubmit.setBackgroundColor(this.getResources().getColor(R.color.green));
+            btConsultSubmit.setClickable(true);
+        }
+    }
+
+    public void uploadpic(List<UploadPicsBean> list) {
+        picids.clear();
+        publishConsultPresenter.uploadPicture(list,othur);
+    }
+
+    public void savepicid(int picid, String strpicid) {
+        ((UploadPicsBean)consultPicsAdapter .getitem(picid)).setPresent(100);
+        consultPicsAdapter.notifyDataSetChanged();
+        picids.add(strpicid);
+        if (picids.size() == consultPicsAdapter.getItemCount()) {
+            sendconsult();
+        }
+
     }
 
     @Override
-    public ConsultActivity getConsultActivity() {
-        return consultActivity;
+    public void sendSuccess(Object object) {
+        Toast.makeText(getContext(),"发送成功",Toast.LENGTH_SHORT);
+        /*String bwztid=msg.substring(msg.lastIndexOf("=")+1);
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("userdata",consultActivity.userBean);
+        bundle.putString("bwztid", bwztid);
+        bundle.putString("uid",consultActivity.userBean.getUserdata().getUid());
+        intent.putExtras(bundle);
+        startActivity(intent);
+        showerror(code,"发布成功");
+        getActivity().finish();*/
     }
 
     @Override
-    public EditText getEtConsultMessage() {
-        return etConsultMessage;
+    public void sendFailure(String msg) {
+        setButtonClickable();
+        showerror(1,msg);
     }
+
+    @Override
+    public void sendError(String msg) {
+        showerror(2,msg);
+    }
+
+    public void sendconsult() {
+        consultActivity.consultBean.setMessage(etConsultMessage.getText().toString());
+        consultActivity.consultBean.setSubject(etConsultSubject.getText().toString());
+        consultActivity.consultBean.setPicids(picids);
+        publishConsultPresenter.dosentconsult(consultActivity.consultBean,othur);
+    }
+
+
+    public void updatepb(int pbid, int present) {
+        ((UploadPicsBean) consultPicsAdapter.getitem(pbid)).setPresent(present);
+        consultPicsAdapter.notifyDataSetChanged();
+    }
+
 }

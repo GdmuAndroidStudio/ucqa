@@ -12,5 +12,10 @@ import java.util.List;
  */
 public interface IConsultMessageView {
     public ConsultAdapter getConsultAdapter();
-    public List<ConsultBean> getConsultBeanList();
+    public List<ConsultMessageBean> getConsultBeanList();
+    public void getFailure(String msg,Actions actions);
+    public void getError(String msg,Actions actions);
+    public void noNextPage(Actions actions);
+    public void noData(Actions actions);
+    public void getSuccess();
 }

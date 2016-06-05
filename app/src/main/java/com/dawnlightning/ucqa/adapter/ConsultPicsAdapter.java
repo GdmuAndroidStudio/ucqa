@@ -46,8 +46,6 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
     private LayoutInflater layoutInflater;
     private DisplayImageOptions options;
     private  DeletePicture  deletePicture;
-    private EditTextListener editTextListener;
-    private List<PictureTitleEdittext> ediTexts;
 
     public ConsultPicsAdapter(Context context, List<UploadPicsBean> list){
         this.context=context;
@@ -58,14 +56,6 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
 
     public void  setDeletePicture(DeletePicture deletePicture){
         this.deletePicture=deletePicture;
-    }
-    
-    public void setEdiTexts(List<PictureTitleEdittext> ediTexts){
-        this.ediTexts = ediTexts;
-    }
-    
-    public void setEditTextListener( EditTextListener editTextListener){
-        this.editTextListener=editTextListener;
     }
     
 
@@ -107,27 +97,6 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
                     }
                 }
             });
-            ediTexts.get(position).clearTextChangedListeners();
-            ediTexts.get(position).addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable editable) {
-                       if(editTextListener!=null){
-                           editTextListener.AdapterTextChaged(position,editable.toString());
-                       }
-                }
-            });
-
-
             ((ViewHolder) holder).img.setOnClickListener(new OnClickListener(((ViewHolder) holder), position));
             ((ViewHolder) holder).img.setOnLongClickListener(new LongClickListener(((ViewHolder) holder)));
             Log.d("test", "" + position);
@@ -230,11 +199,9 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
             delete=(TextView)view.findViewById(R.id.iv_consult_picture_delete) ;
         }
     }
+
     public interface DeletePicture{
         public void Detele(int postion);
-    }
-    public interface EditTextListener{
-        public void AdapterTextChaged(int postion, String str);
     }
 
 
