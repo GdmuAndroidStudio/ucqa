@@ -355,5 +355,5 @@
         </LinearLayout>
     </LinearLayout>
 
-    <include layout="@layout/consult_error" />
+    <include layout="@layout/consult_nodata" />
 </LinearLayout>

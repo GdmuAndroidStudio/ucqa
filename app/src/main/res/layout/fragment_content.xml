@@ -16,7 +16,7 @@
             android:background="@color/white"
             android:cacheColorHint="@null"
             android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
-    </LinearLayout>
 
-    <include layout="@layout/consult_error" />
+        <include layout="@layout/consult_nodata" />
+    </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

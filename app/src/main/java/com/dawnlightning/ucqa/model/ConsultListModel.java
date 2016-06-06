@@ -85,7 +85,9 @@ public class ConsultListModel {
                     listListener.noData(actions);
                 } else if (list.size() < MaxConsultPageSize && list.size() > 0) {
                     listListener.getSuccess(list, actions);
-                    listListener.noNextPage(actions);
+                    if(actions == Actions.LoadMore){
+                        listListener.noNextPage(actions);
+                    }
                 } else if (list.size() == MaxConsultPageSize) {
                     listListener.getSuccess(list, actions);
                 }
@@ -128,7 +130,9 @@ public class ConsultListModel {
                     listListener.noData(actions);
                 } else if (list.size() < MaxConsultPageSize && list.size() > 0) {
                     listListener.getSuccess(list, actions);
-                    listListener.noNextPage(actions);
+                    if(actions == Actions.LoadMore){
+                        listListener.noNextPage(actions);
+                    }
                 } else if (list.size() == MaxConsultPageSize) {
                     listListener.getSuccess(list, actions);
                 }

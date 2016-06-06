@@ -5,6 +5,8 @@ import android.widget.ImageView;
 
 import com.dawnlightning.ucqa.bean.others.UserBean;
 import com.dawnlightning.ucqa.bean.others.UserData;
+import com.dawnlightning.ucqa.bean.response.account.UpdateBean;
+import com.dawnlightning.ucqa.model.AccountModel;
 import com.dawnlightning.ucqa.viewinterface.IMainFragView;
 import com.dawnlightning.ucqa.viewinterface.IMainView;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -22,6 +24,7 @@ public class MainPresenter {
     private List<Integer> newItems;
     private List<Integer> unreadNumbers;
     private boolean isUpDate;
+    private AccountModel accountModel;
 
 
     public MainPresenter(IMainView iMainView, Context context) {
@@ -30,7 +33,8 @@ public class MainPresenter {
         userBean = iMainView.getUserBean();
         newItems = iMainView.getNewItems();
         unreadNumbers = iMainView.getUnreadNumbers();
-        isUpDate = iMainView.doCheckUpDate();
+        isUpDate = iMainView.setCheckUpDate();
+        accountModel = new AccountModel();
     }
 
     public void initUserData(){
@@ -51,7 +55,19 @@ public class MainPresenter {
     }
 
     public void doCheckUpDate(){
-        isUpDate = true;
+        accountModel.CheckUpdate(new AccountModel.UpdateListener() {
+            @Override
+            public void needUpdate(UpdateBean bean) {
+                isUpDate = true;
+                iMainView.checkUpDate();
+            }
+
+            @Override
+            public void noUpdate() {
+                isUpDate = false;
+                iMainView.checkUpDate();
+            }
+        });
     }
 
 

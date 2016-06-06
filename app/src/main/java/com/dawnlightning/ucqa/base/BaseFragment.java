@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.BaseAdapter;
 import com.dawnlightning.ucqa.viewinterface.IBase;
@@ -28,14 +30,22 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     boolean isLoading = false;
     @Bind(R.id.recyclerView)
-    RecyclerView recyclerView;
+    public RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_widget)
     public SwipeRefreshLayout swipeRefreshWidget;
+    @Bind(R.id.tv_detail_nodata)
+    public TextView tvDetailNodata;
+    @Bind(R.id.bt_detail_nodata)
+    public Button btDetailNodata;
+    @Bind(R.id.rl_detail_nodata)
+    public RelativeLayout rlDetailNodata;
     private Handler handler = new Handler();
     public BaseAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
 
     public abstract void initAdapter();
+
     public abstract void doRefresh();
 
     @Override
@@ -47,7 +57,6 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
         initView();
         initData();
         initEvent();
-//        doRefresh();
         return view;
     }
 
@@ -59,13 +68,6 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     @Override
     public void initView() {
         swipeRefreshWidget.setColorSchemeResources(R.color.green);
-//        swipeRefreshWidget.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                System.out.println("do refresh");
-//                swipeRefreshWidget.setRefreshing(true);
-//            }
-//        });
         swipeRefreshWidget.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -78,7 +80,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
                 }, 2000);
             }
         });
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);
@@ -94,46 +96,50 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 Log.d("test", "onScrolled");
-                //设置滑动至顶部菜能刷新
-                swipeRefreshWidget.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
-                int lastCompleteVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
-                int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
-                //设置加载前foot样式
-                if (lastVisibleItemPosition + 1 == adapter.getItemCount()) {
-                    adapter.setBeforeFoot();
-                }
-                //当foot完全出现在屏幕中进行加载更多操作
-                if (lastCompleteVisibleItemPosition + 1 == adapter.getItemCount()) {
-                    Log.d("test", "loading executed");
-                    //设置加载中foot样式
-                    adapter.setFooting();
-                    boolean isRefreshing = swipeRefreshWidget.isRefreshing();
-                    //如果刷新进行中则不能加载更多
-                    if (isRefreshing) {
-                        adapter.notifyItemRemoved(adapter.getItemCount());
-                        return;
-                    }
-                    //如果一次性加载完但是没有item没有填满屏幕则foot显示加载完毕
-                    if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
-                        adapter.setOverFoot();
-                        return;
-                    }
-                    //加载更多
-                    if (!isLoading) {
-                        isLoading = true;
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                LoadMore(Actions.LoadMore);
-                                Log.d("test", "load more completed");
-                                isLoading = false;
-                            }
-                        }, 1000);
-                    }
-                }
+                setScroller();
             }
         });
 
+    }
+
+    public void setScroller(){
+        //设置滑动至顶部菜能刷新
+        swipeRefreshWidget.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
+        int lastCompleteVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
+        int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();
+        //设置加载前foot样式
+        if (lastVisibleItemPosition + 1 == adapter.getItemCount()) {
+            adapter.setBeforeFoot();
+        }
+        //当foot完全出现在屏幕中进行加载更多操作
+        if (lastCompleteVisibleItemPosition + 1 == adapter.getItemCount()) {
+            Log.d("test", "loading executed");
+            //设置加载中foot样式
+            adapter.setFooting();
+            boolean isRefreshing = swipeRefreshWidget.isRefreshing();
+            //如果刷新进行中则不能加载更多
+            if (isRefreshing) {
+                adapter.notifyItemRemoved(adapter.getItemCount());
+                return;
+            }
+            //如果一次性加载完但是没有item没有填满屏幕则foot显示加载完毕
+            if (layoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                adapter.setOverFoot();
+                return;
+            }
+            //加载更多
+            if (!isLoading) {
+                isLoading = true;
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        LoadMore(Actions.LoadMore);
+                        Log.d("test", "load more completed");
+                        isLoading = false;
+                    }
+                }, 1000);
+            }
+        }
     }
 
     @Override

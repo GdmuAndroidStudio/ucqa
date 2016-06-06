@@ -79,7 +79,6 @@ public class MainActivity extends BaseActivity implements IMainView {
     private UserBean userBean = new UserBean();  //用户实体
     private List<Integer> newItems = new ArrayList<>();  //左拉列表要显示new字样的item数组
     private List<Integer> unreadNumbers = new ArrayList<>();  //未读信息数数组
-    private int allUnReadNumbers; //未读信息总数 = 未读信息数 + 未读咨询数
     private MainPresenter mainPresenter;
     private boolean isUpDate = false; // 是否要更新，初始化为false
     private String classifyName = "全部";
@@ -89,7 +88,7 @@ public class MainActivity extends BaseActivity implements IMainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mainPresenter = new MainPresenter(this, this);
+        initData();
         initView();
         initDragLayout();
         initLeftContent();
@@ -130,7 +129,7 @@ public class MainActivity extends BaseActivity implements IMainView {
     }
 
     @Override
-    public boolean doCheckUpDate() {
+    public boolean setCheckUpDate() {
         return isUpDate;
     }
 
@@ -144,6 +143,12 @@ public class MainActivity extends BaseActivity implements IMainView {
     public void showtitleclassift(String strclassify) {
         title.setText(strclassify);
         classifyName = strclassify;
+    }
+
+    private void initData(){
+        mainPresenter = new MainPresenter(this, this);
+        mainPresenter.initUserData();
+        mainPresenter.getUnreadNumbers();
     }
 
     private void initView() {
@@ -182,7 +187,6 @@ public class MainActivity extends BaseActivity implements IMainView {
      * 加载用户数据，如头像，昵称
      */
     private void initUser() {
-        mainPresenter.initUserData();
         ImageLoader.getInstance().displayImage(userBean.getUserdata().getAvatar_url(), ivIcon, Options.getListOptions());
         tvUsername.setText(userBean.getUserdata().getName());
     }
@@ -191,15 +195,17 @@ public class MainActivity extends BaseActivity implements IMainView {
      * 检测是否有未读信息
      */
     private void checkUnreadMessage() {
-        if (allUnReadNumbers <= 0) {
+        if (unreadNumbers.get(0) <= 0) {
             unreadMsgNumber.setVisibility(View.GONE);
         } else {
             unreadMsgNumber.setVisibility(View.VISIBLE);
+            unreadMsgNumber.setText("" + unreadNumbers.get(0));
         }
     }
 
-    private void checkUpDate() {
-        if (doCheckUpDate() == true) {
+    @Override
+    public void checkUpDate() {
+        if (setCheckUpDate() == true) {
             ((Menu) menuadapter.getItem(4)).setStatus(1);
             menuadapter.notifyDataSetChanged();
         }
@@ -220,8 +226,7 @@ public class MainActivity extends BaseActivity implements IMainView {
                     ((Menu) menuadapter.getItem(1)).setStatus(0);
                     menuadapter.notifyDataSetChanged();
                 }
-                allUnReadNumbers -= unreadNumbers.get(0);
-                unreadMsgNumber.setText("" + allUnReadNumbers);
+                unreadNumbers.set(0,0);
                 checkUnreadMessage();
                 break;
             case 2:
@@ -287,12 +292,7 @@ public class MainActivity extends BaseActivity implements IMainView {
         menuList.add(new Menu("设        置", 0));
         menuadapter = new LeftMenuAdapter(MainActivity.this, menuList);
         lvMenu.setAdapter(menuadapter);
-        mainPresenter.getUnreadNumbers();
         mainPresenter.getNewItems();
-        for (int i = 0; i < unreadNumbers.size(); i++) {
-            allUnReadNumbers += unreadNumbers.get(i);
-        }
-        unreadMsgNumber.setText("" + allUnReadNumbers);
         showUpDate();
     }
 

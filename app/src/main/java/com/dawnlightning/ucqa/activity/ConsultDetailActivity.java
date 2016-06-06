@@ -12,15 +12,22 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.CommentListAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
+import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.CommentBean;
+import com.dawnlightning.ucqa.utils.Options;
+import com.dawnlightning.ucqa.utils.TimeUtil;
+import com.dawnlightning.ucqa.viewinterface.ConsultDetailView;
 import com.dawnlightning.ucqa.widget.ActionItem;
 import com.dawnlightning.ucqa.widget.DividerLine;
 import com.dawnlightning.ucqa.widget.FullyLinearLayoutManager;
+import com.dawnlightning.ucqa.widget.RoundImageView;
 import com.dawnlightning.ucqa.widget.TitlePopup;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +39,7 @@ import butterknife.OnClick;
 /**
  * Created by Kyo on 2016/5/22.
  */
-public class ConsultDetailActivity extends BaseActivity {
+public class ConsultDetailActivity extends BaseActivity implements ConsultDetailView {
 
     @Bind(R.id.rv_comment_list)
     RecyclerView rvCommentList;
@@ -44,6 +51,20 @@ public class ConsultDetailActivity extends BaseActivity {
     ImageView ivDetailBack;
     @Bind(R.id.iv_detail_actions)
     ImageView ivDetailActions;
+    @Bind(R.id.iv_detail_icon)
+    RoundImageView ivDetailIcon;
+    @Bind(R.id.tv_detail_subject)
+    TextView tvDetailSubject;
+    @Bind(R.id.tv_detail_userdata)
+    TextView tvDetailUserdata;
+    @Bind(R.id.tv_detail_message)
+    TextView tvDetailMessage;
+    @Bind(R.id.tv_detail_numview)
+    TextView tvDetailNumview;
+    @Bind(R.id.tv_detail_numreply)
+    TextView tvDetailNumreply;
+    @Bind(R.id.tv_detail_time)
+    TextView tvDetailTime;
 
     private Handler handler = new Handler();
     private List<CommentBean> data = new ArrayList<>();
@@ -90,6 +111,14 @@ public class ConsultDetailActivity extends BaseActivity {
     }
 
     private void initData() {
+        ConsultMessageBean consultMessageBean = (ConsultMessageBean) getIntent().getSerializableExtra("consultMessageBean");
+        ImageLoader.getInstance().displayImage(consultMessageBean.getAvatar_url(), ivDetailIcon, Options.getListOptions());
+        tvDetailSubject.setText(consultMessageBean.getSubject());
+        tvDetailUserdata.setText(consultMessageBean.getUsename() + "，" + consultMessageBean.getSex() + "，" + consultMessageBean.getAge());
+        tvDetailMessage.setText(consultMessageBean.getMessage());
+        tvDetailNumview.setText(consultMessageBean.getViewnum());
+        tvDetailNumreply.setText(consultMessageBean.getReplynum());
+        tvDetailTime.setText(TimeUtil.TimeStamp2Date(consultMessageBean.getDateline()));
         data.clear();
         for (int i = 0; i < 10; i++) {
             CommentBean commentBean = new CommentBean();
@@ -127,9 +156,9 @@ public class ConsultDetailActivity extends BaseActivity {
                 this.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 break;
             case R.id.iv_detail_actions:
-                if(titlePopup!=null){
+                if (titlePopup != null) {
                     titlePopup.show(view);
-                }else{
+                } else {
                     initdialoglistview();
                 }
                 break;
@@ -141,7 +170,7 @@ public class ConsultDetailActivity extends BaseActivity {
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         //给标题栏弹窗添加子类
         titlePopup.addAction(new ActionItem(this, "分享", R.mipmap.ic_share));
-        titlePopup.addAction(new ActionItem(this,"举报",R.mipmap.ic_report));
+        titlePopup.addAction(new ActionItem(this, "举报", R.mipmap.ic_report));
 //        if(detailedBean.getUid().equals(userBean.getUserdata().getUid())){
 //            titlePopup.addAction(new ActionItem(this, "采纳", R.mipmap.ic_slove));
 //            titlePopup.addAction(new ActionItem(this, "删除",  R.mipmap.ic_delete));

@@ -7,7 +7,7 @@ public class ConsultMessageBean implements Serializable {
     private String bwztid;
     private String message;
     private String uid;
-    private String usename;
+    private String usename = "点亮用户";
     private String subject;
     private String bwztclassid;
     private String bwztdivisionid;

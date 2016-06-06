@@ -72,24 +72,24 @@ public class ClassifyAdapter extends BaseAdapter implements Serializable {
         ConsultClassifyBean bean=list.get(position);
         switch(bean.getBwztclassarrid()){
             case 1:
-                viewHolder.img.setBackgroundResource(R.drawable.ic_classifyitem_02_normal);
-                viewHolder.title.setText("激光治近视");
-                break;
-            case 2:
-                viewHolder.img.setBackgroundResource(R.drawable.classify_item3_selector);
-                viewHolder.title.setText("白内障");
-                break;
-            case 3:
-                viewHolder.img.setBackgroundResource(R.drawable.classify_item4_selector);
-                viewHolder.title.setText("青光眼");
-                break;
-            case 4:
                 viewHolder.img.setBackgroundResource(R.drawable.classify_item5_selector);
                 viewHolder.title.setText("青少年近视");
                 break;
-            case 5:
+            case 2:
                 viewHolder.img.setBackgroundResource(R.drawable.classify_item6_selector);
                 viewHolder.title.setText("防盲治盲");
+                break;
+            case 3:
+                viewHolder.img.setBackgroundResource(R.drawable.classify_item2_selector);
+                viewHolder.title.setText("飞秒激光治疗近视");
+                break;
+            case 4:
+                viewHolder.img.setBackgroundResource(R.drawable.classify_item4_selector);
+                viewHolder.title.setText("青光眼");
+                break;
+            case 5:
+                viewHolder.img.setBackgroundResource(R.drawable.classify_item3_selector);
+                viewHolder.title.setText("白内障");
                 break;
            default:
                viewHolder.img.setBackgroundResource(R.drawable.classify_item1_selector);
