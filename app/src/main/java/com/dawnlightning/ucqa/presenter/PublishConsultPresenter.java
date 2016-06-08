@@ -71,13 +71,13 @@ public class PublishConsultPresenter {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case Code.UPLOADSUCCESS:
-                    iPublishConsultView.savepicid(msg.arg1,msg.obj.toString());
+                    iPublishConsultView.savePicid(msg.arg1,msg.obj.toString());
                     break;
                 case Code.UPLOADCHANGE:
-                    iPublishConsultView.updatepb(msg.arg1,Integer.parseInt(msg.obj.toString()));
+                    iPublishConsultView.updatePb(msg.arg1,Integer.parseInt(msg.obj.toString()));
                     break;
                 case Code.UPLOADFAILURE:
-                    iPublishConsultView.uploadpicerror(msg.arg1,(File)msg.obj);
+                    iPublishConsultView.uploadPicError(msg.arg1,(File)msg.obj);
                     break;
             }
             super.handleMessage(msg);

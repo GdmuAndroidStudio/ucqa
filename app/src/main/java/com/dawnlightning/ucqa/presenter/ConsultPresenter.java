@@ -19,13 +19,9 @@ import com.dawnlightning.ucqa.viewinterface.IConsultMessageView;
 public class ConsultPresenter {
     private ConsultListModel consultListModel = new ConsultListModel();
     private IConsultMessageView iConsultMessageView;
-    private ConsultAdapter consultAdapter;
-    private List<ConsultMessageBean> consultBeanList;
 
     public  ConsultPresenter(IConsultMessageView iConsultMessageView){
         this.iConsultMessageView = iConsultMessageView;
-        consultAdapter = iConsultMessageView.getConsultAdapter();
-        consultBeanList=iConsultMessageView.getConsultBeanList();
     }
 
 
@@ -34,17 +30,13 @@ public class ConsultPresenter {
             @Override
             public void getSuccess(List<ConsultMessageBean> list, Actions actions) {
                 if(actions.equals(Actions.Refresh)){
-                    consultBeanList.clear();
-                    consultBeanList = list;
-                    Log.i("test"," "+"refresh getSuccess"+"refresh"+list.size());
-                    consultAdapter.setList(consultBeanList);
-                }else {
-                    for(ConsultMessageBean consultMessageBean : list){
-                        Log.i("test"," "+"refresh getSuccess"+consultMessageBean.toString()+" loadmore"+list.size());
-                        consultBeanList.add(consultMessageBean);
-                    }
+                    iConsultMessageView.getConsultBeanList().clear();
                 }
-                consultAdapter.notifyDataSetChanged();
+                for(ConsultMessageBean consultMessageBean : list){
+                    Log.i("test"," "+"refresh getSuccess"+consultMessageBean.toString()+" loadmore"+list.size());
+                    iConsultMessageView.getConsultBeanList().add(consultMessageBean);
+                }
+                iConsultMessageView.getConsultAdapter().notifyDataSetChanged();
                 iConsultMessageView.getSuccess();
             }
 
@@ -72,6 +64,6 @@ public class ConsultPresenter {
                 iConsultMessageView.noData(actions);
             }
         });
-        consultAdapter.notifyDataSetChanged();
+        iConsultMessageView.getConsultAdapter().notifyDataSetChanged();
     }
 }

@@ -64,8 +64,9 @@ public class ConsultFragment extends BaseFragment implements IConsultMessageView
         }
         if(currentPage==1) {
             Log.i("test","隐藏");
+            swipeRefreshWidget.setEnabled(true);
             noMessage.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -133,6 +134,7 @@ public class ConsultFragment extends BaseFragment implements IConsultMessageView
         if(noMessage.getVisibility()==View.VISIBLE){
             noMessage.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
+            swipeRefreshWidget.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
         }
         consultPresenter.refreshAndLoadMore(uid,othur,currentPage);
     }

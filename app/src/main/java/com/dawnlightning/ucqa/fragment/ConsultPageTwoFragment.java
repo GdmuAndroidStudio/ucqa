@@ -633,7 +633,7 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     }
 
 
-    public void uploadpicerror(int picid, File file) {
+    public void uploadPicError(int picid, File file) {
         setButtonClickable();
         showerror(0, "图片上传失败");
         btConsultSubmit.setText("继续上传");
@@ -661,7 +661,7 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
         publishConsultPresenter.uploadPicture(list,othur);
     }
 
-    public void savepicid(int picid, String strpicid) {
+    public void savePicid(int picid, String strpicid) {
         ((UploadPicsBean)consultPicsAdapter .getitem(picid)).setPresent(100);
         consultPicsAdapter.notifyDataSetChanged();
         picids.add(strpicid);
@@ -706,7 +706,7 @@ public class ConsultPageTwoFragment extends Fragment implements IPublishConsultV
     }
 
 
-    public void updatepb(int pbid, int present) {
+    public void updatePb(int pbid, int present) {
         ((UploadPicsBean) consultPicsAdapter.getitem(pbid)).setPresent(present);
         consultPicsAdapter.notifyDataSetChanged();
     }

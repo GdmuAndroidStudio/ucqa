@@ -1,17 +1,20 @@
 package com.dawnlightning.ucqa.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
+import com.dawnlightning.ucqa.activity.ConsultActivity;
 import com.dawnlightning.ucqa.bean.others.ConsultBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.utils.ImageLoaderOptions;
@@ -28,6 +31,7 @@ import butterknife.Bind;
 public class ConsultAdapter extends BaseAdapter {
     public static final int TYPE_ITEM = 0;
     public static final int TYPE_FOOTER = 1;
+    private static final int TYPE_HEAD = 2;
     private Context context;
     private FootViewHolder footViewHolder;
     private Handler handler = new Handler();
@@ -37,6 +41,15 @@ public class ConsultAdapter extends BaseAdapter {
     public ConsultAdapter(Context context) {
         this.context = context;
         options = ImageLoaderOptions.getConsultLoadPictureOptions();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position + 1 == getItemCount()) {
+            return TYPE_FOOTER;
+        } else {
+                return TYPE_ITEM;
+        }
     }
 
     @Override
@@ -51,7 +64,6 @@ public class ConsultAdapter extends BaseAdapter {
             footViewHolder = new FootViewHolder(view);
             return footViewHolder;
         }
-
         return null;
     }
 

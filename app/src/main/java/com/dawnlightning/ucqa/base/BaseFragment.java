@@ -16,6 +16,7 @@ import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.BaseAdapter;
 import com.dawnlightning.ucqa.viewinterface.IBase;
 import com.dawnlightning.ucqa.viewinterface.IRefreshAndLoadmore;
+import com.dawnlightning.ucqa.widget.FullyLinearLayoutManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -33,6 +34,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     public SwipeRefreshLayout swipeRefreshWidget;
     private Handler handler = new Handler();
     public BaseAdapter adapter;
+    public FullyLinearLayoutManager layoutManager;
 
 
     public abstract void initAdapter();
@@ -79,7 +81,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
                 }, 2000);
             }
         });
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new FullyLinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
         recyclerView.setHasFixedSize(true);

@@ -21,14 +21,10 @@ import com.dawnlightning.ucqa.viewinterface.IMessageView;
  */
 public class MessagePresenter {
     private IMessageView iMessageView;
-    private MessageAdapter consultAdapter;
-    private List<MessageBean> consultMessageBeanList;
     private MessageModel messageModel = new MessageModel();
 
     public  MessagePresenter(IMessageView iMessageView){
         this.iMessageView = iMessageView;
-        consultAdapter = iMessageView.getMessageAdapter();
-        consultMessageBeanList=iMessageView.getConsultMessageBeanList();
     }
 
     public void refreshAndLoadMore(String othur,int page){
@@ -37,46 +33,28 @@ public class MessagePresenter {
             public void getSuccess(NoticeBean bean, Actions actions) {
                 if(actions.equals(Actions.Refresh)) {
                     Log.i("test", " " + "refresh sucess");
-                    consultMessageBeanList.clear();
-                    for (NoticeBean.NoticesEntity.ListEntity listEntity : bean.getNotices().getList()) {
-                        Log.i("test","content"+listEntity.toString());
-                        MessageBean messageBean = new MessageBean();
-                        messageBean.setAuthor(listEntity.getAuthor());
-                        messageBean.setBwztid(listEntity.getBwztid());
-                        messageBean.setDateline(listEntity.getDateline());
-                        messageBean.setIsnew(listEntity.getIsnew());
-                        messageBean.setLink(listEntity.getLink());
-                        messageBean.setMessage(listEntity.getMessage());
-                        messageBean.setName(listEntity.getName());
-                        messageBean.setUid(listEntity.getUid());
-                        messageBean.setNote(listEntity.getNote());
-                        messageBean.setType(listEntity.getType());
-                        messageBean.setIsfriend(listEntity.getIsfriend());
-                        messageBean.setStyle(listEntity.getStyle());
-                        messageBean.setAvatar_url(listEntity.getAvatar_url());
-                        consultMessageBeanList.add(messageBean);
-                    }
-                }else{
-                    for (NoticeBean.NoticesEntity.ListEntity listEntity : bean.getNotices().getList()) {
-                        MessageBean messageBean = new MessageBean();
-                        messageBean.setAuthor(listEntity.getAuthor());
-                        messageBean.setBwztid(listEntity.getBwztid());
-                        messageBean.setDateline(listEntity.getDateline());
-                        messageBean.setIsnew(listEntity.getIsnew());
-                        messageBean.setLink(listEntity.getLink());
-                        messageBean.setMessage(listEntity.getMessage());
-                        messageBean.setName(listEntity.getName());
-                        messageBean.setUid(listEntity.getUid());
-                        messageBean.setNote(listEntity.getNote());
-                        messageBean.setType(listEntity.getType());
-                        messageBean.setIsfriend(listEntity.getIsfriend());
-                        messageBean.setStyle(listEntity.getStyle());
-                        consultMessageBeanList.add(messageBean);
-                    }
+                    iMessageView.getConsultMessageBeanList().clear();
                 }
-                consultAdapter.notifyDataSetChanged();
+                for (NoticeBean.NoticesEntity.ListEntity listEntity : bean.getNotices().getList()) {
+                    Log.i("test","content"+listEntity.toString());
+                    MessageBean messageBean = new MessageBean();
+                    messageBean.setAuthor(listEntity.getAuthor());
+                    messageBean.setBwztid(listEntity.getBwztid());
+                    messageBean.setDateline(listEntity.getDateline());
+                    messageBean.setIsnew(listEntity.getIsnew());
+                    messageBean.setLink(listEntity.getLink());
+                    messageBean.setMessage(listEntity.getMessage());
+                    messageBean.setName(listEntity.getName());
+                    messageBean.setUid(listEntity.getUid());
+                    messageBean.setNote(listEntity.getNote());
+                    messageBean.setType(listEntity.getType());
+                    messageBean.setIsfriend(listEntity.getIsfriend());
+                    messageBean.setStyle(listEntity.getStyle());
+                    messageBean.setAvatar_url(listEntity.getAvatar_url());
+                    iMessageView.getConsultMessageBeanList().add(messageBean);
+                }
+                iMessageView.getMessageAdapter().notifyDataSetChanged();
                 iMessageView.getSuccess();
-
             }
 
             @Override
@@ -101,7 +79,6 @@ public class MessagePresenter {
             public void noData(Actions actions) {
                 Log.i("test"," "+"refresh noData");
                 iMessageView.noData(actions);
-
             }
         });
     }
