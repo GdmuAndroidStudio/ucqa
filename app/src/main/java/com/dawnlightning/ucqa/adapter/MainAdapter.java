@@ -29,6 +29,7 @@ import com.dawnlightning.ucqa.bean.others.ConsultClassifyBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.fragment.MainFragment;
 import com.dawnlightning.ucqa.utils.Options;
+import com.dawnlightning.ucqa.utils.TimeUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -44,12 +45,16 @@ public class MainAdapter extends BaseAdapter {
     private static final int TYPE_HEADER = 2;
     private static final int TYPE_BANNER = 3;
     private Context context;
+    private ItemViewHolder itemViewHolder;
     private FootViewHolder footViewHolder;
     private Handler handler = new Handler();
     private List<BannerBean> bannerBeanList;
     private MainFragment mainFragment;
+    private List<ConsultMessageBean> data;
+    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private DisplayImageOptions options = Options.getListOptions();
 
-    public MainAdapter(MainFragment mainFragment, List data,List<BannerBean> bannerBeanList) {
+    public MainAdapter(MainFragment mainFragment, List<ConsultMessageBean> data, List<BannerBean> bannerBeanList) {
         this.mainFragment = mainFragment;
         this.context = mainFragment.getContext();
         this.data = data;
@@ -62,20 +67,29 @@ public class MainAdapter extends BaseAdapter {
     }
 
     @Override
-    public void setOverFoot() {
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                footViewHolder.progressBar.setVisibility(View.GONE);
-                footViewHolder.textView.setText("已全部加载完毕");
-                footViewHolder.itemView.setClickable(false);
-            }
-        }, 1000);
+    public void setList(List list) {
+        data = list;
+    }
 
+    @Override
+    public void add(Object obj) {
+        data.add((ConsultMessageBean) obj);
+    }
+
+    @Override
+    public void addAll(List list) {
+        data.addAll(list);
+    }
+
+    @Override
+    public void setOverFoot() {
+        footViewHolder.progressBar.setVisibility(View.GONE);
+        footViewHolder.textView.setText("已全部加载完毕");
     }
 
     @Override
     public void setBeforeFoot() {
+        System.out.println("itemcounts = " + getItemCount() + "footitem = " + footViewHolder);
         footViewHolder.progressBar.setVisibility(View.GONE);
         footViewHolder.textView.setText("下拉加载更多");
 
@@ -106,7 +120,8 @@ public class MainAdapter extends BaseAdapter {
         if (viewType == TYPE_ITEM) {
             final View view = LayoutInflater.from(context).inflate(R.layout.item_consult, parent,
                     false);
-            return new ItemViewHolder(view);
+            itemViewHolder = new ItemViewHolder(view);
+            return itemViewHolder;
         } else if (viewType == TYPE_FOOTER) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_foot, parent,
                     false);
@@ -127,6 +142,12 @@ public class MainAdapter extends BaseAdapter {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ItemViewHolder) {
+            ((ItemViewHolder) holder).tvTitle.setText(data.get(position).getSubject().toString());
+            ((ItemViewHolder) holder).tvContent.setText(data.get(position).getMessage().toString());
+            ((ItemViewHolder) holder).tvReplay.setText(data.get(position).getReplynum().toString());
+            ((ItemViewHolder) holder).tvView.setText(data.get(position).getViewnum().toString());
+            ((ItemViewHolder) holder).tvTime.setText(TimeUtil.TimeStamp2Date(data.get(position).getDateline().toString()));
+            imageLoader.displayImage(data.get(position).getAvatar_url().toString(), ((ItemViewHolder) holder).ivPic, options);
             if (onItemClickListener != null) {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -185,22 +206,28 @@ public class MainAdapter extends BaseAdapter {
                 consultClassifyBean.setBwztclassarrid("" + i);
                 switch (i) {
                     case 0:
+                        consultClassifyBean.setBwztclassarrid("0");
                         consultClassifyBean.setBwztclassarrname("全部");
                         break;
                     case 1:
-                        consultClassifyBean.setBwztclassarrname("激光治近视");
-                        break;
-                    case 2:
-                        consultClassifyBean.setBwztclassarrname("白内障");
-                        break;
-                    case 3:
-                        consultClassifyBean.setBwztclassarrname("青光眼");
-                        break;
-                    case 4:
+                        consultClassifyBean.setBwztclassarrid("1");
                         consultClassifyBean.setBwztclassarrname("青少年近视");
                         break;
+                    case 2:
+                        consultClassifyBean.setBwztclassarrid("2");
+                        consultClassifyBean.setBwztclassarrname("防盲防治");
+                        break;
+                    case 3:
+                        consultClassifyBean.setBwztclassarrid("3");
+                        consultClassifyBean.setBwztclassarrname("飞秒激光治疗近视");
+                        break;
+                    case 4:
+                        consultClassifyBean.setBwztclassarrid("4");
+                        consultClassifyBean.setBwztclassarrname("青光眼");
+                        break;
                     case 5:
-                        consultClassifyBean.setBwztclassarrname("防盲治盲");
+                        consultClassifyBean.setBwztclassarrid("5");
+                        consultClassifyBean.setBwztclassarrname("白内障");
                         break;
                     default:
                         break;
@@ -213,8 +240,7 @@ public class MainAdapter extends BaseAdapter {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     ConsultClassifyBean bean = (ConsultClassifyBean) classifyAdapter.getItem(position);
-                    ((MainActivity)mainFragment.getActivity()).showtitleclassift(bean.getBwztclassarrname());
-                    mainFragment.setClassifyName(bean.getBwztclassarrname());
+                    mainFragment.setClassifyId(bean.getBwztclassarrid());
 
                 }
             });
@@ -225,8 +251,6 @@ public class MainAdapter extends BaseAdapter {
     class BannerViewHolder extends ViewHolder {
 
         private ConvenientBanner convenientBanner;
-        private ImageLoader imageLoader = ImageLoader.getInstance();
-        private DisplayImageOptions options = Options.getListOptions();
         private ArrayList<Integer> localImages = new ArrayList<Integer>();
         private List<String> networkImages = new ArrayList<>();
 
@@ -249,7 +273,7 @@ public class MainAdapter extends BaseAdapter {
 //            convenientBanner.startTurning(3000);
 
 //            网络加载例子
-            for(int i = 0; i< MainAdapter.this.bannerBeanList.size(); i++){
+            for (int i = 0; i < MainAdapter.this.bannerBeanList.size(); i++) {
                 String img = MainAdapter.this.bannerBeanList.get(i).getImg();
                 networkImages.add(img);
             }

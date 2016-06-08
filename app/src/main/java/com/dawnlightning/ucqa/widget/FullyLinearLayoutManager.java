@@ -42,22 +42,25 @@ public class FullyLinearLayoutManager extends LinearLayoutManager {
         int width = 0;
         int height = 0;
         for (int i = 0; i < getItemCount(); i++) {
-            measureScrapChild(recycler, i,
-                    View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
-                    mMeasuredDimension);
 
-            if (getOrientation() == HORIZONTAL) {
-                width = width + mMeasuredDimension[0];
-                if (i == 0) {
-                    height = mMeasuredDimension[1];
+                measureScrapChild(recycler, i,
+                        View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(i, View.MeasureSpec.UNSPECIFIED),
+                        mMeasuredDimension);
+
+                if (getOrientation() == HORIZONTAL) {
+                    width = width + mMeasuredDimension[0];
+                    if (i == 0) {
+                        height = mMeasuredDimension[1];
+                    }
+                } else {
+                    height = height + mMeasuredDimension[1];
+                    if (i == 0) {
+                        width = mMeasuredDimension[0];
+                    }
                 }
-            } else {
-                height = height + mMeasuredDimension[1];
-                if (i == 0) {
-                    width = mMeasuredDimension[0];
-                }
-            }
+
+
         }
         switch (widthMode) {
             case View.MeasureSpec.EXACTLY:
@@ -79,7 +82,7 @@ public class FullyLinearLayoutManager extends LinearLayoutManager {
     private void measureScrapChild(RecyclerView.Recycler recycler, int position, int widthSpec,
                                    int heightSpec, int[] measuredDimension) {
         try {
-            View view = recycler.getViewForPosition(0);//fix 动态添加时报IndexOutOfBoundsException
+            View view = recycler.getViewForPosition(position);//fix 动态添加时报IndexOutOfBoundsException
 
             if (view != null) {
                 RecyclerView.LayoutParams p = (RecyclerView.LayoutParams) view.getLayoutParams();
