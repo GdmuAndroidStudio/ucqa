@@ -19,6 +19,7 @@ public class ConsultDetailPresenter {
     private UserBean userBean;
     private ConsultDetailedModel consultDetailedModel = new ConsultDetailedModel();
     private int bwztid;
+    private int uid;
 
     public ConsultDetailPresenter(final ConsultDetailView consultDetailView, final Context context){
         this.consultDetailView = consultDetailView;
@@ -26,13 +27,14 @@ public class ConsultDetailPresenter {
         this.detailedBean = consultDetailView.getDetailedBean();
         this.userBean = consultDetailView.getUserBean();
         this.bwztid = consultDetailView.getBwztid();
-        Log.d("kyo",userBean.getUserdata().getUid());
-        Log.d("kyo", userBean.getM_auth());
-        Log.d("kyo","" + bwztid);
+        this.uid = consultDetailView.getUid();
     }
 
     public void initData(){
-        consultDetailedModel.GetConsultDetailed(Integer.parseInt(userBean.getUserdata().getUid()), userBean.getM_auth(), bwztid, new ConsultDetailedModel.DetailedListener() {
+        Log.d("kyo1","" + uid);
+        Log.d("kyo1", userBean.getM_auth());
+        Log.d("kyo1","" + bwztid);
+        consultDetailedModel.GetConsultDetailed(uid, userBean.getM_auth(), bwztid, new ConsultDetailedModel.DetailedListener() {
                     @Override
                     public void getSuccess(DetailedBean bean) {
                         Log.d("kyo","Success");
@@ -42,12 +44,12 @@ public class ConsultDetailPresenter {
 
                     @Override
                     public void getFailure(String msg) {
-                        Log.d("kyo","Failure");
+                        Log.d("kyo","Failure " + msg);
                     }
 
                     @Override
                     public void getError(String msg) {
-                        Log.d("kyo","Error");
+                        Log.d("kyo","Error " + msg);
                     }
                 }
         );

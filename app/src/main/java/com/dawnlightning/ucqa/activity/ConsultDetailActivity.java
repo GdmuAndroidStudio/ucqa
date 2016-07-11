@@ -79,6 +79,7 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     private DetailedBean detailedBean = new DetailedBean();
     private UserBean userBean;
     private int bwztid;
+    private int uid;
     private ConsultDetailPresenter consultDetailPresenter;
 
     @Override
@@ -90,9 +91,8 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         userBean = (UserBean) getIntent().getSerializableExtra("userBean");
         bwztid = Integer.parseInt(getIntent().getStringExtra("bwztid"));
-        consultDetailPresenter = new ConsultDetailPresenter(this,this);
-        Log.d("kyo",userBean.getUserdata().getUid());
-        Log.d("kyo","" + bwztid);
+        uid = Integer.parseInt(getIntent().getStringExtra("uid"));
+        consultDetailPresenter = new ConsultDetailPresenter(this, this);
         initView();
         initData();
     }
@@ -110,18 +110,23 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     }
 
     @Override
-    public DetailedBean getDetailedBean(){
+    public DetailedBean getDetailedBean() {
         return detailedBean;
     }
 
     @Override
-    public UserBean getUserBean(){
+    public UserBean getUserBean() {
         return userBean;
     }
 
     @Override
-    public int getBwztid(){
+    public int getBwztid() {
         return bwztid;
+    }
+
+    @Override
+    public int getUid() {
+        return uid;
     }
 
     private void initView() {
@@ -224,10 +229,10 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     }
 
     @Override
-    public void setResult(Results result){
-        switch (result){
+    public void setResult(Results result) {
+        switch (result) {
             case Success:
-                Log.d("kyo",detailedBean.getAvatar_url());
+                Log.d("kyo", detailedBean.getAvatar_url());
                 ImageLoader.getInstance().displayImage(detailedBean.getAvatar_url(), ivDetailIcon, Options.getListOptions());
                 tvDetailMessage.setText(detailedBean.getMessage());
                 tvDetailSubject.setText(detailedBean.getSubject());

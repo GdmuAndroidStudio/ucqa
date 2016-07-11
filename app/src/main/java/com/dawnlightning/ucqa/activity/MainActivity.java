@@ -18,6 +18,7 @@ import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.base.Menu;
 import com.dawnlightning.ucqa.bean.others.UserBean;
 import com.dawnlightning.ucqa.bean.others.UserData;
+import com.dawnlightning.ucqa.common.Code;
 import com.dawnlightning.ucqa.fragment.ConsultFragment;
 import com.dawnlightning.ucqa.fragment.MainFragment;
 import com.dawnlightning.ucqa.fragment.MessageFragment;
@@ -241,6 +242,15 @@ public class MainActivity extends BaseActivity implements IMainView {
                 Intent consult = new Intent();
                 consult.setClass(this, ConsultActivity.class);
                 startActivity(consult);
+                break;
+            case 4:
+                Intent intent=new Intent();
+                intent.setClass(MainActivity.this, SettingActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("userdata",userBean);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Code.LoginoffForResult);
+                //设置
                 break;
         }
     }

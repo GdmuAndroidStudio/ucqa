@@ -11,6 +11,7 @@ public interface ConsultDetailView {
 
     public DetailedBean getDetailedBean();
     public UserBean getUserBean();
+    public int getUid();
     public int getBwztid();
     public void initData();
     public void setResult(Results result);

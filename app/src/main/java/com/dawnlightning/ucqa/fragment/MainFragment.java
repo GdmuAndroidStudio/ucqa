@@ -108,6 +108,7 @@ public class MainFragment extends BaseFragment implements IMainFragView {
                 Intent i = new Intent();
                 i.putExtra("userBean",MainActivity.userBean);
                 i.putExtra("bwztid",data.get(position).getBwztid());
+                i.putExtra("uid",data.get(position).getUid());
                 i.setClass(getActivity(), ConsultDetailActivity.class);
                 startActivity(i);
                 // 动画过渡
