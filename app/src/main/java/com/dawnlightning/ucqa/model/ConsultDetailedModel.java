@@ -7,6 +7,7 @@ import com.dawnlightning.ucqa.api.apimanager.OperateApiManager;
 import com.dawnlightning.ucqa.api.action.FailureAction;
 import com.dawnlightning.ucqa.api.action.SuccessAction;
 import com.dawnlightning.ucqa.api.jsonparse.JsonParseHelper;
+import com.dawnlightning.ucqa.bean.ApiBase;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.CommentBean;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.DetailedBean;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.PicsBean;
@@ -59,6 +60,7 @@ public class ConsultDetailedModel {
      */
     public void GetConsultDetailed(int uid, String m_auth, int bwztid, final DetailedListener listener){
         consultApiManager .GetConsultDetailed(uid,m_auth,bwztid)
+
                 .subscribe(new SuccessAction<JsonObject>() {
                     /**
                      * @param target
@@ -70,24 +72,24 @@ public class ConsultDetailedModel {
                         * */
                         DetailedBean  detailedBean=new DetailedBean();
                         JsonObject js=target.getAsJsonObject("bwzt");
-                        detailedBean.setAge(js.get("age").toString());
-                        detailedBean.setContent(js.get("message").toString());
-                        detailedBean.setDatetime(js.get("dateline").toString());
-                        detailedBean.setSubject(js.get("subject").toString());
-                        detailedBean.setUid(js.get("uid").toString());
-                        detailedBean.setUsename(js.get("username").toString());
-                        detailedBean.setAvatar_url(js.get("avatar_url").toString());
-                        detailedBean.setName(js.get("name").toString());
-                        detailedBean.setViewnum(js.get("viewnum").toString());
-                        detailedBean.setName(js.get("name").toString());
-                        detailedBean.setReplynum(js.get("replynum").toString());
-                        detailedBean.setBwztid(Integer.parseInt(js.get("bwztid").toString()));
-                        detailedBean.setStatus(Integer.parseInt(js.get("status").toString()));
-                        detailedBean.setSex(js.get("sex").toString());
+                        detailedBean.setAge(js.get("age").getAsString());
+                        detailedBean.setContent(js.get("message").getAsString());
+                        detailedBean.setDatetime(js.get("dateline").getAsString());
+                        detailedBean.setSubject(js.get("subject").getAsString());
+                        detailedBean.setUid(js.get("uid").getAsString());
+                        detailedBean.setUsename(js.get("username").getAsString());
+                        detailedBean.setAvatar_url(js.get("avatar_url").getAsString());
+                        detailedBean.setName(js.get("name").getAsString());
+                        detailedBean.setViewnum(js.get("viewnum").getAsString());
+                        detailedBean.setName(js.get("name").getAsString());
+                        detailedBean.setReplynum(js.get("replynum").getAsString());
+                        detailedBean.setBwztid(Integer.parseInt(js.get("bwztid").getAsString()));
+                        detailedBean.setStatus(Integer.parseInt(js.get("status").getAsString()));
+                        detailedBean.setSex(js.get("sex").getAsString());
                         /*
                         * 解析评论
                         * */
-                        detailedBean.setComment(JsonParseHelper.ParseComment(target));
+                        detailedBean.setComment(JsonParseHelper.ParseComment( target));
                           /*
                         * 解析2级回复
                         * */
@@ -95,7 +97,7 @@ public class ConsultDetailedModel {
                         /*
                         * 获取图片列表
                         * */
-                        detailedBean.setPics(JsonParseHelper.ParsePictureList(target));
+                        detailedBean.setPics(JsonParseHelper.ParsePictureList( target));
                       listener.getSuccess(detailedBean);
                     }
 

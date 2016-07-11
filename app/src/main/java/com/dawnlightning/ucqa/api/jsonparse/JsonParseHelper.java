@@ -39,12 +39,15 @@ public class JsonParseHelper {
         List<CommentBean> list=new ArrayList<CommentBean>();
         Gson gson=new Gson();
         JsonArray asJsonArray=target.getAsJsonArray("replylist");
-        Iterator it= asJsonArray.iterator();
-        while(it.hasNext()){
-            JsonElement element = (JsonElement)it.next();//JsonElement转换为JavaBean对象
-            CommentBean  bean =  gson.fromJson(element,CommentBean.class);
-            list.add(bean);
+        if (asJsonArray!=null){
+            Iterator it= asJsonArray.iterator();
+            while(it.hasNext()){
+                JsonElement element = (JsonElement)it.next();//JsonElement转换为JavaBean对象
+                CommentBean  bean =  gson.fromJson(element,CommentBean.class);
+                list.add(bean);
+            }
         }
+
         return list;
     }
     /**
@@ -54,42 +57,47 @@ public class JsonParseHelper {
      */
     public static List<CommentBean> ParseReply(List<CommentBean> list) {
         List<CommentBean> newlist = new ArrayList<CommentBean>();
-        for (CommentBean commentbean : list) {
-            newlist.add(commentbean);
-        }
-        for (int i = 0; i < list.size(); i++) {
-            List<String> replylist = new ArrayList<String>();
-            String comment = list.get(i).getAuthor() + ": " + list.get(i).getMessage();
-            for (int z = i + 1; z < list.size(); z++) {
-                String reply = list.get(z).getMessage();
-                if (reply.contains(comment)) {
-                    String name = "";
-                    if (list.get(z).getName().length() > 0) {
-                        name = list.get(z).getName();
-                    } else {
-                        name = list.get(z).getAuthor();
+        if (list.size()>0){
+
+            for (CommentBean commentbean : list) {
+                newlist.add(commentbean);
+            }
+            for (int i = 0; i < list.size(); i++) {
+                List<String> replylist = new ArrayList<String>();
+                String comment = list.get(i).getAuthor() + ": " + list.get(i).getMessage();
+                for (int z = i + 1; z < list.size(); z++) {
+                    String reply = list.get(z).getMessage();
+                    if (reply.contains(comment)) {
+                        String name = "";
+                        if (list.get(z).getName().length() > 0) {
+                            name = list.get(z).getName();
+                        } else {
+                            name = list.get(z).getAuthor();
+                        }
+                        reply = name + ": " + reply.replace(comment, "").toString();
+
+                        replylist.add(reply);
+                        newlist.remove(list.get(z));
                     }
-                    reply = name + ": " + reply.replace(comment, "").toString();
-
-                    replylist.add(reply);
-                    newlist.remove(list.get(z));
                 }
-            }
-            if (i <= newlist.size() - 1) {
-                newlist.get(i).setReplylist(replylist);
-            }
+                if (i <= newlist.size() - 1) {
+                    newlist.get(i).setReplylist(replylist);
+                }
 
+            }
         }
         return newlist;
     }
     public static List<PicsBean> ParsePictureList(JsonObject target){
         List<PicsBean> picsBeanList=new ArrayList<PicsBean>();
         JsonArray picsJsonArray=target.getAsJsonArray("pics");
-        Iterator it = picsJsonArray.iterator();
-        while(it.hasNext()){
-            JsonObject jsonObject = (JsonObject)it.next();//JsonElement转换为JavaBean对象
-            PicsBean  bean =  new PicsBean(jsonObject.get("picurl").toString(),jsonObject.get("title").toString());
-            picsBeanList.add(bean);
+        if (picsJsonArray!=null){
+            Iterator it = picsJsonArray.iterator();
+            while(it.hasNext()){
+                JsonObject jsonObject = (JsonObject)it.next();//JsonElement转换为JavaBean对象
+                PicsBean  bean =  new PicsBean(jsonObject.get("picurl").toString(),jsonObject.get("title").toString());
+                picsBeanList.add(bean);
+            }
         }
         return picsBeanList;
     }
