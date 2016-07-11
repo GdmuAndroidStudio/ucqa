@@ -17,6 +17,7 @@ import com.dawnlightning.ucqa.adapter.MyFragmentPagerAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.base.Menu;
 import com.dawnlightning.ucqa.bean.others.UserBean;
+import com.dawnlightning.ucqa.bean.others.UserData;
 import com.dawnlightning.ucqa.fragment.ConsultFragment;
 import com.dawnlightning.ucqa.fragment.MainFragment;
 import com.dawnlightning.ucqa.fragment.MessageFragment;
@@ -76,12 +77,12 @@ public class MainActivity extends BaseActivity implements IMainView {
     private MessageFragment messageFragment;
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<>();
     private ConsultFragment consultFragment;
-    private UserBean userBean = new UserBean();  //用户实体
     private List<Integer> newItems = new ArrayList<>();  //左拉列表要显示new字样的item数组
     private List<Integer> unreadNumbers = new ArrayList<>();  //未读信息数数组
     private MainPresenter mainPresenter;
     private boolean isUpDate = false; // 是否要更新，初始化为false
     private String classifyName = "全部";
+    public static UserBean userBean = new UserBean();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

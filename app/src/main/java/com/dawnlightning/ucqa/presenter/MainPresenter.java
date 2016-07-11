@@ -39,9 +39,11 @@ public class MainPresenter {
 
     public void initUserData(){
         UserData userData = new UserData();
+        userData.setUid("11");
         userData.setName("测试用户");
         userData.setAvatar_url("http://img0.imgtn.bdimg.com/it/u=3098891403,1943866363&fm=21&gp=0.jpg");
         userBean.setUserdata(userData);
+        userBean.setM_auth("1ef3poLwJ40hJdOx2OpAxGbbvxfGiY%2BPMr4c7GzW8x8k5fYFvCxx5Orq%2BQZxZqHArO%2FKTnYnjTL6zXSZMLzMng");
     }
 
     public void getNewItems(){

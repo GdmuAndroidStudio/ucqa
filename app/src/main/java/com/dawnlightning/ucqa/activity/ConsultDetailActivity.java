@@ -17,8 +17,12 @@ import android.widget.TextView;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.CommentListAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
+import com.dawnlightning.ucqa.base.Results;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
+import com.dawnlightning.ucqa.bean.others.UserBean;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.CommentBean;
+import com.dawnlightning.ucqa.bean.response.consult.detailed.DetailedBean;
+import com.dawnlightning.ucqa.presenter.ConsultDetailPresenter;
 import com.dawnlightning.ucqa.utils.Options;
 import com.dawnlightning.ucqa.utils.TimeUtil;
 import com.dawnlightning.ucqa.viewinterface.ConsultDetailView;
@@ -72,6 +76,10 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     private final FullyLinearLayoutManager fullyLinearLayoutManager = new FullyLinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);//false参数设置是否逆布局
     private final DividerLine dividerLine = new DividerLine(DividerLine.VERTICAL);
     private TitlePopup titlePopup;
+    private DetailedBean detailedBean = new DetailedBean();
+    private UserBean userBean;
+    private int bwztid;
+    private ConsultDetailPresenter consultDetailPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +88,40 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        userBean = (UserBean) getIntent().getSerializableExtra("userBean");
+        bwztid = Integer.parseInt(getIntent().getStringExtra("bwztid"));
+        consultDetailPresenter = new ConsultDetailPresenter(this,this);
+        Log.d("kyo",userBean.getUserdata().getUid());
+        Log.d("kyo","" + bwztid);
         initView();
         initData();
+    }
+
+    @Override
+    public void initData() {
+        consultDetailPresenter.initData();
+        data.clear();
+        for (int i = 0; i < 10; i++) {
+            CommentBean commentBean = new CommentBean();
+            commentBean.setName("user" + (i + 1));
+            data.add(commentBean);
+        }
+        commentListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public DetailedBean getDetailedBean(){
+        return detailedBean;
+    }
+
+    @Override
+    public UserBean getUserBean(){
+        return userBean;
+    }
+
+    @Override
+    public int getBwztid(){
+        return bwztid;
     }
 
     private void initView() {
@@ -108,24 +148,6 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
 
             }
         });
-    }
-
-    private void initData() {
-        ConsultMessageBean consultMessageBean = (ConsultMessageBean) getIntent().getSerializableExtra("consultMessageBean");
-        ImageLoader.getInstance().displayImage(consultMessageBean.getAvatar_url(), ivDetailIcon, Options.getListOptions());
-        tvDetailSubject.setText(consultMessageBean.getSubject());
-        tvDetailUserdata.setText(consultMessageBean.getUsename() + "，" + consultMessageBean.getSex() + "，" + consultMessageBean.getAge());
-        tvDetailMessage.setText(consultMessageBean.getMessage());
-        tvDetailNumview.setText(consultMessageBean.getViewnum());
-        tvDetailNumreply.setText(consultMessageBean.getReplynum());
-        tvDetailTime.setText(TimeUtil.TimeStamp2Date(consultMessageBean.getDateline()));
-        data.clear();
-        for (int i = 0; i < 10; i++) {
-            CommentBean commentBean = new CommentBean();
-            commentBean.setName("user" + (i + 1));
-            data.add(commentBean);
-        }
-        commentListAdapter.notifyDataSetChanged();
     }
 
     public void clickToReply(String name) {
@@ -199,6 +221,22 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
 //        });
 
 
+    }
+
+    @Override
+    public void setResult(Results result){
+        switch (result){
+            case Success:
+                Log.d("kyo",detailedBean.getAvatar_url());
+                ImageLoader.getInstance().displayImage(detailedBean.getAvatar_url(), ivDetailIcon, Options.getListOptions());
+                tvDetailMessage.setText(detailedBean.getMessage());
+                tvDetailSubject.setText(detailedBean.getSubject());
+                tvDetailNumreply.setText(detailedBean.getReplynum());
+                tvDetailNumview.setText(detailedBean.getViewnum());
+                tvDetailTime.setText(TimeUtil.TimeStamp2Date(detailedBean.getDatetime()));
+                tvDetailUserdata.setText(detailedBean.getName() + "，" + detailedBean.getSex() + "，" + detailedBean.getAge());
+                break;
+        }
     }
 
 }
