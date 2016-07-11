@@ -73,13 +73,13 @@ public class MessageFragment extends BaseFragment implements IMessageView{
     @Override
     public void getFailure(String msg, Actions actions) {
         swipeRefreshWidget.setRefreshing(false);
-        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT);
+        showMessage(msg);
     }
 
     @Override
     public void getError(String msg, Actions actions) {
         swipeRefreshWidget.setRefreshing(false);
-        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT);
+        showMessage(msg);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class MessageFragment extends BaseFragment implements IMessageView{
                 isFirst = false;
             }
         }else{
-            Toast.makeText(getActivity(),"网络出错",Toast.LENGTH_SHORT);
+            showMessage("网络出错");
         }
     }
 
@@ -174,6 +174,10 @@ public class MessageFragment extends BaseFragment implements IMessageView{
             Toast.makeText(getActivity(),"已没有更多数据",Toast.LENGTH_SHORT);
         }
 
+    }
+
+    private void showMessage(String msg){
+        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT);
     }
 
     @Override

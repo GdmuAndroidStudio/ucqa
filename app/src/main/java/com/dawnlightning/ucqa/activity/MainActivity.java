@@ -2,6 +2,7 @@ package com.dawnlightning.ucqa.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -158,6 +159,13 @@ public class MainActivity extends BaseActivity implements IMainView {
             @Override
             public void onClick(View v) {
                 dlMain.open();
+            }
+        });
+        ivIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(getcontext(),PersonalDataActivity.class);
             }
         });
         Bundle data = new Bundle();

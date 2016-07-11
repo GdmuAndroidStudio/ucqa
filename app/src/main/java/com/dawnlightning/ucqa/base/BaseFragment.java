@@ -42,6 +42,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     private Handler handler = new Handler();
     public BaseAdapter adapter;
     private LinearLayoutManager layoutManager;
+    public View view;
 
 
     public abstract void initAdapter();
@@ -51,7 +52,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         System.out.println("base oncreate");
-        final View view = inflater.inflate(setContentLayout(), container, false);
+        view = inflater.inflate(setContentLayout(), container, false);
         ButterKnife.bind(this, view);
         initAdapter();
         initView();

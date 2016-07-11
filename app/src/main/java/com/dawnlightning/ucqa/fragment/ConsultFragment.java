@@ -45,13 +45,14 @@ public class ConsultFragment extends BaseFragment implements IConsultMessageView
     @Override
     public void getError(String msg, Actions actions) {
         swipeRefreshWidget.setRefreshing(false);
-        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT);
+        showMessage(msg);
     }
 
     @Override
     public void noNextPage(Actions actions) {
         swipeRefreshWidget.setRefreshing(false);
         status = NONEXTPAGE;
+        showMessage("没有下一页了");
     }
 
     @Override
@@ -68,13 +69,6 @@ public class ConsultFragment extends BaseFragment implements IConsultMessageView
             noMessage.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.INVISIBLE);
         }
-    }
-
-
-    public static MainFragment newInstance(Bundle bundle) {
-        MainFragment mainFragment = new MainFragment();
-        mainFragment.setArguments(bundle);
-        return mainFragment;
     }
 
     @Override
@@ -101,7 +95,7 @@ public class ConsultFragment extends BaseFragment implements IConsultMessageView
                 isFirst = false;
             }
         }else{
-            Toast.makeText(getActivity(),"网络出错",Toast.LENGTH_SHORT);
+            showMessage("网络出错");
         }
     }
 
@@ -134,9 +128,12 @@ public class ConsultFragment extends BaseFragment implements IConsultMessageView
         if(noMessage.getVisibility()==View.VISIBLE){
             noMessage.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
-            swipeRefreshWidget.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
         }
         consultPresenter.refreshAndLoadMore(uid,othur,currentPage);
+    }
+
+    private void showMessage(String msg){
+        Toast.makeText(getActivity(),msg,Toast.LENGTH_SHORT);
     }
 
     @Override
