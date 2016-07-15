@@ -8,25 +8,22 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Handler;
-public class UpdateManager {
-	 
-	
-	 private Context mContext;
-	 private Handler handler;
-     private String updatenote="";
-     private String updatename="";
-     private String updateurl="";
-	 public UpdateManager(Context context,Handler handler)
-	    {
-	        this.mContext = context;
-	        this.handler=handler;
-	    }
 
-	 /**
+import com.dawnlightning.ucqa.bean.response.account.UpdateBean;
+
+public class UpdateManager {
+
+
+    private Context mContext;
+
+    public UpdateManager(Context context) {
+        this.mContext = context;
+    }
+
+    /**
      * 检测软件更新
      */
-    public void checkUpdate()
-    {
+    public void checkUpdate() {
 //        if (AsyncHttp.getcache(HttpConstants.Update)!=null&&AsyncHttp.getcache(HttpConstants.Update).length()>0){
 //            Message msg = new Message();
 //            com.alibaba.fastjson.JSONObject js = (com.alibaba.fastjson.JSONObject) JSON.parse(AsyncHttp.getcache(HttpConstants.Update).toString());
@@ -86,83 +83,73 @@ public class UpdateManager {
 //                    handler.sendMessage(msg);
 //                }
 //            });
-    //}
+        //}
 
-    	
-    	
-    	
-    	
+
     }
-	 /**
+    /**
      * 检查软件是否有更新版本
-     * 
+     *
      * @return
      */
-    
 
-  
+
     /**
      * 获取软件版本号
-     * 
+     *
      * @param context
      * @return
      */
-    public int getVersionCode(Context context)
-    {
+    public int getVersionCode(Context context) {
         int versionCode = 0;
-        try
-        {
+        try {
             // 获取软件版本号，对应AndroidManifest.xml下android:versionCode
             versionCode = context.getPackageManager().getPackageInfo("com.dawnlightning.ucqa", 0).versionCode;
-        } catch (NameNotFoundException e)
-        {
+        } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
         return versionCode;
     }
+
     /**
      * 显示软件更新对话框
      */
-    public void showNoticeDialog()
-    {
+    public void showNoticeDialog(final UpdateBean updateBean) {
         // 构造对话框
         Builder builder = new Builder(mContext);
         builder.setTitle("更新提醒");
-        builder.setMessage(updatenote);
+        builder.setMessage(updateBean.getNote());
         // 更新
-        builder.setPositiveButton("更新", new OnClickListener()
-        {
+        builder.setPositiveButton("更新", new OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                Intent intent = new Intent(mContext,UpdateService.class);
-    			intent.putExtra("Key_App_Name",updatename);
-    			intent.putExtra("Key_Down_Url",updateurl);
-    			mContext.startService(intent);
+                Intent intent = new Intent(mContext, UpdateService.class);
+                intent.putExtra("Key_App_Name", updateBean.getName());
+                intent.putExtra("Key_Down_Url", updateBean.getUrl());
+                mContext.startService(intent);
             }
         });
         // 稍后更新
-        builder.setNegativeButton("稍后更新", new OnClickListener()
-        {
+        builder.setNegativeButton("稍后更新", new OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which)
-            {
+            public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
         Dialog noticeDialog = builder.create();
         noticeDialog.show();
     }
-    public String getversionname(){
-    try {
-		return mContext.getPackageManager().getPackageInfo("com.dawnlightning.ucqa", 0).versionName;
-	} catch (NameNotFoundException e) {
-		// TODO 自动生成的 catch 块
-		e.printStackTrace();
-		
-	}
-    	return "";
+
+    public String getversionname() {
+        try {
+            return mContext.getPackageManager().getPackageInfo("com.dawnlightning.ucqa", 0).versionName;
+        } catch (NameNotFoundException e) {
+            // TODO 自动生成的 catch 块
+            e.printStackTrace();
+
+        }
+        return "";
     }
 
 }

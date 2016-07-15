@@ -1,8 +1,14 @@
 package com.dawnlightning.ucqa.activity;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -12,6 +18,11 @@ import android.widget.ToggleButton;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.bean.others.UserBean;
+import com.dawnlightning.ucqa.bean.response.account.UpdateBean;
+import com.dawnlightning.ucqa.db.SharedPreferenceDb;
+import com.dawnlightning.ucqa.presenter.SettingPresenter;
+import com.dawnlightning.ucqa.update.UpdateManager;
+import com.dawnlightning.ucqa.update.UpdateStatus;
 import com.dawnlightning.ucqa.utils.DataCleanManager;
 import com.dawnlightning.ucqa.utils.SdCardUtil;
 import com.dawnlightning.ucqa.viewinterface.ISettingView;
@@ -64,6 +75,12 @@ public class SettingActivity extends BaseActivity implements ISettingView {
     RelativeLayout reSettingClearcahe;
 
     private UserBean userBean;
+    private SettingPresenter settingPresenter;
+    private UpdateManager updateManager;
+    private UpdateBean updateBean;
+    private SharedPreferenceDb sharedPreferenceDb;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +89,59 @@ public class SettingActivity extends BaseActivity implements ISettingView {
         ButterKnife.bind(this);
         setNeedBackGesture(true);//设置需要手势监听
         userBean = (UserBean) getIntent().getSerializableExtra("userdata");
+        settingPresenter = new SettingPresenter(this, getcontext());
         initData();
+        initEvent();
 
     }
 
-    private void initData(){
-        getcachesize();
+    public void getVersion() {
+        tvSettingVersion.setText("V" + String.valueOf(updateManager.getversionname()));
+    }
+
+    private void getPushStatus(){
+        sharedPreferences= getSharedPreferences("setting",
+                Activity.MODE_PRIVATE);
+        if(sharedPreferences.getString("push","true").equals("true")){
+            tbSettingPush.setChecked(true);
+        }else{
+            tbSettingPush.setChecked(false);
+        }
+    }
+
+    @Override
+    public void doUpDate(UpdateBean updateBean) {
+        this.updateBean = updateBean;
+        Log.d("kyo", "Version = V" + updateBean.getName());
+        updateManager.showNoticeDialog(updateBean);
+
+    }
+
+    private void initData() {
+        updateManager = new UpdateManager(getcontext());
+        sharedPreferenceDb=new SharedPreferenceDb(getcontext());
+        getCacheSize();
+        getVersion();
+        getPushStatus();
+    }
+
+    private void initEvent(){
+        editor = sharedPreferences.edit();
+        tbSettingPush.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d("kyo","" + isChecked);
+                sharedPreferenceDb.setPush(isChecked);
+                if(isChecked == true){
+                    editor.putString("push","true");
+                    Toast.makeText(getcontext(),"已打开推送",Toast.LENGTH_SHORT).show();
+                }else{
+                    editor.putString("push","false");
+                    Toast.makeText(getcontext(),"已关闭推送",Toast.LENGTH_SHORT).show();
+                }
+                editor.commit();
+            }
+        });
     }
 
 
@@ -93,11 +157,11 @@ public class SettingActivity extends BaseActivity implements ISettingView {
             e.printStackTrace();
         }
         Toast.makeText(this, "清除成功", Toast.LENGTH_SHORT).show();
-        getcachesize();
+        getCacheSize();
 
     }
 
-    private void getcachesize() {
+    private void getCacheSize() {
         File cacheDir = StorageUtils.getOwnCacheDirectory(this, SdCardUtil.FILEDIR + "/" + SdCardUtil.FILECACHE);//获取到缓存的目录地址
         try {
             showcachesize(DataCleanManager.getCacheSize(cacheDir));
@@ -107,7 +171,7 @@ public class SettingActivity extends BaseActivity implements ISettingView {
 
     }
 
-    @OnClick({R.id.iv_setting_back, R.id.re_setting_clearcahe})
+    @OnClick({R.id.iv_setting_back, R.id.re_setting_clearcahe, R.id.re_setting_checkupdate})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_setting_back:
@@ -115,6 +179,9 @@ public class SettingActivity extends BaseActivity implements ISettingView {
                 break;
             case R.id.re_setting_clearcahe:
                 clearcache();
+                break;
+            case R.id.re_setting_checkupdate:
+                settingPresenter.checkUpDate();
                 break;
         }
     }

@@ -22,25 +22,24 @@ public class SettingPresenter {
     public ISettingView iSettingView;
     public Context mContext;
     private UpdateManager updateManager;
-    private SharedPreferenceDb sharedPreferenceDb;
     private AccountModel accountModel;
 
     public SettingPresenter(ISettingView iSettingView, Context mContext){
         this.iSettingView=iSettingView;
         this.mContext=mContext;
-        sharedPreferenceDb=new SharedPreferenceDb(mContext);
         accountModel = new AccountModel();
     }
 
-    public void initData(){
+    public void checkUpDate(){
         accountModel.CheckUpdate(new AccountModel.UpdateListener() {
             @Override
             public void needUpdate(UpdateBean bean) {
+                iSettingView.doUpDate(bean);
             }
 
             @Override
             public void noUpdate() {
-
+                Toast.makeText(mContext,"已为最新版本",Toast.LENGTH_SHORT).show();
             }
         });
     }

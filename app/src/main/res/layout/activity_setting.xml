@@ -31,8 +31,8 @@
     <RelativeLayout
         android:id="@+id/re_setting_help"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@mipmap/bg_white"
+        android:layout_height="60dp"
+        android:background="@drawable/normal_selector"
         android:clickable="true"
         android:paddingLeft="20dp"
         android:layout_marginTop="20dp"
@@ -45,7 +45,7 @@
             android:layout_centerVertical="true"
             android:text="帮助与反馈"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -60,8 +60,8 @@
     <RelativeLayout
         android:id="@+id/re_setting_clearcahe"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@mipmap/bg_white"
+        android:layout_height="60dp"
+        android:background="@drawable/normal_selector"
         android:clickable="true"
         android:paddingLeft="20dp"
         android:layout_marginTop="20dp"
@@ -74,13 +74,13 @@
             android:layout_centerVertical="true"
             android:text="清空缓存"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:id="@+id/textView" />
         <TextView
             android:id="@+id/tv_setting_cahesize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12.0sp"
+            android:textSize="13.0sp"
             android:textColor="@color/nomalGray"
             android:text="10.0MB"
             android:layout_marginRight="20dp"
@@ -106,8 +106,8 @@
     <RelativeLayout
         android:id="@+id/re_setting_push"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@mipmap/bg_white"
+        android:layout_height="60dp"
+        android:background="@drawable/normal_selector"
         android:clickable="true"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -119,12 +119,12 @@
             android:layout_centerVertical="true"
             android:text="通知推送"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="14sp"
              />
         <ToggleButton
             android:id="@+id/tb_setting_push"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
@@ -143,8 +143,8 @@
     <RelativeLayout
         android:id="@+id/re_setting_checkupdate"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@mipmap/bg_white"
+        android:layout_height="60dp"
+        android:background="@drawable/normal_selector"
         android:clickable="true"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
@@ -156,7 +156,7 @@
             android:layout_centerVertical="true"
             android:text="版本更新"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:id="@+id/textView3" />
         <TextView
             android:visibility="gone"
@@ -165,8 +165,9 @@
             android:layout_height="wrap_content"
             android:text="NEW"
             android:gravity="center_horizontal|center_vertical"
-            android:textColor="@color/white"
-            android:textSize="8sp"
+            android:textColor="@color/red"
+            android:textSize="10sp"
+            android:layout_marginLeft="5dp"
             android:layout_alignBottom="@+id/tv_setting_version"
             android:layout_toRightOf="@+id/textView3"
             android:layout_toEndOf="@+id/textView3" />
@@ -174,7 +175,7 @@
             android:id="@+id/tv_setting_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12.0sp"
+            android:textSize="13.0sp"
             android:textColor="@color/nomalGray"
             android:text="V2.0"
             android:layout_marginRight="20dp"
@@ -195,8 +196,8 @@
     <RelativeLayout
         android:id="@+id/re_setting_aboutme"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@mipmap/bg_white"
+        android:layout_height="60dp"
+        android:background="@drawable/normal_selector"
         android:clickable="true"
         android:paddingLeft="20dp"
         android:layout_marginTop="20dp"
@@ -209,7 +210,7 @@
             android:layout_centerVertical="true"
             android:text="关于我们"
             android:textColor="@color/black"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

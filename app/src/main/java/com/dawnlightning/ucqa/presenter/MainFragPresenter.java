@@ -91,6 +91,7 @@ public class MainFragPresenter {
             @Override
             public void getSuccess(List<ConsultMessageBean> list, Actions actions) {
                 System.out.println("loadmore success");
+                consultMessageBeanList.addAll(list);
                 mainAdapter.addAll(list);
                 mainAdapter.notifyDataSetChanged();
                 listCounts = list.size();

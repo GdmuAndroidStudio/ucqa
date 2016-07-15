@@ -15,7 +15,6 @@ import com.dawnlightning.ucqa.viewinterface.ConsultDetailView;
 public class ConsultDetailPresenter {
     private ConsultDetailView consultDetailView;
     private Context context;
-    private DetailedBean detailedBean;
     private UserBean userBean;
     private ConsultDetailedModel consultDetailedModel = new ConsultDetailedModel();
     private int bwztid;
@@ -24,7 +23,6 @@ public class ConsultDetailPresenter {
     public ConsultDetailPresenter(final ConsultDetailView consultDetailView, final Context context){
         this.consultDetailView = consultDetailView;
         this.context = context;
-        this.detailedBean = consultDetailView.getDetailedBean();
         this.userBean = consultDetailView.getUserBean();
         this.bwztid = consultDetailView.getBwztid();
         this.uid = consultDetailView.getUid();
@@ -38,7 +36,7 @@ public class ConsultDetailPresenter {
                     @Override
                     public void getSuccess(DetailedBean bean) {
                         Log.d("kyo","Success");
-                        ConsultDetailPresenter.this.detailedBean = bean;
+                        consultDetailView.setDetailBean(bean);
                         consultDetailView.setResult(Results.Success);
                     }
 

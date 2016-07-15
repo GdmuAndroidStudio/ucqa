@@ -1,5 +1,7 @@
 package com.dawnlightning.ucqa.bean.response.consult.detailed;
 
+import android.util.Log;
+
 public class PicsBean {
 	public PicsBean(){
 		
@@ -24,6 +26,8 @@ public class PicsBean {
 	}
 	public PicsBean(String url, String title) {
 		super();
+		url = url.replaceAll("\"","");
+		Log.d("kyo","pic bean url = " + url);
 		this.picurl = url;
 		this.title = title;
 	}

@@ -9,6 +9,7 @@ import com.dawnlightning.ucqa.bean.response.consult.detailed.DetailedBean;
  */
 public interface ConsultDetailView {
 
+    public void setDetailBean(DetailedBean detailBean);
     public DetailedBean getDetailedBean();
     public UserBean getUserBean();
     public int getUid();

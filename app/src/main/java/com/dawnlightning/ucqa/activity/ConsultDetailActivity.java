@@ -16,19 +16,19 @@ import android.widget.TextView;
 
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.adapter.CommentListAdapter;
+import com.dawnlightning.ucqa.adapter.DetailPicsAdapter;
 import com.dawnlightning.ucqa.base.BaseActivity;
 import com.dawnlightning.ucqa.base.Results;
-import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.bean.others.UserBean;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.CommentBean;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.DetailedBean;
 import com.dawnlightning.ucqa.presenter.ConsultDetailPresenter;
 import com.dawnlightning.ucqa.utils.Options;
-import com.dawnlightning.ucqa.utils.TimeUtil;
 import com.dawnlightning.ucqa.viewinterface.ConsultDetailView;
 import com.dawnlightning.ucqa.widget.ActionItem;
 import com.dawnlightning.ucqa.widget.DividerLine;
 import com.dawnlightning.ucqa.widget.FullyLinearLayoutManager;
+import com.dawnlightning.ucqa.widget.OtherGridView;
 import com.dawnlightning.ucqa.widget.RoundImageView;
 import com.dawnlightning.ucqa.widget.TitlePopup;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -69,6 +69,8 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     TextView tvDetailNumreply;
     @Bind(R.id.tv_detail_time)
     TextView tvDetailTime;
+    @Bind(R.id.gv_detail_picslist)
+    OtherGridView gvDetailPicslist;
 
     private Handler handler = new Handler();
     private List<CommentBean> data = new ArrayList<>();
@@ -81,6 +83,7 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     private int bwztid;
     private int uid;
     private ConsultDetailPresenter consultDetailPresenter;
+    private DetailPicsAdapter detailPicsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,11 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
             data.add(commentBean);
         }
         commentListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setDetailBean(DetailedBean detailBean) {
+        this.detailedBean = detailBean;
     }
 
     @Override
@@ -232,14 +240,33 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     public void setResult(Results result) {
         switch (result) {
             case Success:
-                Log.d("kyo", detailedBean.getAvatar_url());
+                Log.d("kyo","" + detailedBean.getPics().size());
+                Log.d("kyo","" + detailedBean.getComment().size());
+                Log.d("kyo","" + detailedBean.getMessage());
+                Log.d("kyo","" + detailedBean.getSubject());
+                Log.d("kyo","" + detailedBean.getAvatar_url());
+                for(int i = 0; i<detailedBean.getComment().size(); i++){
+                    Log.d("kyo2","" + detailedBean.getComment().get(i));
+                }
                 ImageLoader.getInstance().displayImage(detailedBean.getAvatar_url(), ivDetailIcon, Options.getListOptions());
                 tvDetailMessage.setText(detailedBean.getMessage());
                 tvDetailSubject.setText(detailedBean.getSubject());
                 tvDetailNumreply.setText(detailedBean.getReplynum());
                 tvDetailNumview.setText(detailedBean.getViewnum());
-                tvDetailTime.setText(TimeUtil.TimeStamp2Date(detailedBean.getDatetime()));
-                tvDetailUserdata.setText(detailedBean.getName() + "，" + detailedBean.getSex() + "，" + detailedBean.getAge());
+                tvDetailUserdata.setText(detailedBean.getName() + "，" + detailedBean.getSex() + "，" + detailedBean.getAge() + "岁");
+
+                String[] Date = detailedBean.getDatetime().split("/");
+                tvDetailTime.setText(Date[0] + "年" + Date[1] + "月" + Date[2] + "日");
+
+                if (detailedBean.getPics().size() != 0){
+                    Log.d("kyo","test picturelist");
+                    gvDetailPicslist.setVisibility(View.VISIBLE);
+                    detailPicsAdapter =new DetailPicsAdapter(this,detailedBean.getPics());
+                    gvDetailPicslist.setAdapter(detailPicsAdapter);
+                    detailPicsAdapter.notifyDataSetChanged();
+                }else{
+                    gvDetailPicslist.setVisibility(View.GONE);
+                }
                 break;
         }
     }
