@@ -43,7 +43,7 @@ public class JsonParseHelper {
         List<CommentBean> list = new ArrayList<CommentBean>();
         Gson gson = new Gson();
         JsonArray asJsonArray = target.getAsJsonArray("replylist");
-        Log.d("kyo2", "" + (asJsonArray == null));
+//        Log.d("kyo2", "" + (asJsonArray == null));
         if (asJsonArray != null) {
             Iterator it = asJsonArray.iterator();
             while (it.hasNext()) {
@@ -52,7 +52,7 @@ public class JsonParseHelper {
                 list.add(bean);
             }
         }
-        Log.d("kyo2", "" + list.size());
+//        Log.d("kyo2", "" + list.size());
         return list;
     }
 
@@ -99,7 +99,6 @@ public class JsonParseHelper {
     public static List<PicsBean> ParsePictureList(JsonObject target) {
         List<PicsBean> picsBeanList = new ArrayList<PicsBean>();
         Log.d("kyo3", "" + target);
-        Log.d("kyo4", "" + target.get("pics").getAsString().);
         if(target.get("pics").getAsString()!=null){
             JsonArray picsJsonArray = target.getAsJsonArray("pics");
             Log.d("kyo3", "" + (picsBeanList == null));

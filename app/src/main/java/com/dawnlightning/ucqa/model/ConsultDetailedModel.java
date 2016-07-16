@@ -245,7 +245,7 @@ public class ConsultDetailedModel {
      * @param m_auth 登陆后返回
      * @param bwztid 咨询id
      */
-    public void Solove(String m_auth, int bwztid, final OperateListener listener) {
+    public void Solve(String m_auth, int bwztid, final OperateListener listener) {
         operateApiManager.Solve(m_auth, bwztid)
                 .subscribe(new SuccessAction<JsonObject>() {
                     @Override

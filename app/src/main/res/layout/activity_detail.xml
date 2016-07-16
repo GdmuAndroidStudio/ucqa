@@ -80,6 +80,7 @@
                     android:paddingRight="20dp">
 
                     <ImageView
+                        android:visibility="invisible"
                         android:id="@+id/iv_detail_consult_status"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
