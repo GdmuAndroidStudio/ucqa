@@ -28,7 +28,6 @@ public abstract  class SuccessAction<T> implements Action1<ApiBase> {
         }else{
             Failure(apiBase.getMsg());
         }
-
     }
     /**
      * json字符串转成对象

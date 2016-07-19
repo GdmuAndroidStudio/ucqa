@@ -28,7 +28,7 @@
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginTop="5dp"
-        android:text="暂无咨询"
+        android:text="网络出错"
         android:textColor="@color/nomalGray"
         android:textSize="12sp" />
 
@@ -39,7 +39,7 @@
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginTop="20dp"
         android:background="#549D37"
-        android:text="发布咨询"
+        android:text="重新加载"
         android:textColor="@color/white" />
 </LinearLayout>
 

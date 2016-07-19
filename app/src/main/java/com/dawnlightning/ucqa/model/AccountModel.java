@@ -39,7 +39,6 @@ public class AccountModel {
 
     public interface UpdateListener {
         void needUpdate(UpdateBean bean);
-
         void noUpdate();
     }
 
@@ -58,7 +57,6 @@ public class AccountModel {
             @Override
             public void Success(LoginBean target) {
                 listener.doSuccess(target);
-
             }
 
             @Override
@@ -137,7 +135,6 @@ public class AccountModel {
                     public void Success(String target) {
                         String msg = "修改资料成功";
                         listener.doSuccess(msg);
-
                     }
 
                     @Override

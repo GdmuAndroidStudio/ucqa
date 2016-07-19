@@ -41,6 +41,9 @@ public class MainPresenter {
         UserData userData = new UserData();
         userData.setName("测试用户");
         userData.setAvatar_url("http://img0.imgtn.bdimg.com/it/u=3098891403,1943866363&fm=21&gp=0.jpg");
+        userData.setSex("男");
+        userData.setAge("21");
+        userBean.setM_auth("86dbHma%2FLr19gbGC%2FCH16GG%2FmBowm8P5Lai2amtBgoBerRxT5F34SPqeqC%2FbTg6zX%2FTjhlAEGtLKTbozWIZm%2FKk");
         userBean.setUserdata(userData);
     }
 

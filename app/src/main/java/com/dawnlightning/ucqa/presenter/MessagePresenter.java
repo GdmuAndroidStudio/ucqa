@@ -8,6 +8,7 @@ import java.util.List;
 import com.dawnlightning.ucqa.adapter.ConsultAdapter;
 import com.dawnlightning.ucqa.adapter.MessageAdapter;
 import com.dawnlightning.ucqa.base.Actions;
+import com.dawnlightning.ucqa.base.Results;
 import com.dawnlightning.ucqa.bean.others.ConsultBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.bean.others.MessageBean;
@@ -54,31 +55,31 @@ public class MessagePresenter {
                     iMessageView.getConsultMessageBeanList().add(messageBean);
                 }
                 iMessageView.getMessageAdapter().notifyDataSetChanged();
-                iMessageView.getSuccess();
+                iMessageView.getActionResult("", Results.Success,actions);
             }
 
             @Override
             public void getFailure(String msg, Actions actions) {
                 Log.i("test"," "+"refresh failure");
-                iMessageView.getFailure(msg,actions);
+                iMessageView.getActionResult(msg, Results.Fail,actions);
             }
 
             @Override
             public void getError(String msg, Actions actions) {
                 Log.i("test"," "+"refresh error");
-                iMessageView.getError(msg,actions);
+                iMessageView.getActionResult(msg, Results.Error,actions);
             }
 
             @Override
             public void noNextPage(Actions actions) {
                 Log.i("test"," "+"refresh noNextPage");
-                iMessageView.noNextPage(actions);
+                iMessageView.getActionResult("", Results.NoNextPage,actions);
             }
 
             @Override
             public void noData(Actions actions) {
                 Log.i("test"," "+"refresh noData");
-                iMessageView.noData(actions);
+                iMessageView.getActionResult("", Results.NoData,actions);
             }
         });
     }

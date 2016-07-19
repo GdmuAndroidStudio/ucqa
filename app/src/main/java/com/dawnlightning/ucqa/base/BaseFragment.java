@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,10 +30,20 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
 
     boolean isLoading = false;
+    @Bind(R.id.iv_detail_error)
+    public ImageView ivDetailError;
+    @Bind(R.id.tv_detail_error)
+    public TextView tvDetailError;
+    @Bind(R.id.bt_detail_error)
+    public Button btDetailError;
+    @Bind(R.id.rl_detail_error)
+    public RelativeLayout rlDetailError;
     @Bind(R.id.recyclerView)
     public RecyclerView recyclerView;
     @Bind(R.id.swipe_refresh_widget)
     public SwipeRefreshLayout swipeRefreshWidget;
+    @Bind(R.id.iv_detail_nodata)
+    public ImageView ivDetailNodata;
     @Bind(R.id.tv_detail_nodata)
     public TextView tvDetailNodata;
     @Bind(R.id.bt_detail_nodata)
@@ -103,7 +114,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     }
 
-    public void setScroller(){
+    public void setScroller() {
         //设置滑动至顶部菜能刷新
         swipeRefreshWidget.setEnabled(layoutManager.findFirstCompletelyVisibleItemPosition() == 0);
         int lastCompleteVisibleItemPosition = layoutManager.findLastCompletelyVisibleItemPosition();
@@ -145,6 +156,7 @@ public abstract class BaseFragment extends Fragment implements IBase, IRefreshAn
 
     @Override
     public void initEvent() {
+
     }
 
     @Override

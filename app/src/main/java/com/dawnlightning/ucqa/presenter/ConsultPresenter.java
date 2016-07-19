@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.dawnlightning.ucqa.adapter.ConsultAdapter;
 import com.dawnlightning.ucqa.base.Actions;
+import com.dawnlightning.ucqa.base.Results;
 import com.dawnlightning.ucqa.bean.others.ConsultBean;
 import com.dawnlightning.ucqa.bean.others.ConsultMessageBean;
 import com.dawnlightning.ucqa.model.ConsultDetailedModel;
@@ -24,7 +25,6 @@ public class ConsultPresenter {
         this.iConsultMessageView = iConsultMessageView;
     }
 
-
     public void refreshAndLoadMore(int uid,String othur,int page){
         consultListModel.GetMyConsult(uid, othur, page, new ConsultListModel.ConsultListListener() {
             @Override
@@ -37,31 +37,31 @@ public class ConsultPresenter {
                     iConsultMessageView.getConsultBeanList().add(consultMessageBean);
                 }
                 iConsultMessageView.getConsultAdapter().notifyDataSetChanged();
-                iConsultMessageView.getSuccess();
+                iConsultMessageView.getActionResult("", Results.Success,actions);
             }
 
             @Override
             public void getFailure(String msg, Actions actions) {
                 Log.i("test"," "+"refresh getFailure");
-                iConsultMessageView.getFailure(msg,actions);
+                iConsultMessageView.getActionResult(msg, Results.Fail,actions);
             }
 
             @Override
             public void getError(String msg, Actions actions) {
                 Log.i("test"," "+"refresh getError");
-                iConsultMessageView.getError(msg,actions);
+                iConsultMessageView.getActionResult(msg, Results.Error,actions);
             }
 
             @Override
             public void noNextPage(Actions actions) {
                 Log.i("test"," "+"refresh noNextPage");
-                iConsultMessageView.noNextPage(actions);
+                iConsultMessageView.getActionResult("", Results.NoNextPage,actions);
             }
 
             @Override
             public void noData(Actions actions) {
                 Log.i("test"," "+"refresh noData");
-                iConsultMessageView.noData(actions);
+                iConsultMessageView.getActionResult("", Results.NoData,actions);
             }
         });
         iConsultMessageView.getConsultAdapter().notifyDataSetChanged();
