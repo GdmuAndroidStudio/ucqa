@@ -41,18 +41,20 @@ public class JsonParseHelper {
      */
     public static List<CommentBean> ParseComment(JsonObject target) {
         List<CommentBean> list = new ArrayList<CommentBean>();
-        Gson gson = new Gson();
-        JsonArray asJsonArray = target.getAsJsonArray("replylist");
-//        Log.d("kyo2", "" + (asJsonArray == null));
-        if (asJsonArray != null) {
-            Iterator it = asJsonArray.iterator();
-            while (it.hasNext()) {
-                JsonElement element = (JsonElement) it.next();//JsonElement转换为JavaBean对象
-                CommentBean bean = gson.fromJson(element, CommentBean.class);
-                list.add(bean);
+        if (target.get("replylist").isJsonNull() == false) {
+            Gson gson = new Gson();
+            JsonArray asJsonArray = target.getAsJsonArray("replylist");
+            if (asJsonArray != null) {
+                Iterator it = asJsonArray.iterator();
+                while (it.hasNext()) {
+                    JsonElement element = (JsonElement) it.next();//JsonElement转换为JavaBean对象
+                    CommentBean bean = gson.fromJson(element, CommentBean.class);
+                    list.add(bean);
+                }
             }
+
         }
-//        Log.d("kyo2", "" + list.size());
+        Log.d("kyo5", "" + list.size());
         return list;
     }
 
@@ -98,16 +100,13 @@ public class JsonParseHelper {
 
     public static List<PicsBean> ParsePictureList(JsonObject target) {
         List<PicsBean> picsBeanList = new ArrayList<PicsBean>();
-        Log.d("kyo3", "" + target);
-        if(target.get("pics").getAsString()!=null){
+        if (target.get("pics").isJsonNull() == false) {
             JsonArray picsJsonArray = target.getAsJsonArray("pics");
-            Log.d("kyo3", "" + (picsBeanList == null));
-            Log.d("kyo3", "" + target);
             if (picsJsonArray != null) {
                 Iterator it = picsJsonArray.iterator();
                 while (it.hasNext()) {
                     JsonObject jsonObject = (JsonObject) it.next();//JsonElement转换为JavaBean对象
-                    PicsBean bean = new PicsBean(jsonObject.get("picurl").toString(), jsonObject.get("title").toString());
+                    PicsBean bean = new PicsBean(jsonObject.get("picurl").getAsString(), jsonObject.get("title").getAsString());
                     picsBeanList.add(bean);
                 }
             }

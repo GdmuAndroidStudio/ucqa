@@ -58,7 +58,7 @@ import cn.sharesdk.framework.PlatformActionListener;
 /**
  * Created by Kyo on 2016/5/22.
  */
-public class ConsultDetailActivity extends BaseActivity implements ConsultDetailView,PlatformActionListener,Handler.Callback {
+public class ConsultDetailActivity extends BaseActivity implements ConsultDetailView, PlatformActionListener, Handler.Callback {
 
     @Bind(R.id.rv_comment_list)
     RecyclerView rvCommentList;
@@ -86,6 +86,8 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     TextView tvDetailTime;
     @Bind(R.id.gv_detail_picslist)
     OtherGridView gvDetailPicslist;
+    @Bind(R.id.tv_detail_nocomment)
+    TextView tvDetailNocomment;
 
     private Handler handler = new Handler();
     private List<CommentBean> data = new ArrayList<>();
@@ -99,8 +101,9 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     private int uid;
     private ConsultDetailPresenter consultDetailPresenter;
     private DetailPicsAdapter detailPicsAdapter;
-    private  ShareTool  Share;
+    private ShareTool Share;
     private PopupWindow reportdialog;
+    private int loadmoreNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,21 +115,54 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
         userBean = (UserBean) getIntent().getSerializableExtra("userBean");
         bwztid = Integer.parseInt(getIntent().getStringExtra("bwztid"));
         uid = Integer.parseInt(getIntent().getStringExtra("uid"));
-        consultDetailPresenter = new ConsultDetailPresenter(this, this);
+        consultDetailPresenter = new ConsultDetailPresenter(this, getcontext());
         initView();
-        initData();
     }
 
-    @Override
-    public void initData() {
-        consultDetailPresenter.initData();
-        data.clear();
-        for (int i = 0; i < 10; i++) {
-            CommentBean commentBean = new CommentBean();
-            commentBean.setName("user" + (i + 1));
-            data.add(commentBean);
+    private void initComment(List<CommentBean> data) {
+        Log.d("kyo4", "" + data.size());
+        if (data.size() == 0) {
+            rvCommentList.setVisibility(View.GONE);
+            tvDetailNocomment.setVisibility(View.VISIBLE);
+        } else {
+            if (data.size() <= 10) {
+                for (int i = 0; i < data.size(); i++) {
+                    this.data.add(data.get(i));
+                }
+            } else {
+                for (int i = 0; i < 10; i++) {
+                    this.data.add(data.get(i));
+                }
+            }
+            commentListAdapter = new CommentListAdapter(this, this.data);
+            dividerLine.setSize(1);
+            dividerLine.setColor(this.getResources().getColor(R.color.lightgray));
+            rvCommentList.addItemDecoration(dividerLine);
+            rvCommentList.setLayoutManager(fullyLinearLayoutManager);
+            rvCommentList.setAdapter(commentListAdapter);
+            rvCommentList.setHasFixedSize(true);
+            rvCommentList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                }
+            });
+            if (data.size() <= 10) {
+//                Log.d("kyo","setoverfoot");
+                commentListAdapter.setOverFoot();
+            } else {
+//                Log.d("kkyo","setbeforefoot");
+                commentListAdapter.setBeforeFoot();
+            }
         }
-        commentListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -155,29 +191,7 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     }
 
     private void initView() {
-        commentListAdapter = new CommentListAdapter(this, data);
-        dividerLine.setSize(1);
-        dividerLine.setColor(this.getResources().getColor(R.color.lightgray));
-        rvCommentList.addItemDecoration(dividerLine);
-        rvCommentList.setLayoutManager(fullyLinearLayoutManager);
-        rvCommentList.setAdapter(commentListAdapter);
-        rvCommentList.setHasFixedSize(true);
-        rvCommentList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                Log.d("test", "StateChanged = " + newState);
-
-
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                Log.d("test", "onScrolled");
-
-            }
-        });
+        consultDetailPresenter.initData();
     }
 
     public void clickToReply(String name) {
@@ -192,11 +206,19 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     }
 
     public void LoadMore() {
-        for (int i = 0; i < 1; i++) {
-            CommentBean commentBean = new CommentBean();
-            commentBean.setName("add user");
-            data.add(commentBean);
+        if (detailedBean.getComment().size() > 10 + loadmoreNum && detailedBean.getComment().size() <= 10 + loadmoreNum + 4) {
+            for (int i = 10 + loadmoreNum; i < detailedBean.getComment().size(); i++) {
+                Log.d("kkyo","add comment");
+                this.data.add(detailedBean.getComment().get(i));
+            }
+            commentListAdapter.setOverFoot();
+        } else {
+            for (int i = 10 + loadmoreNum; i < 4; i++) {
+                this.data.add(detailedBean.getComment().get(i));
+            }
+            commentListAdapter.setBeforeFoot();
         }
+        loadmoreNum += 4;
         commentListAdapter.notifyDataSetChanged();
     }
 
@@ -223,25 +245,25 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
         //给标题栏弹窗添加子类
         titlePopup.addAction(new ActionItem(this, "分享", R.mipmap.ic_share));
         titlePopup.addAction(new ActionItem(this, "举报", R.mipmap.ic_report));
-        if(uid == Integer.parseInt(userBean.getUserdata().getUid())){
+        if (uid == Integer.parseInt(userBean.getUserdata().getUid())) {
             titlePopup.addAction(new ActionItem(this, "采纳", R.mipmap.ic_slove));
-            titlePopup.addAction(new ActionItem(this, "删除",  R.mipmap.ic_delete));
+            titlePopup.addAction(new ActionItem(this, "删除", R.mipmap.ic_delete));
         }
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {
-                if (position==0){
+                if (position == 0) {
                     shareConsult();//分享
-                }else if(position==1){
+                } else if (position == 1) {
                     showReportDialog();//举报
-                }else{
-                    if(detailedBean.getUid().equals(userBean.getUserdata().getUid())) {
-                        switch (position){
+                } else {
+                    if (detailedBean.getUid().equals(userBean.getUserdata().getUid())) {
+                        switch (position) {
                             case 2:
-                                consultDetailPresenter.Solve(userBean.getM_auth(),bwztid);
+                                consultDetailPresenter.Solve(userBean.getM_auth(), bwztid);
                                 break;
                             case 3:
-                                consultDetailPresenter.Delete(userBean.getM_auth(),bwztid);
+                                consultDetailPresenter.Delete(userBean.getM_auth(), bwztid);
                                 break;
                         }
                     }
@@ -258,7 +280,7 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
         model.setImageUrl("http://image.baidu.com/search/detail?ct=503316480&z=0&ipn=false&word=美女&pn=0&spn=0&di=0&pi=0&rn=1&tn=baiduimagedetail&is=0%2C0&ie=utf-8&oe=utf-8&in=3354&cl=2&lm=-1&cs=1735880100%2C3223346182&os=2896705163%2C2839266134&simid=&adpicid=0&fr=ala&fm=&sme=&statnum=girl&cg=girl&bdtype=-1&oriquery=&objurl=http%3A%2F%2Fe.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Fe7cd7b899e510fb34395d1c3de33c895d0430cd1.jpg&fromurl=http%3A%2F%2Fimage.baidu.com%2Fdetail%2Fnewindex%3Fcol%3D%26tag%3D%26pn%3D0%26pid%3D31752171852%26aid%3D400266147%26user_id%3D980778976%26setid%3D-1%26sort%3D0%26newsPn%3D%26star%3D%26fr%3D%26from%3D2&gsm=0");
         model.setText(detailedBean.getContent());
         model.setTitle(detailedBean.getSubject());
-        String url=String.format("https://ucqa.dawnlightning.com/space.php?uid=%s&do=bwzt&id=%s", uid, bwztid);
+        String url = String.format("https://ucqa.dawnlightning.com/space.php?uid=%s&do=bwzt&id=%s", uid, bwztid);
         model.setUrl(url);
         Share.initShareParams(model);
 
@@ -267,10 +289,10 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
 
     public void showReportDialog() {
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_report, null);
-        reportdialog = new PopupWindow(view, ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,true);
-        final  ImageView iv_consult_report_close=(ImageView)view.findViewById(R.id.iv_consult_report_close);
-        final EditText et_consult_report_reason=(EditText)view.findViewById(R.id.et_consult_report_reason);
-        final Button bt_consult_report_sent= (Button) view.findViewById(R.id.bt_consult_report_sent);
+        reportdialog = new PopupWindow(view, ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        final ImageView iv_consult_report_close = (ImageView) view.findViewById(R.id.iv_consult_report_close);
+        final EditText et_consult_report_reason = (EditText) view.findViewById(R.id.et_consult_report_reason);
+        final Button bt_consult_report_sent = (Button) view.findViewById(R.id.bt_consult_report_sent);
         bt_consult_report_sent.setClickable(false);
         bt_consult_report_sent.setBackgroundColor(getResources().getColor(R.color.lightgray));
         iv_consult_report_close.setOnClickListener(new View.OnClickListener() {
@@ -319,14 +341,13 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
         reportdialog.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                reportdialog=null;
+                reportdialog = null;
             }
         });
     }
 
     @Override
-    public void onCancel(Platform arg0, int arg1)
-    {
+    public void onCancel(Platform arg0, int arg1) {
 
         Message msg = new Message();
         msg.what = 0;
@@ -335,8 +356,7 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     }
 
     @Override
-    public void onComplete(Platform plat, int action, HashMap<String, Object> res)
-    {
+    public void onComplete(Platform plat, int action, HashMap<String, Object> res) {
         Message msg = new Message();
         msg.arg1 = 1;
         msg.arg2 = action;
@@ -346,8 +366,7 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     }
 
     @Override
-    public void onError(Platform arg0, int arg1, Throwable arg2)
-    {
+    public void onError(Platform arg0, int arg1, Throwable arg2) {
         Message msg = new Message();
         msg.what = 1;
         UIHandler.sendMessage(msg, this);
@@ -355,14 +374,12 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     }
 
     @Override
-    public boolean handleMessage(Message msg)
-    {
+    public boolean handleMessage(Message msg) {
         int what = msg.what;
-        if (what == 1)
-        {
+        if (what == 1) {
             Toast.makeText(this, "分享失败", Toast.LENGTH_SHORT).show();
             Share.dismiss();
-        }else{
+        } else {
 
             Share.dismiss();
         }
@@ -374,14 +391,14 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
     public void setResult(Results result) {
         switch (result) {
             case Success:
-                Log.d("kyo","" + detailedBean.getPics().size());
-                Log.d("kyo","" + detailedBean.getComment().size());
-                Log.d("kyo","" + detailedBean.getMessage());
-                Log.d("kyo","" + detailedBean.getSubject());
-                Log.d("kyo","" + detailedBean.getAvatar_url());
-                for(int i = 0; i<detailedBean.getComment().size(); i++){
-                    Log.d("kyo2","" + detailedBean.getComment().get(i));
-                }
+//                Log.d("kyo","" + detailedBean.getPics().size());
+//                Log.d("kyo","" + detailedBean.getComment().size());
+//                Log.d("kyo","" + detailedBean.getMessage());
+//                Log.d("kyo","" + detailedBean.getSubject());
+//                Log.d("kyo","" + detailedBean.getAvatar_url());
+//                for(int i = 0; i<detailedBean.getComment().size(); i++){
+//                    Log.d("kyo2","" + detailedBean.getComment().get(i));
+//                }
                 ImageLoader.getInstance().displayImage(detailedBean.getAvatar_url(), ivDetailIcon, Options.getListOptions());
                 tvDetailMessage.setText(detailedBean.getMessage());
                 tvDetailSubject.setText(detailedBean.getSubject());
@@ -392,15 +409,17 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
                 String[] Date = detailedBean.getDatetime().split("/");
                 tvDetailTime.setText(Date[0] + "年" + Date[1] + "月" + Date[2] + "日");
 
-                if (detailedBean.getPics().size() != 0){
-                    Log.d("kyo","test picturelist");
+                if (detailedBean.getPics().size() != 0) {
                     gvDetailPicslist.setVisibility(View.VISIBLE);
-                    detailPicsAdapter =new DetailPicsAdapter(this,detailedBean.getPics());
+                    detailPicsAdapter = new DetailPicsAdapter(this, detailedBean.getPics());
                     gvDetailPicslist.setAdapter(detailPicsAdapter);
                     detailPicsAdapter.notifyDataSetChanged();
-                }else{
+                } else {
                     gvDetailPicslist.setVisibility(View.GONE);
                 }
+
+                initComment(detailedBean.getComment());
+                commentListAdapter.notifyDataSetChanged();
                 break;
         }
     }
