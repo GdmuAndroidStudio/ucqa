@@ -105,10 +105,11 @@ public class MainFragment extends BaseFragment implements IMainFragView {
         adapter.setOnItemClickListener(new MainAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                ConsultMessageBean consultMessageBean = data.get(position);
                 Intent i = new Intent();
+                i.putExtra("userBean",MainActivity.userBean);
+                i.putExtra("bwztid",data.get(position).getBwztid());
+                i.putExtra("uid",data.get(position).getUid());
                 i.setClass(getActivity(), ConsultDetailActivity.class);
-                i.putExtra("consultMessageBean",consultMessageBean);
                 startActivity(i);
                 // 动画过渡
                 getActivity().overridePendingTransition(R.anim.slide_in_right,

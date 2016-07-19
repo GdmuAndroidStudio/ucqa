@@ -33,8 +33,7 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
-            android:name=".activity.PersonalDataActivity"
-            android:windowSoftInputMode="stateHidden">
+            android:name=".activity.PersonalDataActivity">
         </activity>
 
 

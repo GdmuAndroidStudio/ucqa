@@ -121,5 +121,7 @@ public class TimeUtil {
 	private static long toYears(long date) {
 		return toMonths(date) / 365L;
 	}
-
+	private void changeTimeFormat(){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:m:s");
+	}
 }
