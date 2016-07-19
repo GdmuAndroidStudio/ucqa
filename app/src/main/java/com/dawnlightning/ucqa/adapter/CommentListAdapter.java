@@ -3,6 +3,7 @@ package com.dawnlightning.ucqa.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,10 @@ import android.widget.Toast;
 import com.dawnlightning.ucqa.R;
 import com.dawnlightning.ucqa.activity.ConsultDetailActivity;
 import com.dawnlightning.ucqa.bean.response.consult.detailed.CommentBean;
+import com.dawnlightning.ucqa.utils.Options;
+import com.dawnlightning.ucqa.utils.TimeUtil;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
@@ -27,6 +32,8 @@ public class CommentListAdapter extends BaseAdapter {
     private List<CommentBean> data;
     private FootViewHolder footViewHolder;
     private Handler handler = new Handler();
+    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private DisplayImageOptions options = Options.getListOptions();
 
     public CommentListAdapter(Context context, List<CommentBean> data) {
         this.context = context;
@@ -35,7 +42,7 @@ public class CommentListAdapter extends BaseAdapter {
 
     @Override
     public int getItemCount() {
-        return data.size() == 0 ? 0 : data.size()+1;
+        return data.size() == 0 ? 0 : data.size() + 1;
     }
 
     @Override
@@ -52,10 +59,19 @@ public class CommentListAdapter extends BaseAdapter {
     }
 
     @Override
-    public void setFooting() {
+    public void setBeforeFoot() {
+        System.out.println("kyo   " + footViewHolder.itemView);
         footViewHolder.progressBar.setVisibility(View.GONE);
         footViewHolder.textView.setText("点击查看更多");
         footViewHolder.textView.setTextColor(context.getResources().getColor(R.color.green));
+        footViewHolder.itemView.setClickable(true);
+    }
+
+    @Override
+    public void setFooting() {
+        footViewHolder.progressBar.setVisibility(View.VISIBLE);
+        footViewHolder.textView.setText("正在加载更多评论");
+        footViewHolder.itemView.setClickable(false);
     }
 
     @Override
@@ -69,17 +85,16 @@ public class CommentListAdapter extends BaseAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == TYPE_ITEM){
+        if (viewType == TYPE_ITEM) {
             View view = LayoutInflater.from(context).inflate(R.layout.item_consult_comment, parent,
                     false);
 
             return new ItemViewHolder(view);
-        }else if(viewType == TYPE_FOOTER){
-            View view = LayoutInflater.from(context).inflate(R.layout.item_foot,parent,
+        } else if (viewType == TYPE_FOOTER) {
+            View view = LayoutInflater.from(context).inflate(R.layout.item_foot, parent,
                     false);
             footViewHolder = new FootViewHolder(view);
             setFooting();
-            System.out.println("create foot");
             return footViewHolder;
         }
 
@@ -90,12 +105,15 @@ public class CommentListAdapter extends BaseAdapter {
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ItemViewHolder) {
             holder.itemView.setTag(position);
-            System.out.println("tag = " + holder.itemView.getTag());
-        }else if(holder instanceof  FootViewHolder){
+            imageLoader.displayImage(data.get(position).getAvatar_url().toString(), ((ItemViewHolder) holder).ivUser, options);
+            ((ItemViewHolder) holder).tvMessage.setText(data.get(position).getMessage().toString());
+            ((ItemViewHolder) holder).tvTime.setText(TimeUtil.TimeStamp2Date(data.get(position).getDateline().toString()));
+        } else if (holder instanceof FootViewHolder) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((ConsultDetailActivity)context).LoadMore();
+                    setFooting();
+                    ((ConsultDetailActivity) context).LoadMore();
                 }
             });
         }
@@ -120,7 +138,7 @@ public class CommentListAdapter extends BaseAdapter {
         @Override
         public void onClick(View view) {
             String name = data.get(Integer.parseInt(this.itemView.getTag().toString())).getName();
-            ((ConsultDetailActivity)context).clickToReply(name);
+            ((ConsultDetailActivity) context).clickToReply(name);
         }
     }
 

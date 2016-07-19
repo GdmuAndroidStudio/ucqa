@@ -41,7 +41,7 @@ public class JsonParseHelper {
      */
     public static List<CommentBean> ParseComment(JsonObject target) {
         List<CommentBean> list = new ArrayList<CommentBean>();
-        if (target.get("replylist").isJsonNull()==false) {
+        if (target.get("replylist").isJsonNull() == false) {
             Gson gson = new Gson();
             JsonArray asJsonArray = target.getAsJsonArray("replylist");
             if (asJsonArray != null) {
@@ -54,6 +54,7 @@ public class JsonParseHelper {
             }
 
         }
+        Log.d("kyo5", "" + list.size());
         return list;
     }
 
@@ -99,7 +100,7 @@ public class JsonParseHelper {
 
     public static List<PicsBean> ParsePictureList(JsonObject target) {
         List<PicsBean> picsBeanList = new ArrayList<PicsBean>();
-        if(target.get("pics").isJsonNull()==false){
+        if (target.get("pics").isJsonNull() == false) {
             JsonArray picsJsonArray = target.getAsJsonArray("pics");
             if (picsJsonArray != null) {
                 Iterator it = picsJsonArray.iterator();
