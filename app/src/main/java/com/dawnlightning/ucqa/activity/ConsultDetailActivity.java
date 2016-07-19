@@ -156,13 +156,15 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
                 }
             });
             if (data.size() <= 10) {
-//                Log.d("kyo","setoverfoot");
+                Log.d("kyo","setoverfoot");
                 commentListAdapter.setOverFoot();
             } else {
-//                Log.d("kkyo","setbeforefoot");
+              Log.d("kkyo","setbeforefoot");
                 commentListAdapter.setBeforeFoot();
             }
+            commentListAdapter.notifyDataSetChanged();
         }
+
     }
 
     @Override
@@ -419,7 +421,7 @@ public class ConsultDetailActivity extends BaseActivity implements ConsultDetail
                 }
 
                 initComment(detailedBean.getComment());
-                commentListAdapter.notifyDataSetChanged();
+
                 break;
         }
     }

@@ -140,7 +140,8 @@ public class ConsultDetailedModel {
                 .subscribe(new SuccessAction<JsonObject>() {
                     @Override
                     public void Success(JsonObject target) {
-                        List<CommentBean> list = JsonParseHelper.ParseComment(target);//一级评论列表
+                        JsonObject js = target.getAsJsonObject("bwzt");
+                        List<CommentBean> list = JsonParseHelper.ParseComment(js);//一级评论列表
                         List<CommentBean> newlist = JsonParseHelper.ParseReply(list);//二级评论列表
                         if (newlist.size() == 0) {
                             listener.noData();
