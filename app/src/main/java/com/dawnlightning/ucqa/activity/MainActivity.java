@@ -2,6 +2,7 @@ package com.dawnlightning.ucqa.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +26,7 @@ import com.dawnlightning.ucqa.fragment.MessageFragment;
 import com.dawnlightning.ucqa.model.TestModel;
 import com.dawnlightning.ucqa.presenter.MainPresenter;
 import com.dawnlightning.ucqa.utils.BaseTools;
+import com.dawnlightning.ucqa.utils.ImageLoaderOptions;
 import com.dawnlightning.ucqa.utils.Options;
 import com.dawnlightning.ucqa.viewinterface.IMainView;
 import com.dawnlightning.ucqa.widget.DragLayout;
@@ -160,6 +162,17 @@ public class MainActivity extends BaseActivity implements IMainView {
             @Override
             public void onClick(View v) {
                 dlMain.open();
+            }
+        });
+        ivIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(getcontext(),PersonalDataActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("userdata",userBean);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Code.ModifyPersonaldataForResult);
             }
         });
         Bundle data = new Bundle();
@@ -312,6 +325,33 @@ public class MainActivity extends BaseActivity implements IMainView {
             ((Menu) menuadapter.getItem(newItems.get(i))).setStatus(1);
         }
         menuadapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        if (requestCode==requestCode) {
+            switch (resultCode) {
+                case Code.ConsultForResult:
+                    mvpMainactivity.setCurrentItem(0);
+                    break;
+                case Code.LoginoffForResult:
+                    finish();
+                    break;
+                case Code.ModifyPersonaldataForResult:
+                    String username=data.getStringExtra("username");
+                    String avater=data.getStringExtra("avatar");
+                    userBean.getUserdata().setName(username);
+                    ImageLoader.getInstance().displayImage(avater,ivIcon, ImageLoaderOptions.getListOptions());
+                    tvUsername.setText(username);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }

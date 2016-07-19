@@ -143,8 +143,8 @@ public class ConsultActivity extends BaseActivity {
 //        consultClassifyBeanList=(List<ConsultClassifyBean>)intent.getSerializableExtra("classifybeanlist");
 //        consultBean.setFormhash(userBean.getFormhash());
 //        consultBean.setM_auth(userBean.getM_auth());
-        consultBean.setFormhash("sad");
-        consultBean.setM_auth("ddd");
+        consultBean.setFormhash("05154ee8");
+        consultBean.setM_auth("86dbHma%2FLr19gbGC%2FCH16GG%2FmBowm8P5Lai2amtBgoBerRxT5F34SPqeqC%2FbTg6zX%2FTjhlAEGtLKTbozWIZm%2FKk");
     }
 
     //根据科室名称寻找对应的ID

@@ -4,11 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent">
+        <include layout="@layout/consult_error" />
+        <include layout="@layout/consult_nodata" />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
@@ -16,7 +16,5 @@
             android:background="@color/white"
             android:cacheColorHint="@null"
             android:scrollbars="vertical"></android.support.v7.widget.RecyclerView>
-
-        <include layout="@layout/consult_nodata" />
-    </LinearLayout>
+    </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

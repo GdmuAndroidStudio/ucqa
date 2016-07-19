@@ -39,7 +39,6 @@ public class AccountModel {
 
     public interface UpdateListener {
         void needUpdate(UpdateBean bean);
-
         void noUpdate();
     }
 
@@ -58,7 +57,6 @@ public class AccountModel {
             @Override
             public void Success(LoginBean target) {
                 listener.doSuccess(target);
-
             }
 
             @Override
@@ -137,7 +135,6 @@ public class AccountModel {
                     public void Success(String target) {
                         String msg = "修改资料成功";
                         listener.doSuccess(msg);
-
                     }
 
                     @Override
@@ -160,10 +157,10 @@ public class AccountModel {
      */
     public void UploadAvater(UploadPicsBean bean, final Handler handler) {
         RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), bean.getPicture());
-        final Message message = handler.obtainMessage();
         ProgressRequestBody progressRequestBody = new ProgressRequestBody(requestBody, new ProgressRequestBody.ProgressListener() {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
+                Message message = handler.obtainMessage();
                 int count = (int) ((bytesRead * 1.0 / contentLength) * 100);
                 message.what = Code.UPLOADCHANGE;
                 message.obj = count;
@@ -177,6 +174,7 @@ public class AccountModel {
                 .subscribe(new SuccessAction<GetAvatarBean>() {
                     @Override
                     public void Success(GetAvatarBean target) {
+                        Message message = handler.obtainMessage();
                         message.what = Code.UPLOADSUCCESS;
                         message.obj = target.getAvatar_url();
                         message.sendToTarget();
@@ -184,6 +182,7 @@ public class AccountModel {
 
                     @Override
                     public void Failure(String msg) {
+                        Message message = handler.obtainMessage();
                         message.what = Code.UPLOADFAILURE;
                         message.obj = msg;
                         message.sendToTarget();
@@ -191,6 +190,7 @@ public class AccountModel {
                 }, new FailureAction() {
                     @Override
                     public void Error(String msg) {
+                        Message message = handler.obtainMessage();
                         message.what = Code.UPLOADFAILURE;
                         message.obj = msg;
                         message.sendToTarget();

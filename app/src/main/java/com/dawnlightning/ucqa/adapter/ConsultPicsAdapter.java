@@ -46,7 +46,7 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
     private LayoutInflater layoutInflater;
     private DisplayImageOptions options;
     private  DeletePicture  deletePicture;
-    private EditTextListener editTextListener;
+
     public ConsultPicsAdapter(Context context, List<UploadPicsBean> list){
         this.context=context;
         this.list=list;
@@ -57,9 +57,7 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
     public void  setDeletePicture(DeletePicture deletePicture){
         this.deletePicture=deletePicture;
     }
-    public void setEditTextListener( EditTextListener editTextListener){
-        this.editTextListener=editTextListener;
-    }
+    
 
     @Override
     public int getItemCount() {
@@ -90,7 +88,6 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
             final UploadPicsBean bean = list.get(position);
             final   RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) ((ViewHolder) holder).img.getLayoutParams();
             ((ViewHolder) holder).delete.setVisibility(View.INVISIBLE);
-             ((ViewHolder) holder).title.setVisibility(View.INVISIBLE);
             ((ViewHolder) holder).delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -100,25 +97,6 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
                     }
                 }
             });
-            ((ViewHolder) holder).title.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (editTextListener != null) {
-                        editTextListener.AdapterTextChaged(position, bean.getPicturetitle());
-                    }
-                }
-            });
-        ((ViewHolder) holder).title.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){//获得焦点
-                    ((ViewHolder) holder).title.setTop(((ViewHolder) holder).title.getBottom()-params.height/2);
-                }else{//失去焦点
-                    ((ViewHolder) holder).title.setTop(((ViewHolder) holder).title.getBottom()-params.height);
-                }
-            }
-        });
             ((ViewHolder) holder).img.setOnClickListener(new OnClickListener(((ViewHolder) holder), position));
             ((ViewHolder) holder).img.setOnLongClickListener(new LongClickListener(((ViewHolder) holder)));
             Log.d("test", "" + position);
@@ -128,9 +106,6 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
                 ((ViewHolder) holder).img.setImageBitmap(upImageSize(bitmap, params.height));
                 ((ViewHolder) holder).img.setProgress(bean.getPresent());
                 if(bean.getPicturetitle()!="") {
-                    ((ViewHolder) holder).title.setText("修改");
-                }else{
-                    ((ViewHolder) holder).title.setText("描述");
                 }
                 Log.d("test", bean.getPicturetitle());
             }
@@ -177,7 +152,6 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
         public void onClick(View view) {
             if(viewHolder.delete.getVisibility()==View.VISIBLE) {
                 viewHolder.delete.setVisibility(View.INVISIBLE);
-                viewHolder.title.setVisibility(View.INVISIBLE);
             }else {
                 Intent intent = new Intent();
                 intent.setClass(context, DisplayActivity.class);
@@ -198,7 +172,6 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
         @Override
         public boolean onLongClick(View view) {
             viewHolder.delete.setVisibility(View.VISIBLE);
-            viewHolder.title.setVisibility(View.VISIBLE);
             return true;
         }
     }
@@ -219,20 +192,16 @@ public class ConsultPicsAdapter extends com.dawnlightning.ucqa.adapter.BaseAdapt
     //
     public class ViewHolder extends RecyclerView.ViewHolder {
         ProcessImageView img;
-        TextView title;
         TextView delete;
         public ViewHolder(View view){
             super(view);
             img =(ProcessImageView)view.findViewById(R.id.piv_consult_picture) ;
-            title = (TextView)view.findViewById(R.id.et_consult_picture_title);
             delete=(TextView)view.findViewById(R.id.iv_consult_picture_delete) ;
         }
     }
+
     public interface DeletePicture{
         public void Detele(int postion);
-    }
-    public interface EditTextListener{
-        public void AdapterTextChaged(int postion, String str);
     }
 
 
