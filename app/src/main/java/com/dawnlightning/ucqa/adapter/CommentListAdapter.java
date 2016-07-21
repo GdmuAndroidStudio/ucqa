@@ -60,11 +60,15 @@ public class CommentListAdapter extends BaseAdapter {
 
     @Override
     public void setBeforeFoot() {
-        System.out.println("kyo   " + footViewHolder.itemView);
-        footViewHolder.progressBar.setVisibility(View.GONE);
-        footViewHolder.textView.setText("点击查看更多");
-        footViewHolder.textView.setTextColor(context.getResources().getColor(R.color.green));
-        footViewHolder.itemView.setClickable(true);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                footViewHolder.progressBar.setVisibility(View.GONE);
+                footViewHolder.textView.setText("点击查看更多");
+                footViewHolder.textView.setTextColor(context.getResources().getColor(R.color.green));
+                footViewHolder.itemView.setClickable(true);
+            }
+        }, 1000);
     }
 
     @Override
