@@ -56,6 +56,7 @@ public class MessagePresenter {
                 }
                 iMessageView.getMessageAdapter().notifyDataSetChanged();
                 iMessageView.getActionResult("", Results.Success,actions);
+                Log.i("test", " " + "refresh sucess"+" ok");
             }
 
             @Override
@@ -68,6 +69,7 @@ public class MessagePresenter {
             public void getError(String msg, Actions actions) {
                 Log.i("test"," "+"refresh error");
                 iMessageView.getActionResult(msg, Results.Error,actions);
+                Log.i("test", " " + "refresh fail"+" ok");
             }
 
             @Override

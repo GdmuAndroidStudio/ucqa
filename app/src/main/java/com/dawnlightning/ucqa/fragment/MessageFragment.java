@@ -130,7 +130,7 @@ public class MessageFragment extends BaseFragment implements IMessageView{
     @Override
     public void initAdapter() {
         messageBeanList = new ArrayList<MessageBean>();
-        adapter = new ConsultAdapter(getContext());
+        adapter = new MessageAdapter(getContext());
         messagePresenter = new MessagePresenter(this);
         adapter.setList(messageBeanList);
         btDetailNodata.setOnClickListener(new View.OnClickListener() {
